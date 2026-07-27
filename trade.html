@@ -17,17 +17,38 @@
   <h2>Welcome Hassan! Demo Account</h2>
   <div class="balance">
     <p>Virtual Balance</p>
-    <h1>$10,000.00</h1>
-    <p>Profit: +$0.00</p>
+    <<h1 id="balance">$10,000.00</h1>
+<p id="profit">Profit: +$0.00</p>
   </div>
   
   <h3<!-- TradingView Chart -->
 <div class="tradingview-widget-container" style="margin:20px 0;">
-  <div id="tradingview_chart"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-  <script type="text/javascript">
-  new TradingView.widget({
-  "width": "100%",
+  <div class="buttons">
+    <button class="buy" onclick="trade('buy')">BUY</button>
+    <button class="sell" onclick="trade('sell')">SELL</button>
+</div>
+
+<script>
+let balance = 10000.00;
+let profit = 0.00;
+
+function trade(type) {
+    let change = (Math.random() * 200 - 50).toFixed(2); // Random profit/loss
+    
+    if(type == 'buy') {
+        profit = parseFloat(change);
+        balance = balance + profit;
+    } else {
+        profit = parseFloat(change) * -1; // Sell = opposite
+        balance = balance + profit;
+    }
+    
+    document.getElementById("balance").innerHTML = "$" + balance.toFixed(2);
+    document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2);
+    
+    alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
+}
+</script>
   "height": 400,
   "symbol": "FX:EURUSD",
   "interval": "5",
