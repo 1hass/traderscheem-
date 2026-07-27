@@ -47,7 +47,6 @@ new TradingView.widget({
 <button class="buy" onclick="trade('buy')">BUY</button>
 <button class="sell" onclick="trade('sell')">SELL</button>
 </div>
-
 <script>
 let balance = 10000.00;
 let profit = 0.00;
@@ -61,6 +60,7 @@ document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2);
 alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
 }
 </script>
+
   
 <a href="index.html">← Logout</a>
 </body>
