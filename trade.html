@@ -57,13 +57,36 @@ new TradingView.widget({
 <script>
 let balance = 10000.00;
 let profit = 0.00;
+let tradeCount = 1;
+
 function trade(type) {
 let change = (Math.random() * 200 - 50).toFixed(2);
-if(type == 'buy') { profit = parseFloat(change); } 
-else { profit = parseFloat(change) * -1; }
+
+if(type == 'buy') { 
+profit = parseFloat(change); 
+} else { 
+profit = parseFloat(change) * -1; 
+}
 balance = balance + profit;
+
 document.getElementById("balance").innerHTML = "$" + balance.toFixed(2);
 document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2);
+
+let historyDiv = document.getElementById("history");
+if(historyDiv.innerHTML.includes("No trades yet")) {
+historyDiv.innerHTML = "";
+}
+
+let color = profit >= 0 ? "#00ff88" : "#ff0044";
+let time = new Date().toLocaleTimeString();
+let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
+<b>Trade #${tradeCount}</b> - ${type.toUpperCase()} - ${time}
+<span style="color:${color}; float:right;">$${profit.toFixed(2)}</span>
+</p>`;
+
+historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+tradeCount++;
+
 alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
 }
   </script>
