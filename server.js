@@ -1,4 +1,11 @@
+process.on('uncaughtException', err => console.error('CRASH:', err));
+process.on('unhandledRejection', err => console.error('CRASH:', err));
+
 const express = require('express'); 
+const axios = require('axios'); 
+const cors = require('cors'); 
+const app = express();
+... rest of your codeconst express = require('express'); 
 const axios = require('axios'); 
 const cors = require('cors'); 
 const app = express(); 
