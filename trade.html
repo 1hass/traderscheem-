@@ -52,7 +52,7 @@ h3 { text-align: center; margin-top: 20px; }
 <script>
 let currentAccount = 'demo';
 let demoBal = 10000.00;
-let realBal = 0.50;
+let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 
 function toggleDropdown() {
   document.getElementById('dropdown').classList.toggle('active');
