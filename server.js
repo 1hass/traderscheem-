@@ -28,8 +28,9 @@ async function getToken() {
   accessToken = res.data.access_token; 
 } 
 
-app.post('/stkpush', async (req, res) => { 
-  let { amount, phone } = req.body; 
+app.post('/stkpush', async (req, res) => {
+  let { amount, phone } = req.body;
+if (!amount || !phone) return res.status(400).json({ success: false, message: "amount and phone required" });
   phone = phone.replace('+', ''); 
   if (phone.startsWith('0')) phone = '254' + phone.slice(1); 
   if (!phone.startsWith('254')) phone = '254' + phone; 
