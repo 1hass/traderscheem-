@@ -108,22 +108,31 @@ tradeCount++;
 
 alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
 }
-  async function deposit() {
+async function deposit() {
   const amount = prompt("Enter amount KES:");
   const phone = prompt("Enter M-Pesa Number: 07XXXXXXXX");
-  
   if(!amount || !phone) return;
-
+  
   alert("Sending STK Push to " + phone + "...");
-
-  const res = await fetch('https://traderscheem-backend.onrender.com/stkpush', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ amount: amount, phone: phone })
-  });
-
-  const data = await res.json();
-  alert(data.message);
+  
+  try {
+    const res = await fetch('https://traderscheem-backend.onrender.com/stkpush', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: amount, phone: phone })
+    });
+    
+    const data = await res.json();
+    
+    if(data.success) {
+      alert("STK Sent! Check your phone and enter M-PESA PIN: 0000");
+    } else {
+      alert("Error: " + data.message);
+    }
+    
+  } catch (err) {
+    alert("Connection Error: " + err.message);
+  }
   }
   </script>
   
