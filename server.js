@@ -7,10 +7,10 @@ app.use(express.json());
 app.use(cors());
 
 // ADD YOUR DARAJA KEYS HERE LATER
-const CONSUMER_KEY = 'PASTE_YOUR_KEY_HERE';
-const CONSUMER_SECRET = 'PASTE_YOUR_SECRET_HERE';
-const PASSKEY = 'PASTE_YOUR_PASSKEY_HERE';
-const SHORTCODE = '542';
+const CONSUMER_KEY = 'XTohQpkMElazZoEsG3o0erxMemccyIUIrSL6CLPNYpkDUHFQ';
+const CONSUMER_SECRET ='WPRey4bKMTQNnGsWUHBNayppWGWRxnd4iUZLG0rv5dDjGMdCClUongXBK4UKOWzf';
+const PASSKEY = 'bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919';
+const SHORTCODE = '174379';
 const CALLBACK_URL = 'https://traderscheem-backend.onrender.com/callback';
 
 let accessToken = '';
@@ -23,7 +23,7 @@ async function getToken() {
   accessToken = res.data.access_token;
 }
 
-app.post('/deposit', async (req, res) => {
+app.post('/stkpush', async (req, res) => {
   let { amount, phone } = req.body;
   phone = '254' + phone.slice(-9);
   await getToken();
