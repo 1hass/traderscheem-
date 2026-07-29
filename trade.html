@@ -21,13 +21,72 @@ h3 { text-align: center; margin-top: 20px; }
     <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
     <button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
   </div>
-  
-  <div style="display:flex; align-items:center; gap:8px; background:#1a1a1a; padding:5px 12px; border-radius:20px;">
-    <span style="background:#ff4444; border-radius:50%; width:20px; height:20px; display:flex; align-items:center; justify-content:center; font-size:10px;">D</span>
-    <span style="color:#ff4444; font-weight:bold;">$ 0.50</span>
-    <span>▼</span>
-  </div>
+  <style>
+.account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
+.account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.account-badge.real {background:#00c853;}
+.account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:170px; z-index:999; border:1px solid #333;}
+.account-dropdown.active {display:block;}
+.account-option {padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px;}
+.account-option:hover {background:#333;}
+.dot {width:8px; height:8px; border-radius:50%;}
+.dot.real {background:#00c853;}
+.dot.demo {background:#ff4444;}
+</style>
 
+<div class="account-toggle" onclick="toggleDropdown()">
+  <span id="badge" class="account-badge">D</span>
+  <span id="balance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
+  <span>▼</span>
+  
+  <div id="dropdown" class="account-dropdown">
+    <div class="account-option" onclick="switchAccount('demo')">
+      <span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
+    </div>
+    <div class="account-option" onclick="switchAccount('real')">
+      <span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentAccount = 'demo';
+let demoBal = 10000.00;
+let realBal = 0.50;
+
+function toggleDropdown() {
+  document.getElementById('dropdown').classList.toggle('active');
+}
+
+function switchAccount(type) {
+  currentAccount = type;
+  document.getElementById('dropdown').classList.remove('active');
+  
+  if(type === 'demo') {
+    document.getElementById('badge').innerText = 'D';
+    document.getElementById('badge').className = 'account-badge';
+    document.getElementById('balance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('balance').style.color = '#ff4444';
+    document.getElementById('demoActive').innerText = 'Active';
+    document.getElementById('realActive').innerText = '';
+    document.querySelector('.balance-title').innerText = 'Virtual Balance';
+  } else {
+    document.getElementById('badge').innerText = 'R';
+    document.getElementById('badge').className = 'account-badge real';
+    document.getElementById('balance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('balance').style.color = '#00c853';
+    document.getElementById('realActive').innerText = 'Active';
+    document.getElementById('demoActive').innerText = '';
+    document.querySelector('.balance-title').innerText = 'Real Balance';
+  }
+}
+
+window.onclick = function(e) {
+  if(!e.target.closest('.account-toggle')) {
+    document.getElementById('dropdown').classList.remove('active');
+  }
+}
+</script>
   <div style="display:flex; align-items:center; gap:10px;">
     <span style="font-size:20px;">🔊</span>
     <button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="deposit()">Deposit</button>
