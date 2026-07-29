@@ -15,10 +15,10 @@ app.get('/', (req, res) => {
 });
 
 // ✅ NOW READING FROM RENDER ENVIRONMENT VARIABLES
-const CONSUMER_KEY = process.env.CONSUMER_KEY;
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET;
-const PASSKEY = process.env.PASSKEY;
-const SHORTCODE = process.env.SHORTCODE;
+const CONSUMER_KEY = WPRey4bKMTQNnGsWUHBNayppWGWRxnd4iUZLG0rv5dDjGMdCClUongXBK4UKOWzf
+const CONSUMER_SECRET = XTohQpkMElazZoEsG3o0erxMemccyIUIrSL6CLPNYpkDUHFQ
+const PASSKEY = bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919
+const SHORTCODE = 174379
 const CALLBACK_URL = 'https://traderscheem-backend.onrender.com/callback';
 
 let accessToken = '';
