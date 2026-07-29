@@ -116,7 +116,7 @@ alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
 
   alert("Sending STK Push to " + phone + "...");
 
-  const res = await fetch('https://traderscheem-backend.onrender.com/deposit', {
+  const res = await fetch('https://traderscheem-backend.onrender.com/stkpush', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ amount: amount, phone: phone })
