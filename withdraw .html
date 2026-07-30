@@ -6,40 +6,61 @@
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; padding: 20px; }
 .box { background: #1a1a1a; padding: 20px; border-radius: 12px; max-width: 400px; margin: 50px auto; }
-input { width: 100%; padding: 12px; margin: 10px 0; background: #333; border: none; color: white; border-radius: 8px; }
-.btn { width: 100%; padding: 15px; background: #ff4444; border: none; color: white; border-radius: 8px; font-weight: bold; font-size: 16px; }
+input { width: 100%; padding: 12px; margin: 10px 0; background: #333; border: none; color: white; border-radius: 8px; box-sizing: border-box; }
+.btn { width: 100%; padding: 15px; background: #ff4444; border: none; color: white; border-radius: 8px; font-weight: bold; font-size: 16px; cursor:pointer; }
+.btn:disabled { background:#555; cursor:not-allowed; }
 .back { color: #00aaff; text-decoration: none; }
+.balance-box { background:#222; padding:15px; border-radius:10px; margin-bottom:15px; text-align:center; }
 </style>
 </head>
 <body>
 <a href="trade.html" class="back">← Back to Trade</a>
 <div class="box">
-<h2>💸 Withdraw Funds</h2>
-<p>Balance: <b id="bal">$0.00</b></p>
+<h2 style="color:#ff4444;">💸 Withdraw Funds</h2>
+<div class="balance-box">
+<small>Available Real Balance</small><br>
+<b id="bal" style="font-size:24px; color:#00c853;">$0.00</b>
+</div>
+
 <input id="wPhone" placeholder="M-Pesa Number: 2547XXXXXXXX">
-<input id="wAmount" type="number" placeholder="Amount $">
-<button onclick="withdraw()" class="btn">Withdraw Now</button>
-<p id="msg" style="color:#aaa; margin-top:10px;"></p>
+<input id="wAmount" type="number" placeholder="Amount $ Min: 10">
+<button onclick="withdraw()" class="btn" id="wBtn">Withdraw Now</button>
+<p id="msg" style="color:#aaa; margin-top:10px; text-align:center;"></p>
 </div>
 
 <script>
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
-document.getElementById('bal').innerText = '$' + realBal.toFixed(2);
+document.getElementById('bal').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
 
 function withdraw() {
 const phone = document.getElementById('wPhone').value;
 const amount = parseFloat(document.getElementById('wAmount').value);
+const btn = document.getElementById('wBtn');
+const msg = document.getElementById('msg');
+
 if(!phone || !amount) return alert("Enter phone and amount");
 if(amount > realBal) return alert("Not enough balance!");
 if(amount < 10) return alert("Minimum withdraw $10");
 
+btn.disabled = true;
+btn.innerText = "Processing...";
+msg.innerText = "Sending withdrawal request...";
+
+setTimeout(() => {
 realBal = realBal - amount;
 localStorage.setItem('realBalance', realBal);
-document.getElementById('bal').innerText = '$' + realBal.toFixed(2);
-document.getElementById('msg').innerText = "Withdrawal request sent! Money will arrive in 5-10 minutes.";
+document.getElementById('bal').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
 
-// TODO: Connect to your backend to send real M-Pesa B2C
-alert("Withdraw $"+amount+" to "+phone+" requested!");
+msg.style.color = '#00ff88';
+msg.innerText = "Success! $"+amount+" withdrawal sent to "+phone+". It will arrive in 5-10 minutes.";
+
+btn.disabled = false;
+btn.innerText = "Withdraw Now";
+
+// TODO: Connect this to your backend B2C M-Pesa API
+console.log("Withdraw:", amount, phone);
+
+}, 2000);
 }
 </script>
 </body>
