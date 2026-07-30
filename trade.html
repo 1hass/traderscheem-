@@ -12,16 +12,7 @@ body { background: #0a0a0a; color: white; font-family: Arial; padding: 20px; }
 .sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 5px; font-weight: bold; font-size: 18px; }
 a { color: #007bff; display: block; text-align: center; margin-top: 20px; }
 h3 { text-align: center; margin-top: 20px; }
-</style>
-</head>
-<body>
-  <!-- TOP BAR -->
-<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
-  <div style="display:flex; align-items:center; gap:10px;">
-    <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
-    <button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
-  </div>
-  <style>
+
 .account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
 .account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .account-badge.real {background:#00c853;}
@@ -32,170 +23,41 @@ h3 { text-align: center; margin-top: 20px; }
 .dot {width:8px; height:8px; border-radius:50%;}
 .dot.real {background:#00c853;}
 .dot.demo {background:#ff4444;}
+.hidden {display:none !important;}
 </style>
+</head>
+<body>
+<!-- TOP BAR -->
+<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
+    <button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
+  </div>
 
-<div class="account-toggle" onclick="toggleDropdown()">
-  <span id="badge" class="account-badge">D</span>
-  <span id="balance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
-  <span>▼</span>
-  
-  <div id="dropdown" class="account-dropdown">
-    <div class="account-option" onclick="switchAccount('demo')">
-      <span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
-    </div>
-    <div class="account-option" onclick="switchAccount('real')">
-      <span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
+  <div class="account-toggle" onclick="toggleDropdown()">
+    <span id="badge" class="account-badge">D</span>
+    <span id="topBalance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
+    <span>▼</span>
+    <div id="dropdown" class="account-dropdown">
+      <div id="optionDemo" class="account-option" onclick="switchAccount('demo')">
+        <span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
+      </div>
+      <div id="optionReal" class="account-option" onclick="switchAccount('real')">
+        <span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-let currentAccount = 'demo';
-let demoBal = 10000.00;
-let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
-
-function toggleDropdown() {
-  document.getElementById('dropdown').classList.toggle('active');
-}
-
-function switchAccount(type) {
-  currentAccount = type;
-  document.getElementById('dropdown').classList.remove('active');
-  
-  if(type === 'demo') {
-    document.getElementById('badge').innerText = 'D';
-    document.getElementById('badge').className = 'account-badge';
-    document.getElementById('balance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('balance').style.color = '#ff4444';
-    document.getElementById('demoActive').innerText = 'Active';
-    document.getElementById('realActive').innerText = '';
-    document.querySelector('.balance-title').innerText = 'Virtual Balance';
-  } else {
-    document.getElementById('badge').innerText = 'R';
-    document.getElementById('badge').className = 'account-badge real';
-    document.getElementById('balance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-    document.getElementById('balance').style.color = '#00c853';
-    document.getElementById('realActive').innerText = 'Active';
-    document.getElementById('demoActive').innerText = '';
-    document.querySelector('.balance-title').innerText = 'Real Balance';
-  }
-}
-
-window.onclick = function(e) {
-  if(!e.target.closest('.account-toggle')) {
-    document.getElementById('dropdown').classList.remove('active');
-  }
-}
-</script>
   <div style="display:flex; align-items:center; gap:10px;">
     <span style="font-size:20px;">🔊</span>
     <button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="deposit()">Deposit</button>
     <span style="font-size:20px;">🔔</span>
   </div>
 </div>
+
 <h2>Welcome! Binary Trading Demo</h2>
 
 <div class="balance">
-<p>Virtual Balance</p>
-<h1 id="balance">$10,000.00</h1>
-<p id="profit">Profit: +$0.00</p>
-</div>
-
-<h3>EUR/USD Live Chart</h3>
-<div id="tradingview_chart" style="margin:20px 0;"></div>
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-<script type="text/javascript">
-new TradingView.widget({
-"width": "100%",
-"height": 400,
-"symbol": "FX:EURUSD",
-"interval": "5",
-"timezone": "Etc/UTC",
-"theme": "dark",
-"style": "1",
-"locale": "en",
-"toolbar_bg": "#1a1a1a",
-"enable_publishing": false,
-"allow_symbol_change": true,
-"container_id": "tradingview_chart"
-});
-</script>
-
-</script>
-
-<h3>Trade History</h3>
-<div id="history" style="background:#1a1a1a; padding:15px; border-radius:10px; max-height:200px; overflow-y:auto; margin-bottom:20px;">
-<p style="color:#888; text-align:center;">No trades yet</p>
-</div>
-
-<div class="buttons">
-<button class="buy" onclick="trade('buy')">BUY</button>
-<button class="sell" onclick="trade('sell')">SELL</button>
-</div>
-<script>
-let balance = 10000.00;
-let profit = 0.00;
-let tradeCount = 1;
-
-function trade(type) {
-let change = (Math.random() * 200 - 50).toFixed(2);
-
-if(type == 'buy') { 
-profit = parseFloat(change); 
-} else { 
-profit = parseFloat(change) * -1; 
-}
-balance = balance + profit;
-
-document.getElementById("balance").innerHTML = "$" + balance.toFixed(2);
-document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2);
-
-let historyDiv = document.getElementById("history");
-if(historyDiv.innerHTML.includes("No trades yet")) {
-historyDiv.innerHTML = "";
-}
-
-let color = profit >= 0 ? "#00ff88" : "#ff0044";
-let time = new Date().toLocaleTimeString();
-let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
-<b>Trade #${tradeCount}</b> - ${type.toUpperCase()} - ${time}
-<span style="color:${color}; float:right;">$${profit.toFixed(2)}</span>
-</p>`;
-
-historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-tradeCount++;
-
-alert(type.toUpperCase() + " Order Placed!\nP/L: $" + profit.toFixed(2));
-}
-async function deposit() {
-  const amount = prompt("Enter amount KES:");
-  const phone = prompt("Enter M-Pesa Number: 07XXXXXXXX");
-  if(!amount || !phone) return;
-  
-  alert("Sending STK Push to " + phone + "...");
-  
-  try {
-    const res = await fetch('https://traderscheem-backend.onrender.com/stkpush', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: amount, phone: phone })
-    });
-    
-    const data = await res.json();
-    
-    if(data.success) {
-      alert("STK Sent! Check your phone and enter M-PESA PIN: 0000");
-    } else {
-      alert("Error: " + data.message);
-    }
-    
-  } catch (err) {
-    alert("Connection Error: " + err.message);
-  }
-  }
-  </script>
-  
-  
-<a href="index.html">← Logout</a>
-</body>
-  </html>
+  <p class="balance-title">Virtual Balance</p>
+  <h1 id="mainBalance">$10,000.00</h1>
+  <p id="profit">Profit: +$0.00
