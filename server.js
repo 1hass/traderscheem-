@@ -6,6 +6,15 @@ const axios = require('axios');
 const cors = require('cors');
 const app = express();
 
+const { Pool } = require('pg');
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false
+  }
+});
+
 app.use(express.json());
 app.use(cors()); // This fixes CORS errors from your frontend
 
