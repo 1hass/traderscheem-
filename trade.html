@@ -336,14 +336,15 @@ async function doDeposit() {
         headers: { 'Content-Type': 'application/json' }, 
         body: JSON.stringify({ amount: amountKES, phone: phone })
     }); 
-    const data = await res.json(); 
-    if(data.ResponseCode === "0") { 
-        alert("STK Sent! Check your phone");
-        addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');
-        setTimeout(loadRealBalance, 10000); 
-    } else { 
-        alert("Error: " + data.ResponseDescription); 
-    } 
+    const data = await res.json();
+
+if (data.success && data.data && data.data.ResponseCode === "0") {
+    alert("STK Sent! Check your phone");
+    addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');
+    setTimeout(loadRealBalance, 10000);
+} else {
+    alert("Error: " + (data.message || data.data?.ResponseDescription || "Unknown error"));
+    }
 }
 
 async function loadRealBalance() { 
