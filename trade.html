@@ -12,50 +12,92 @@ body { background: #0a0a0a; color: white; font-family: Arial; padding: 20px; }
 .sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 5px; font-weight: bold; font-size: 18px; }
 a { color: #007bff; display: block; text-align: center; margin-top: 20px; }
 h3 { text-align: center; margin-top: 20px; }
-
-/* NEW MODAL STYLES */
-.modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:9999; border-top:1px solid #333;}
-.pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
-.pay-option input { width:100%; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px; }
-.btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; }
 </style>
 </head>
 <body>
-
-<!-- TOP BAR -->
+  <!-- TOP BAR -->
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
-<div style="display:flex; align-items:center; gap:10px;">
-<button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
-<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
-</div>
-
-<style> .account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;} .account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;} .account-badge.real {background:#00c853;} .account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:170px; z-index:999; border:1px solid #333;} .account-dropdown.active {display:block;} .account-option {padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px;} .account-option:hover {background:#333;} .dot {width:8px; height:8px; border-radius:50%;} .dot.real {background:#00c853;} .dot.demo {background:#ff4444;} </style>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
+    <button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
+  </div>
+  <style>
+.account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
+.account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.account-badge.real {background:#00c853;}
+.account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:170px; z-index:999; border:1px solid #333;}
+.account-dropdown.active {display:block;}
+.account-option {padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px;}
+.account-option:hover {background:#333;}
+.dot {width:8px; height:8px; border-radius:50%;}
+.dot.real {background:#00c853;}
+.dot.demo {background:#ff4444;}
+</style>
 
 <div class="account-toggle" onclick="toggleDropdown()">
-<span id="badge" class="account-badge">D</span>
-<span id="topBalance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
-<span>▼</span>
-<div id="dropdown" class="account-dropdown">
-<div id="optionDemo" class="account-option" onclick="switchAccount('demo')">
-<span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
-</div>
-<div id="optionReal" class="account-option" onclick="switchAccount('real')">
-<span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
-</div>
-</div>
-</div>
-
-<div style="display:flex; align-items:center; gap:10px;">
-<span style="font-size:20px;">🔊</span>
-<button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="openDeposit()">Deposit</button>
-<span style="font-size:20px;">🔔</span>
-</div>
+  <span id="badge" class="account-badge">D</span>
+  <span id="balance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
+  <span>▼</span>
+  
+  <div id="dropdown" class="account-dropdown">
+    <div id="optionDemo" class="account-option" onclick="switchAccount('demo')">
+      <span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
+    </div>
+    <div id="optionReal" class="account-option" onclick="switchAccount('real')">
+      <span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
+    </div>
+  </div>
 </div>
 
+<script>
+let currentAccount = 'demo';
+let demoBal = 10000.00;
+let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
+
+function toggleDropdown() {
+  document.getElementById('dropdown').classList.toggle('active');
+}
+
+function switchAccount(type) {
+  currentAccount = type;
+  document.getElementById('dropdown').classList.remove('active');
+  
+  if(type === 'demo') {
+    document.getElementById('badge').innerText = 'D';
+    document.getElementById('badge').className = 'account-badge';
+    document.getElementById('balance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('balance').style.color = '#ff4444';
+    document.getElementById('demoActive').innerText = 'Active';
+    document.getElementById('realActive').innerText = '';
+    document.querySelector('.balance-title').innerText = 'Virtual Balance';
+  } else {
+    document.getElementById('badge').innerText = 'R';
+    document.getElementById('badge').className = 'account-badge real';
+    document.getElementById('balance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
+    document.getElementById('balance').style.color = '#00c853';
+    document.getElementById('realActive').innerText = 'Active';
+    document.getElementById('demoActive').innerText = '';
+    document.querySelector('.balance-title').innerText = 'Real Balance';
+  }
+}
+
+window.onclick = function(e) {
+  if(!e.target.closest('.account-toggle')) {
+    document.getElementById('dropdown').classList.remove('active');
+  }
+}
+</script>
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:20px;">🔊</span>
+    <button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="deposit()">Deposit</button>
+    <span style="font-size:20px;">🔔</span>
+  </div>
+</div>
 <h2>Welcome! Binary Trading Demo</h2>
+
 <div class="balance">
-<p class="balance-title">Virtual Balance</p>
-<h1 id="balanceDisplay">$10,000.00</h1>
+<p>Virtual Balance</p>
+<h1 id="balance">$10,000.00</h1>
 <p id="profit">Profit: +$0.00</p>
 </div>
 
@@ -64,11 +106,21 @@ h3 { text-align: center; margin-top: 20px; }
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script type="text/javascript">
 new TradingView.widget({
-"width": "100%", "height": 400, "symbol": "FX:EURUSD", "interval": "5",
-"timezone": "Etc/UTC", "theme": "dark", "style": "1", "locale": "en",
-"toolbar_bg": "#1a1a1a", "enable_publishing": false, "allow_symbol_change": true,
+"width": "100%",
+"height": 400,
+"symbol": "FX:EURUSD",
+"interval": "5",
+"timezone": "Etc/UTC",
+"theme": "dark",
+"style": "1",
+"locale": "en",
+"toolbar_bg": "#1a1a1a",
+"enable_publishing": false,
+"allow_symbol_change": true,
 "container_id": "tradingview_chart"
 });
+</script>
+
 </script>
 
 <h3>Trade History</h3>
@@ -80,67 +132,15 @@ new TradingView.widget({
 <button class="buy" onclick="trade('buy')">BUY</button>
 <button class="sell" onclick="trade('sell')">SELL</button>
 </div>
-
-<!-- DEPOSIT MODAL LIKE YOUR SCREENSHOT -->
-<div id="depositModal" class="modal">
-<div style="display:flex; justify-content:space-between;"><h3>Deposit Funds</h3><span onclick="closeModal('depositModal')">X</span></div>
-<p style="color:#aaa;">Choose your payment method</p>
-<div class="pay-option" onclick="showMpesaForm()">
-<span style="font-size:24px; margin-right:10px;">📱</span>
-<div><b>M-Pesa</b><br><small style="color:#aaa;">Instant mobile money</small></div>
-</div>
-<div class="pay-option" style="opacity:0.5;">
-<span style="font-size:24px; margin-right:10px;">₮</span>
-<div><b>USDT (TRC20)</b><br><small style="color:#aaa;">Cryptocurrency · coming soon</small></div>
-</div>
-</div>
-
-<!-- M-PESA FORM -->
-<div id="mpesaForm" class="modal">
-<div style="display:flex; justify-content:space-between;"><h3>M-Pesa Deposit</h3><span onclick="closeModal('mpesaForm')">X</span></div>
-<input id="depPhone" placeholder="2547XXXXXXXX" class="pay-option">
-<input id="depAmount" type="number" placeholder="Amount KES" class="pay-option">
-<button onclick="doDeposit()" class="btn-green">Deposit Now</button>
-</div>
-
-<script>
-let currentAccount = 'demo';
-let demoBal = 10000.00;
-let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
-
-function toggleDropdown() { document.getElementById('dropdown').classList.toggle('active'); }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openDeposit() { document.getElementById('depositModal').style.display = 'block'; }
-function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
-
-function switchAccount(type) {
-currentAccount = type;
-document.getElementById('dropdown').classList.remove('active');
-if(type === 'demo') {
-document.getElementById('badge').innerText = 'D';
-document.getElementById('badge').className = 'account-badge';
-document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-document.getElementById('topBalance').style.color = '#ff4444';
-document.getElementById('demoActive').innerText = 'Active';
-document.getElementById('realActive').innerText = '';
-document.querySelector('.balance-title').innerText = 'Virtual Balance';
-document.getElementById('balanceDisplay').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-} else {
-document.getElementById('badge').innerText = 'R';
-document.getElementById('badge').className = 'account-badge real';
-document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-document.getElementById('topBalance').style.color = '#00c853';
-document.getElementById('realActive').innerText = 'Active';
-document.getElementById('demoActive').innerText = '';
-document.querySelector('.balance-title').innerText = 'Real Balance';
-document.getElementById('balanceDisplay').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2});
-}
-}
-
-let profit = 0.00; let tradeCount = 1;
-function trade(type) {
-let targetBal = currentAccount === 'demo' ? demoBal : realBal;
-let change = (Math.random() * 200 - 50).toFixed(2);
-profit = type == 'buy' ? parseFloat(change) : parseFloat(change) * -1;
-targetBal = targetBal + profit;
-if(currentAccount === 'demo') demoBal = targetBal;
+<!DOCTYPE html>
+<html>
+<head>
+<title>HassanFX - Trading</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 20px; }
+.balance { background: #1a1a1a; padding: 20px; border-radius: 10px; text-align: center; margin-top:20px; }
+.balance h1 { color: #00ff88; font-size: 40px; margin: 10px; }
+.buttons { display: flex; gap: 10px; margin-top: 20px; }
+.buy { background: #00ff88; color: black; flex: 1; padding: 15px; border: none; border-radius: 5px; font-weight: bold; font-size: 18px; }
+.sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 5px; font-weight: bold;
