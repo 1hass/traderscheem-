@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
+/* SIDEBAR MENU */
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
 .sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
 .sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
@@ -25,6 +26,18 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .dot {width:8px; height:8px; border-radius:50%;}
 .dot.real {background:#00c853;}
 .dot.demo {background:#ff4444;}
+
+/* NOTIFICATIONS - NEW */
+.notif-btn {position:relative; cursor:pointer;}
+.notif-badge {position:absolute; top:-2px; right:-2px; background:#ff4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
+.notif-dropdown {display:none; position:absolute; top:45px; right:0; background:#1a1a1a; border-radius:12px; padding:10px 0; width:320px; z-index:99999; border:1px solid #333; box-shadow:0 4px 20px rgba(0,0,0,0.5);}
+.notif-dropdown.active {display:block;}
+.notif-header {padding:10px 15px; display:flex; justify-content:space-between; border-bottom:1px solid #333; font-weight:bold;}
+.notif-item {padding:12px 15px; display:flex; gap:10px; border-bottom:1px solid #222; cursor:pointer;}
+.notif-item:hover {background:#222;}
+.notif-item.unread {background:#111;}
+.notif-icon {width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px;}
+
 .modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:99999; border-top:1px solid #333;}
 .pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
 .btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; }
@@ -81,7 +94,23 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 <div style="display:flex; align-items:center; gap:10px;">
 <span style="font-size:20px;">🔊</span>
 <button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="openDeposit()">Deposit</button>
+<!-- NOTIFICATIONS BELL -->
+<div class="notif-btn" onclick="toggleNotif()">
 <span style="font-size:20px;">🔔</span>
+<span class="notif-badge" id="notifCount">1</span>
+<div id="notifDropdown" class="notif-dropdown">
+<div class="notif-header">
+Notifications <span style="color:#888; font-size:12px;">1 recent</span>
+</div>
+<div id="notifList">
+<div class="notif-item unread">
+<div class="notif-icon" style="background:#ffaa00;">👋</div>
+<div><b>Welcome to HassanFX!</b><br><small style="color:#aaa;">Start trading with demo or real money</small></div>
+</div>
+</div>
+<div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs()">Close</div>
+</div>
+</div>
 </div>
 </div>
 
@@ -237,6 +266,13 @@ let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
 history.push({type: type.toUpperCase(), stake: stake, pnl: profit, time: time});
 localStorage.setItem('tradeHistory', JSON.stringify(history));
 
+// ADD NOTIFICATION FOR TRADE RESULT
+if(profit >= 0) {
+addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
+} else {
+addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
+}
+
 tradeCount++;
 }
 
@@ -251,7 +287,11 @@ method: 'POST', headers: { 'Content-Type': 'application/json' },
 body: JSON.stringify({ amount: amount, phone: phone }) 
 }); 
 const data = await res.json(); 
-if(data.ResponseCode === "0") { alert("STK Sent! Check your phone"); setTimeout(loadRealBalance, 10000); } 
+if(data.ResponseCode === "0") { 
+alert("STK Sent! Check your phone"); 
+addNotification('💰', 'Deposit Sent', `KES ${amount} - Waiting for payment`, '#00aaff');
+setTimeout(loadRealBalance, 10000); 
+} 
 else { alert("Error: " + data.ResponseDescription); } 
 }
 
@@ -263,9 +303,35 @@ const data = await res.json();
 realBal = data.balance || 0; 
 localStorage.setItem('realBalance', realBal); 
 if(currentAccount === 'real') switchAccount('real'); 
+if(realBal > 0) { addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); }
 }
 
-window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
+// NOTIFICATION FUNCTIONS
+function toggleNotif() {
+document.getElementById('notifDropdown').classList.toggle('active');
+}
+function clearNotifs() {
+document.getElementById('notifCount').style.display = 'none';
+document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
+document.getElementById('notifDropdown').classList.remove('active');
+}
+function addNotification(icon, title, text, color) {
+let list = document.getElementById('notifList');
+let count = document.getElementById('notifCount');
+let current = parseInt(count.innerText) || 0;
+count.innerText = current + 1;
+count.style.display = 'flex';
+let newNotif = `<div class="notif-item unread">
+<div class="notif-icon" style="background:${color};">${icon}</div>
+<div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
+</div>`;
+list.innerHTML = newNotif + list.innerHTML;
+}
+
+window.onclick = function(e) { 
+if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } 
+if(!e.target.closest('.notif-btn')) { document.getElementById('notifDropdown').classList.remove('active'); } 
+}
 </script>
 </body>
   </html>
