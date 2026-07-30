@@ -284,12 +284,12 @@ alert("Sending STK Push to " + phone + "...");
 closeModal('mpesaForm'); 
 const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
 method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-body: JSON.stringify({ amount: amount, phone: phone }) 
+alert(`Sending STK Push for $${amountUSD} to ${phone}...`);
 }); 
 const data = await res.json(); 
 if(data.ResponseCode === "0") { 
 alert("STK Sent! Check your phone"); 
-addNotification('💰', 'Deposit Sent', `KES ${amount} - Waiting for payment`, '#00aaff');
+addNotification('💰', 'Deposit Sent', `$${amount} - Waiting for payment`, '#00aaff');
 setTimeout(loadRealBalance, 10000); 
 } 
 else { alert("Error: " + data.ResponseDescription); } 
