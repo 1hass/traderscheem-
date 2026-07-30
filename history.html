@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Trade History - HassanFX</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { background: #0a0a0a; color: white; font-family: Arial; padding: 20px; }
+.box { background: #1a1a1a; padding: 20px; border-radius: 12px; }
+.trade { display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #333; }
+.back { color: #00aaff; text-decoration: none; }
+</style>
+</head>
+<body>
+<a href="trade.html" class="back">← Back to Trade</a>
+<div class="box">
+<h2>📜 Trade History</h2>
+<div id="historyList">
+<p style="color:#888;">No trades yet</p>
+</div>
+</div>
+
+<script>
+// Load history from localStorage
+let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+let div = document.getElementById('historyList');
+if(history.length > 0) {
+div.innerHTML = '';
+history.reverse().forEach(trade => {
+let color = trade.pnl >= 0 ? '#00ff88' : '#ff4444';
+div.innerHTML += `<div class="trade"><div><b>${trade.type}</b> $${trade.stake}<br><small>${trade.time}</small></div><div style="color:${color};">$${trade.pnl.toFixed(2)}</div></div>`;
+});
+}
+</script>
+</body>
+</html>
