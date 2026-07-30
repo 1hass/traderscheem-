@@ -21,16 +21,16 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
 .btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; }
 .trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:15px; }
-.stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; }
+.stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; gap:10px; }
 .stake-box button { background:#333; border:none; color:white; width:40px; height:40px; font-size:20px; border-radius:8px; }
-.stake-amount { flex:1; text-align:center; font-size:24px; font-weight:bold; color:#00ff88; }
+.stake-input { flex:1; text-align:center; font-size:24px; font-weight:bold; color:#00ff88; background:#000; border:1px solid #333; border-radius:8px; padding:10px; }
 .stake-buttons { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin:10px 0; }
 .stake-btn { background:#1a1a1a; border:1px solid #333; color:white; padding:10px; border-radius:8px; cursor:pointer; }
 .stake-btn.active { background:#00aaff; border-color:#00aaff; }
 .risk-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin:10px 0; }
 .risk-box { background:#1a1a1a; padding:10px; border-radius:8px; text-align:center; }
-.risk-box small { color:#aaa; font-size:11px; }
-.risk-box b { display:block; margin-top:5px; }
+.risk-box small { font-size:11px; }
+.risk-input { width:100%; background:#000; border:1px solid #333; color:white; text-align:center; font-size:18px; font-weight:bold; padding:8px 0; border-radius:6px; margin-top:5px; }
 .buy { background: #00ff88; color: black; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
 .sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
 .trade-buttons { display:flex; gap:10px; margin-top:15px; }
@@ -83,9 +83,9 @@ new TradingView.widget({
 <div class="trade-panel">
 <label style="color:#00aaff; font-size:12px;">STAKE</label>
 <div class="stake-box">
-<button onclick="changeStake(-1)">-</button>
-<div class="stake-amount" id="stakeAmount">$10</div>
-<button onclick="changeStake(1)">+</button>
+<button onclick="changeStake(-5)">-</button>
+<input type="number" id="stakeAmount" class="stake-input" value="10" onchange="updateStakeButtons()">
+<button onclick="changeStake(5)">+</button>
 </div>
 <div class="stake-buttons">
 <button class="stake-btn" onclick="setStake(1)">$1</button>
@@ -95,11 +95,22 @@ new TradingView.widget({
 <button class="stake-btn" onclick="setStake(50)">$50</button>
 <button class="stake-btn" onclick="setStake(100)">$100</button>
 </div>
+
 <div class="risk-grid">
-<div class="risk-box"><small style="color:#00ff88;">TARGET PROFIT</small><b id="targetProfit">200</b></div>
-<div class="risk-box"><small style="color:#ff0044;">STOP LOSS</small><b id="stopLoss">999</b></div>
-<div class="risk-box"><small style="color:#ffaa00;">MULTIPLIER</small><b id="multiplier">x2</b></div>
+<div class="risk-box">
+<small style="color:#00ff88;">TARGET PROFIT</small>
+<input type="number" id="targetProfit" class="risk-input" value="200">
 </div>
+<div class="risk-box">
+<small style="color:#ff0044;">STOP LOSS</small>
+<input type="number" id="stopLoss" class="risk-input" value="999">
+</div>
+<div class="risk-box">
+<small style="color:#ffaa00;">MULTIPLIER</small>
+<input type="number" id="multiplier" class="risk-input" value="2">
+</div>
+</div>
+
 <div class="trade-buttons">
 <button class="buy" onclick="trade('buy')">BUY</button>
 <button class="sell" onclick="trade('sell')">SELL</button>
@@ -129,17 +140,102 @@ let demoBal = 10000.00;
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; let tradeCount = 1;
+
 function toggleDropdown() { document.getElementById('dropdown').classList.toggle('active'); }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function openDeposit() { document.getElementById('depositModal').style.display = 'block'; }
 function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
-function setStake(val) { stake = val; document.getElementById('stakeAmount').innerText = '$' + val; document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); event.target.classList.add('active'); updateRisk(); }
-function changeStake(dir) { stake = Math.max(1, stake + dir*5); document.getElementById('stakeAmount').innerText = '$' + stake; updateRisk(); }
-function updateRisk() { document.getElementById('targetProfit').innerText = stake * 20; document.getElementById('stopLoss').innerText = stake * 99; document.getElementById('multiplier').innerText = 'x' + (stake >= 50 ? 5 : 2); }
-function switchAccount(type) { currentAccount = type; document.getElementById('dropdown').classList.remove('active'); if(type === 'demo') { document.getElementById('badge').innerText = 'D'; document.getElementById('badge').className = 'account-badge'; document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#ff4444'; document.getElementById('demoActive').innerText = 'Active'; document.getElementById('realActive').innerText = ''; document.querySelector('.balance-title').innerText = 'Virtual Balance'; document.getElementById('balanceDisplay').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); } else { document.getElementById('badge').innerText = 'R'; document.getElementById('badge').className = 'account-badge real'; document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#00c853'; document.getElementById('realActive').innerText = 'Active'; document.getElementById('demoActive').innerText = ''; document.querySelector('.balance-title').innerText = 'Real Balance'; document.getElementById('balanceDisplay').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); } }
-function trade(type) { let targetBal = currentAccount === 'demo' ? demoBal : realBal; if(targetBal < stake) return alert("Not enough balance!"); let win = Math.random() > 0.5; let pnl = win ? stake * 0.9 : -stake; profit = pnl; targetBal = targetBal + profit; if(currentAccount === 'demo') demoBal = targetBal; else { realBal = targetBal; localStorage.setItem('realBalance', realBal); } document.getElementById("balanceDisplay").innerHTML = "$" + targetBal.toFixed(2); document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2); document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2); let historyDiv = document.getElementById("history"); if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; } let color = profit >= 0 ? "#00ff88" : "#ff0044"; let time = new Date().toLocaleTimeString(); let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`; historyDiv.innerHTML = tradeText + historyDiv.innerHTML; tradeCount++; }
-async function doDeposit() { const phone = document.getElementById('depPhone').value; const amount = document.getElementById('depAmount').value; if(!phone || !amount) return alert("Enter phone and amount"); alert("Sending STK Push to " + phone + "..."); closeModal('mpesaForm'); const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ amount: amount, phone: phone }) }); const data = await res.json(); if(data.ResponseCode === "0") { alert("STK Sent! Check your phone"); setTimeout(loadRealBalance, 10000); } else { alert("Error: " + data.ResponseDescription); } }
-async function loadRealBalance() { const phone = prompt("Enter your phone to check balance:"); if(!phone) return; const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); const data = await res.json(); realBal = data.balance || 0; localStorage.setItem('realBalance', realBal); if(currentAccount === 'real') switchAccount('real'); }
+
+function setStake(val) { 
+stake = val; 
+document.getElementById('stakeAmount').value = val; 
+document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); 
+event.target.classList.add('active'); 
+}
+function changeStake(dir) { 
+stake = Math.max(1, stake + dir); 
+document.getElementById('stakeAmount').value = stake; 
+updateStakeButtons();
+}
+function updateStakeButtons() {
+stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+document.querySelectorAll('.stake-btn').forEach(btn => {
+btn.classList.remove('active');
+if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');
+});
+}
+
+function switchAccount(type) { 
+currentAccount = type; 
+document.getElementById('dropdown').classList.remove('active'); 
+if(type === 'demo') { 
+document.getElementById('badge').innerText = 'D'; document.getElementById('badge').className = 'account-badge';
+document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#ff4444';
+document.getElementById('demoActive').innerText = 'Active'; document.getElementById('realActive').innerText = '';
+document.querySelector('.balance-title').innerText = 'Virtual Balance'; document.getElementById('balanceDisplay').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+} else { 
+document.getElementById('badge').innerText = 'R'; document.getElementById('badge').className = 'account-badge real';
+document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#00c853';
+document.getElementById('realActive').innerText = 'Active'; document.getElementById('demoActive').innerText = '';
+document.querySelector('.balance-title').innerText = 'Real Balance'; document.getElementById('balanceDisplay').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+} }
+
+function trade(type) { 
+stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+let targetBal = currentAccount === 'demo' ? demoBal : realBal; 
+if(targetBal < stake) return alert("Not enough balance!");
+
+let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
+let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
+
+let win = Math.random() > 0.5;
+let pnl = win ? stake * multiplier : -stake;
+if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
+if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
+
+profit = pnl;
+targetBal = targetBal + profit;
+if(currentAccount === 'demo') demoBal = targetBal; else { realBal = targetBal; localStorage.setItem('realBalance', realBal); }
+
+document.getElementById("balanceDisplay").innerHTML = "$" + targetBal.toFixed(2);
+document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
+document.getElementById("profit").innerHTML = "Profit: $" + profit.toFixed(2);
+
+let historyDiv = document.getElementById("history");
+if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; }
+let color = profit >= 0 ? "#00ff88" : "#ff0044";
+let time = new Date().toLocaleTimeString();
+let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
+historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+tradeCount++;
+}
+
+async function doDeposit() { 
+const phone = document.getElementById('depPhone').value; 
+const amount = document.getElementById('depAmount').value; 
+if(!phone || !amount) return alert("Enter phone and amount"); 
+alert("Sending STK Push to " + phone + "..."); 
+closeModal('mpesaForm'); 
+const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
+method: 'POST', headers: { 'Content-Type': 'application/json' }, 
+body: JSON.stringify({ amount: amount, phone: phone }) 
+}); 
+const data = await res.json(); 
+if(data.ResponseCode === "0") { alert("STK Sent! Check your phone"); setTimeout(loadRealBalance, 10000); } 
+else { alert("Error: " + data.ResponseDescription); } 
+}
+
+async function loadRealBalance() { 
+const phone = prompt("Enter your phone to check balance:"); 
+if(!phone) return; 
+const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
+const data = await res.json(); 
+realBal = data.balance || 0; 
+localStorage.setItem('realBalance', realBal); 
+if(currentAccount === 'real') switchAccount('real'); 
+}
+
 window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
 </script>
 <a href="index.html">← Logout</a>
