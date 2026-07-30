@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HassanFX Admin Login</title>
+
+<style>
+body{
+margin:0;
+background:#0d1117;
+font-family:Arial,sans-serif;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+color:white;
+}
+
+.box{
+background:#161b22;
+padding:30px;
+border-radius:12px;
+width:320px;
+box-shadow:0 0 20px rgba(0,0,0,.5);
+}
+
+h2{
+text-align:center;
+color:#00c853;
+}
+
+input{
+width:100%;
+padding:12px;
+margin:10px 0;
+border:none;
+border-radius:8px;
+background:#222;
+color:white;
+box-sizing:border-box;
+}
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+background:#00c853;
+color:white;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+button:hover{
+background:#00a844;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>HassanFX Admin</h2>
+
+<input type="text" id="username" placeholder="Admin Username">
+
+<input type="password" id="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<script>
+function login(){
+
+const username=document.getElementById("username").value;
+const password=document.getElementById("password").value;
+
+if(username==="admin" && password==="admin123"){
+window.location.href="dashboard.html";
+}else{
+alert("Wrong username or password");
+}
+
+}
+</script>
+
+</body>
+  </html>
