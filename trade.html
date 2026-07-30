@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
-/* SIDEBAR MENU */
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
 .sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
 .sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
@@ -26,7 +25,6 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .dot {width:8px; height:8px; border-radius:50%;}
 .dot.real {background:#00c853;}
 .dot.demo {background:#ff4444;}
-/* NOTIFICATIONS */
 .notif-btn {position:relative; cursor:pointer;}
 .notif-badge {position:absolute; top:-2px; right:-2px; background:#ff4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .notif-dropdown {display:none; position:absolute; top:45px; right:0; background:#1a1a1a; border-radius:12px; padding:10px 0; width:320px; z-index:99999; border:1px solid #333; box-shadow:0 4px 20px rgba(0,0,0,0.5);}
@@ -55,6 +53,14 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .trade-buttons { display:flex; gap:10px; margin-top:15px; }
 h2 { display:none; }
 h3 { margin-top:10px; margin-bottom:5px; }
+.mode-toggle { display:flex; gap:0; margin:10px 0; border-radius:10px; overflow:hidden; }
+.mode-toggle button { flex:1; padding:12px; background:#1a1a1a; border:none; color:#aaa; font-weight:bold; font-size:15px; cursor:pointer; }
+.mode-toggle button.active { background:#00aaff; color:white; }
+.digits-row { display:flex; justify-content:space-between; gap:5px; margin:10px 0; }
+.digit-btn { flex:1; background:#1a1a1a; border:1px solid #333; border-radius:50%; width:35px; height:35px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; }
+.digit-btn b { font-size:16px; color:white; }
+.digit-btn small { font-size:9px; color:#888; }
+.digit-btn.active { border-color:#00ff88; background:#002211; }
 </style>
 </head>
 <body>
@@ -78,7 +84,7 @@ h3 { margin-top:10px; margin-bottom:5px; }
 
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
 <div style="display:flex; align-items:center; gap:10px;">
-<button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
+<button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">B</button>
 <button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;" onclick="openNav()">☰</button>
 </div>
 
@@ -96,7 +102,6 @@ h3 { margin-top:10px; margin-bottom:5px; }
 <div style="display:flex; align-items:center; gap:10px;">
 <span style="font-size:20px;">🔊</span>
 <button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="openDeposit()">Deposit</button>
-
 <div class="notif-btn" onclick="toggleNotif()">
 <span style="font-size:20px;">🔔</span>
 <span class="notif-badge" id="notifCount">1</span>
@@ -105,7 +110,7 @@ h3 { margin-top:10px; margin-bottom:5px; }
 <div id="notifList">
 <div class="notif-item unread">
 <div class="notif-icon" style="background:#ffaa00;">👋</div>
-<div><b>Welcome to HassanFX!</b><br><small style="color:#aaa;">Start trading with demo or real money</small></div>
+<div><b>Welcome to Binary!</b><br><small style="color:#aaa;">Start trading with demo or real money</small></div>
 </div>
 </div>
 <div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs()">Close</div>
@@ -133,6 +138,26 @@ new TradingView.widget({
 "container_id": "tradingview_chart"
 });
 </script>
+
+<!-- DIGITS 0-9 ROW -->
+<div class="digits-row">
+  <div class="digit-btn" onclick="selectDigit(0, this)"><b>0</b><small>7.8%</small></div>
+  <div class="digit-btn" onclick="selectDigit(1, this)"><b>1</b><small>11.0%</small></div>
+  <div class="digit-btn" onclick="selectDigit(2, this)"><b>2</b><small>9.6%</small></div>
+  <div class="digit-btn" onclick="selectDigit(3, this)"><b>3</b><small>10.0%</small></div>
+  <div class="digit-btn" onclick="selectDigit(4, this)"><b>4</b><small>10.4%</small></div>
+  <div class="digit-btn" onclick="selectDigit(5, this)"><b>5</b><small>9.4%</small></div>
+  <div class="digit-btn" onclick="selectDigit(6, this)"><b>6</b><small>9.4%</small></div>
+  <div class="digit-btn" onclick="selectDigit(7, this)"><b>7</b><small>10.2%</small></div>
+  <div class="digit-btn active" onclick="selectDigit(8, this)"><b>8</b><small>11.2%</small></div>
+  <div class="digit-btn" onclick="selectDigit(9, this)"><b>9</b><small>11.0%</small></div>
+</div>
+
+<!-- AUTO / MANUAL TOGGLE -->
+<div class="mode-toggle">
+  <button id="autoBtn" class="active" onclick="setMode('auto')">AUTO</button>
+  <button id="manualBtn" onclick="setMode('manual')">MANUAL</button>
+</div>
 
 <div class="trade-panel">
 <label style="color:#00aaff; font-size:12px;">STAKE</label>
@@ -186,213 +211,43 @@ let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; 
 let tradeCount = 1;
-const KES_TO_USD = 0.0077; // 1 USD = 130 KES
+let selectedDigit = 8;
+let tradeMode = 'auto';
+let autoInterval = null;
+const KES_TO_USD = 0.0077;
 
 window.onload = function() { 
     switchAccount(currentAccount); 
     loadHistory();
+    setMode('auto');
 }
-
-function openNav() {
-    document.getElementById("mySidebar").style.width = "280px";
-    document.getElementById("overlay").style.display = "block";
-}
-function closeNav() {
-    document.getElementById("mySidebar").style.width = "0";
-    document.getElementById("overlay").style.display = "none";
-}
-
-function toggleDropdown() { 
-    document.getElementById('dropdown').classList.toggle('active'); 
-}
-function closeModal(id) { 
-    document.getElementById(id).style.display = 'none'; 
-}
-function openDeposit() { 
-    closeNav(); 
-    document.getElementById('depositModal').style.display = 'block'; 
-}
-function showMpesaForm() { 
-    closeModal('depositModal'); 
-    document.getElementById('mpesaForm').style.display = 'block'; 
-}
-
-function resetDemo() {
-    demoBal = 100000.00;
-    localStorage.setItem('demoBalance', demoBal);
-    if(currentAccount === 'demo') switchAccount('demo');
-    alert("Demo Balance Reset to $100,000.00");
-    toggleDropdown();
-}
-
-function setStake(val) { 
-    stake = val; 
-    document.getElementById('stakeAmount').value = val; 
-    document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); 
-    event.target.classList.add('active'); 
-}
-function changeStake(dir) { 
-    stake = Math.max(1, stake + dir); 
-    document.getElementById('stakeAmount').value = stake; 
-    updateStakeButtons();
-}
-function updateStakeButtons() {
-    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-    document.querySelectorAll('.stake-btn').forEach(btn => {
-        btn.classList.remove('active');
-        if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');
-    });
-}
-
-function switchAccount(type) { 
-    currentAccount = type; 
-    document.getElementById('dropdown').classList.remove('active'); 
-    if(type === 'demo') { 
-        document.getElementById('badge').innerText = 'D'; 
-        document.getElementById('badge').className = 'account-badge';
-        document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
-        document.getElementById('topBalance').style.color = '#ff4444';
-        document.getElementById('demoActive').innerText = 'Active'; 
-        document.getElementById('realActive').innerText = '';
-    } else { 
-        document.getElementById('badge').innerText = 'R'; 
-        document.getElementById('badge').className = 'account-badge real';
-        document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
-        document.getElementById('topBalance').style.color = '#00c853';
-        document.getElementById('realActive').innerText = 'Active'; 
-        document.getElementById('demoActive').innerText = '';
-    } 
-}
-
-function trade(type) { 
-    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-    let targetBal = currentAccount === 'demo' ? demoBal : realBal; 
-    if(targetBal < stake) return alert("Not enough balance!");
-
-    let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
-    let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
-    let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
-
-    let win = Math.random() > 0.5;
-    let pnl = win ? stake * multiplier : -stake;
-    if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
-    if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
-
-    profit = pnl;
-    targetBal = targetBal + profit;
-    if(currentAccount === 'demo') { 
-        demoBal = targetBal; 
-        localStorage.setItem('demoBalance', demoBal); 
-    } else { 
-        realBal = targetBal; 
-        localStorage.setItem('realBalance', realBal); 
-    }
-
-    document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
-
-    let historyDiv = document.getElementById("history");
-    if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; }
-    let color = profit >= 0 ? "#00ff88" : "#ff0044";
-    let time = new Date().toLocaleTimeString();
-    let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
-    historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-
-    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
-    history.unshift({type: type.toUpperCase(), stake: stake, pnl: profit, time: new Date().toLocaleString()});
-    localStorage.setItem('tradeHistory', JSON.stringify(history));
-
-    if(profit >= 0) {
-        addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
-    } else {
-        addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
-    }
-
-    tradeCount++;
-}
-
-function loadHistory() {
-    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
-    let historyDiv = document.getElementById("history");
-    if(history.length > 0) {
-        historyDiv.innerHTML = "";
-        history.slice(0,10).forEach((t, i) => {
-            let color = t.pnl >= 0 ? "#00ff88" : "#ff0044";
-            historyDiv.innerHTML += `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${i+1}</b> - ${t.type} $${t.stake} - ${t.time} <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span> </p>`;
-        });
-    }
-}
-
-async function doDeposit() { 
-    const phone = document.getElementById('depPhone').value; 
-    const amountUSD = parseFloat(document.getElementById('depAmount').value); 
-    if(!phone || !amountUSD) return alert("Enter phone and amount"); 
-    
-    const amountKES = Math.round(amountUSD / KES_TO_USD);
-    alert(`Sending STK Push for $${amountUSD} to ${phone}...`); 
-    closeModal('mpesaForm'); 
-    
-    const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
-        method: 'POST', 
-        headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ amount: amountKES, phone: phone })
-    }); 
-    const data = await res.json(); 
-    if(data.ResponseCode === "0") { 
-        alert("STK Sent! Check your phone");
-        addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');
-        setTimeout(loadRealBalance, 10000); 
-    } else { 
-        alert("Error: " + data.ResponseDescription); 
-    } 
-}
-
-async function loadRealBalance() { 
-    const phone = prompt("Enter your phone to check balance:"); 
-    if(!phone) return; 
-    const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
-    const data = await res.json(); 
-    let balanceKES = data.balance || 0; 
-    realBal = balanceKES * KES_TO_USD;
-    localStorage.setItem('realBalance', realBal); 
-    if(currentAccount === 'real') switchAccount('real'); 
-    if(realBal > 0) { 
-        addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); 
-    }
-}
-
-// NOTIFICATION FUNCTIONS
-function toggleNotif() {
-    document.getElementById('notifDropdown').classList.toggle('active');
-}
-
-function clearNotifs() {
-    document.getElementById('notifCount').style.display = 'none';
-    document.getElementById('notifCount').innerText = '0';
-    document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
-    document.getElementById('notifDropdown').classList.remove('active');
-}
-
-function addNotification(icon, title, text, color) {
-    let list = document.getElementById('notifList');
-    let count = document.getElementById('notifCount');
-    let current = parseInt(count.innerText) || 0;
-    count.innerText = current + 1;
-    count.style.display = 'flex';
-    let newNotif = `<div class="notif-item unread">
-    <div class="notif-icon" style="background:${color};">${icon}</div>
-    <div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
-    </div>`;
-    list.innerHTML = newNotif + list.innerHTML;
-}
-
-window.onclick = function(e) { 
-    if(!e.target.closest('.account-toggle')) { 
-        document.getElementById('dropdown').classList.remove('active'); 
-    } 
-    if(!e.target.closest('.notif-btn')) { 
-        document.getElementById('notifDropdown').classList.remove('active'); 
-    } 
-}
-</script>
-</body>
-    </html>
+function openNav() {document.getElementById("mySidebar").style.width = "280px";document.getElementById("overlay").style.display = "block";}
+function closeNav() {document.getElementById("mySidebar").style.width = "0";document.getElementById("overlay").style.display = "none";}
+function toggleDropdown() {document.getElementById('dropdown').classList.toggle('active');}
+function closeModal(id) {document.getElementById(id).style.display = 'none';}
+function openDeposit() {closeNav();document.getElementById('depositModal').style.display = 'block';}
+function showMpesaForm() {closeModal('depositModal');document.getElementById('mpesaForm').style.display = 'block';}
+function resetDemo() {demoBal = 100000.00;localStorage.setItem('demoBalance', demoBal);if(currentAccount === 'demo') switchAccount('demo');alert("Demo Balance Reset to $100,000.00");toggleDropdown();}
+function setStake(val) {stake = val;document.getElementById('stakeAmount').value = val;document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active'));event.target.classList.add('active');}
+function changeStake(dir) {stake = Math.max(1, stake + dir);document.getElementById('stakeAmount').value = stake;updateStakeButtons();}
+function updateStakeButtons() {stake = parseFloat(document.getElementById('stakeAmount').value) || 1;document.querySelectorAll('.stake-btn').forEach(btn => {btn.classList.remove('active');if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');});}
+function selectDigit(digit, element) {selectedDigit = digit;document.querySelectorAll('.digit-btn').forEach(btn => btn.classList.remove('active'));element.classList.add('active');addNotification('🎯', 'Digit Selected', `Target digit: ${digit}`, '#00aaff');}
+function setMode(mode) {tradeMode = mode;document.getElementById('autoBtn').classList.remove('active');document.getElementById('manualBtn').classList.remove('active');if(mode === 'auto') {document.getElementById('autoBtn').classList.add('active');startAutoTrade();addNotification('🤖', 'Auto Mode ON', `Trading digit ${selectedDigit} every 5s`, '#00c853');} else {document.getElementById('manualBtn').classList.add('active');clearInterval(autoInterval);addNotification('✋', 'Manual Mode ON', 'Click Buy/Sell to trade', '#00aaff');}}
+function startAutoTrade() {clearInterval(autoInterval);autoInterval = setInterval(() => {let lastDigit = Math.floor(Math.random() * 10);let type = (lastDigit % 2 === 0) ? 'even' : 'odd';let win = lastDigit === selectedDigit;autoTrade(type, win, lastDigit);}, 5000);}
+function trade(type) {if(tradeMode === 'auto') return;manualTrade(type);}
+function manualTrade(type) {executeTrade(type, Math.random() > 0.5);}
+function autoTrade(type, win, lastDigit) {executeTrade(type, win, lastDigit);}
+function executeTrade(type, win, lastDigit = '?') {stake = parseFloat(document.getElementById('stakeAmount').value) || 1;let targetBal = currentAccount === 'demo' ? demoBal : realBal;if(targetBal < stake) {clearInterval(autoInterval);return alert("Not enough balance! Stopping Auto.");}
+let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
+let pnl = win ? stake * multiplier : -stake;if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
+profit = pnl;targetBal = targetBal + profit;if(currentAccount === 'demo') {demoBal = targetBal;localStorage.setItem('demoBalance', demoBal);} else {realBal = targetBal;localStorage.setItem('realBalance', realBal);}
+document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
+let historyDiv = document.getElementById("history");if(historyDiv.innerHTML.includes("No trades yet")) {historyDiv.innerHTML = "";}let color = profit >= 0 ? "#00ff88" : "#ff0044";let time = new Date().toLocaleTimeString();let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} Digit:${lastDigit} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];history.unshift({type: type.toUpperCase(), stake: stake, pnl: profit, digit: lastDigit, time: new Date().toLocaleString()});localStorage.setItem('tradeHistory', JSON.stringify(history));
+if(profit >= 0) {addNotification('✅', 'Trade Won', `Digit ${lastDigit} +$${profit.toFixed(2)}`, '#00c853');} else {addNotification('❌', 'Trade Lost', `Digit ${lastDigit} -$${Math.abs(profit).toFixed(2)}`, '#ff4444');}
+tradeCount++;}
+function loadHistory() {let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];let historyDiv = document.getElementById("history");if(history.length > 0) {historyDiv.innerHTML = "";history.slice(0,10).forEach((t, i) => {let color = t.pnl >= 0 ? "#00ff88" : "#ff0044";historyDiv.innerHTML += `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${i+1}</b> - ${t.type} Digit:${t.digit} $${t.stake} - ${t.time} <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span> </p>`;});}}
+async function doDeposit() {const phone = document.getElementById('depPhone').value;const amountUSD = parseFloat(document.getElementById('depAmount').value);if(!phone || !amountUSD) return alert("Enter phone and amount");const amountKES = Math.round(amountUSD / KES_TO_USD);alert(`Sending STK Push for $${amountUSD} to ${phone}...`);closeModal('mpesaForm');const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ amount: amountKES, phone: phone })});const data = await res.json();if(data.ResponseCode === "0") {alert("STK Sent! Check your phone");addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');setTimeout(loadRealBalance, 10000);} else {alert("Error: " + data.ResponseDescription);}}
+async function loadRealBalance() {const phone = prompt("Enter your phone to check balance:");if(!phone) return;const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`);const data = await res.json();let balanceKES = data.balance || 0;realBal = balanceKES * KES_TO_USD;localStorage.setItem('realBalance', realBal);if(currentAccount === 'real') switchAccount('real');if(realBal > 0) {addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853');}}
+function toggleNotif() {document.getElementById('notifDropdown').classList.toggle('active');}
+function clearNotifs() {document.getEleme
