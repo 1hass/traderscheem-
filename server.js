@@ -97,6 +97,16 @@ app.post('/callback', (req, res) => {
   }
   res.json({ ResultCode: 0, ResultDesc: "Received" });
 });
+// TEMPORARY BALANCE API
+// Returns a demo balance until a database is added.
+app.get('/balance/:phone', (req, res) => {
+  const phone = req.params.phone;
 
+  res.json({
+    success: true,
+    phone,
+    balance: 0
+  });
+});
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
