@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HassanFX Admin Dashboard</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101820;
+color:white;
+}
+
+.header{
+background:#00c853;
+padding:15px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+.container{
+padding:15px;
+}
+
+.card{
+background:#1f2d3d;
+padding:20px;
+margin-bottom:15px;
+border-radius:10px;
+text-align:center;
+}
+
+.number{
+font-size:28px;
+font-weight:bold;
+color:#00ff88;
+}
+
+.menu{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:10px;
+margin-top:20px;
+}
+
+.menu a{
+background:#222;
+color:white;
+text-decoration:none;
+padding:15px;
+border-radius:10px;
+text-align:center;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+HassanFX Admin Dashboard
+</div>
+
+<div class="container">
+
+<div class="card">
+<h3>Total Users</h3>
+<div class="number">0</div>
+</div>
+
+<div class="card">
+<h3>Total Deposits</h3>
+<div class="number">$0.00</div>
+</div>
+
+<div class="card">
+<h3>Total Withdrawals</h3>
+<div class="number">$0.00</div>
+</div>
+
+<div class="card">
+<h3>Total Trades</h3>
+<div class="number">0</div>
+</div>
+
+<div class="menu">
+<a href="users.html">👥 Users</a>
+<a href="deposits.html">💰 Deposits</a>
+<a href="withdrawals.html">🏦 Withdrawals</a>
+<a href="trades.html">📈 Trades</a>
+<a href="settings.html">⚙️ Settings</a>
+<a href="../index.html">🚪 Logout</a>
+</div>
+
+</div>
+
+</body>
+  </html>
