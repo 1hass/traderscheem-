@@ -4,8 +4,15 @@
 <title>HassanFX - Trading</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; } /* reduced padding */
-.balance { display:none; } /* HIDDEN */
+body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
+/* SIDEBAR MENU */
+.sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#111; overflow-x:hidden; transition:0.3s; padding-top:60px; border-right:1px solid #333; }
+.sidebar a { padding:15px 25px; text-decoration:none; font-size:16px; color:#ccc; display:block; transition:0.3s; }
+.sidebar a:hover { background:#1a1a1a; color:#00aaff; }
+.sidebar .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; }
+.sidebar-header { padding:20px; border-bottom:1px solid #333; margin-bottom:10px; }
+.sidebar-header b { color:#00ff88; font-size:18px; }
+.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999998; }
 .account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
 .account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .account-badge.real {background:#00c853;}
@@ -19,7 +26,7 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:99999; border-top:1px solid #333;}
 .pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
 .btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; }
-.trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:10px; } /* reduced margin */
+.trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:10px; }
 .stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; gap:10px; }
 .stake-box button { background:#333; border:none; color:white; width:40px; height:40px; font-size:20px; border-radius:8px; }
 .stake-input { flex:1; text-align:center; font-size:24px; font-weight:bold; color:#00ff88; background:#000; border:1px solid #333; border-radius:8px; padding:10px; }
@@ -33,17 +40,33 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .buy { background: #00ff88; color: black; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
 .sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
 .trade-buttons { display:flex; gap:10px; margin-top:15px; }
-h2 { display:none; } /* HIDDEN Welcome text */
-h3 { margin-top:10px; margin-bottom:5px; } /* reduced spacing */
+h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 </style>
 </head>
 <body>
+
+<!-- SIDEBAR MENU -->
+<div id="mySidebar" class="sidebar">
+<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+<div class="sidebar-header">
+<b>HassanFX</b><br>
+<small style="color:#aaa;">Binary Trading</small>
+</div>
+<a href="trade.html">📊 Trade</a>
+<a href="#" onclick="alert('Coming Soon')">📈 Market</a>
+<a href="#" onclick="alert('Coming Soon')">📜 Trade History</a>
+<a href="#" onclick="openDeposit()">💰 Deposit</a>
+<a href="#" onclick="alert('Coming Soon')">🏦 Withdraw</a>
+<a href="#" onclick="alert('Coming Soon')">⚙️ Settings</a>
+<a href="index.html">🚪 Logout</a>
+</div>
+<div id="overlay" class="overlay" onclick="closeNav()"></div>
 
 <!-- TOP BAR -->
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
 <div style="display:flex; align-items:center; gap:10px;">
 <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
-<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;">☰</button>
+<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;" onclick="openNav()">☰</button> <!-- MENU BUTTON WORKS NOW -->
 </div>
 <div class="account-toggle" onclick="toggleDropdown()">
 <span id="badge" class="account-badge">D</span>
@@ -61,14 +84,12 @@ h3 { margin-top:10px; margin-bottom:5px; } /* reduced spacing */
 </div>
 </div>
 
-<!-- REMOVED: Welcome + Balance Box -->
-
 <h3>EUR/USD Live Chart</h3>
 <div id="tradingview_chart" style="margin:10px 0;"></div>
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script>
 new TradingView.widget({
-"width": "100%", "height": 350, "symbol": "FX:EURUSD", "interval": "1", /* reduced height */
+"width": "100%", "height": 350, "symbol": "FX:EURUSD", "interval": "1",
 "timezone": "Etc/UTC", "theme": "dark", "style": "1", "locale": "en",
 "toolbar_bg": "#1a1a1a", "enable_publishing": false, "allow_symbol_change": true,
 "container_id": "tradingview_chart"
@@ -93,18 +114,9 @@ new TradingView.widget({
 </div>
 
 <div class="risk-grid">
-<div class="risk-box">
-<small style="color:#00ff88;">TARGET PROFIT</small>
-<input type="number" id="targetProfit" class="risk-input" value="200">
-</div>
-<div class="risk-box">
-<small style="color:#ff0044;">STOP LOSS</small>
-<input type="number" id="stopLoss" class="risk-input" value="999">
-</div>
-<div class="risk-box">
-<small style="color:#ffaa00;">MULTIPLIER</small>
-<input type="number" id="multiplier" class="risk-input" value="2">
-</div>
+<div class="risk-box"><small style="color:#00ff88;">TARGET PROFIT</small><input type="number" id="targetProfit" class="risk-input" value="200"></div>
+<div class="risk-box"><small style="color:#ff0044;">STOP LOSS</small><input type="number" id="stopLoss" class="risk-input" value="999"></div>
+<div class="risk-box"><small style="color:#ffaa00;">MULTIPLIER</small><input type="number" id="multiplier" class="risk-input" value="2"></div>
 </div>
 
 <div class="trade-buttons">
@@ -137,9 +149,19 @@ let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; let tradeCount = 1;
 
+/* SIDEBAR FUNCTIONS */
+function openNav() {
+document.getElementById("mySidebar").style.width = "250px";
+document.getElementById("overlay").style.display = "block";
+}
+function closeNav() {
+document.getElementById("mySidebar").style.width = "0";
+document.getElementById("overlay").style.display = "none";
+}
+
 function toggleDropdown() { document.getElementById('dropdown').classList.toggle('active'); }
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openDeposit() { document.getElementById('depositModal').style.display = 'block'; }
+function openDeposit() { closeNav(); document.getElementById('depositModal').style.display = 'block'; }
 function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
 
 function setStake(val) { 
@@ -230,6 +252,5 @@ if(currentAccount === 'real') switchAccount('real');
 
 window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
 </script>
-<a href="index.html">← Logout</a>
 </body>
   </html>
