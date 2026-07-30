@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deposits - HassanFX Admin</title>
+
+<style>
+body{
+margin:0;
+font-family:Arial,sans-serif;
+background:#101820;
+color:white;
+}
+
+.header{
+background:#00c853;
+padding:20px;
+text-align:center;
+font-size:22px;
+font-weight:bold;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th,td{
+border:1px solid #333;
+padding:12px;
+text-align:center;
+}
+
+th{
+background:#222;
+}
+
+tr:nth-child(even){
+background:#1f2d3d;
+}
+
+button{
+padding:8px 12px;
+border:none;
+border-radius:5px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.approve{
+background:#00c853;
+color:white;
+}
+
+.reject{
+background:#ff4444;
+color:white;
+}
+
+.back{
+display:block;
+margin:20px;
+text-decoration:none;
+color:#00ff88;
+font-weight:bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+💰 Deposits Management
+</div>
+
+<a href="dashboard.html" class="back">⬅ Back to Dashboard</a>
+
+<table>
+<tr>
+<th>User</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Action</th>
+</tr>
+
+<tr>
+<td>Demo User</td>
+<td>$100</td>
+<td>Pending</td>
+<td>
+<button class="approve">Approve</button>
+<button class="reject">Reject</button>
+</td>
+</tr>
+
+</table>
+
+</body>
+  </html>
