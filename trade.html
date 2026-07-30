@@ -27,7 +27,7 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .dot.real {background:#00c853;}
 .dot.demo {background:#ff4444;}
 
-/* NOTIFICATIONS - NEW */
+/* NOTIFICATIONS */
 .notif-btn {position:relative; cursor:pointer;}
 .notif-badge {position:absolute; top:-2px; right:-2px; background:#ff4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .notif-dropdown {display:none; position:absolute; top:45px; right:0; background:#1a1a1a; border-radius:12px; padding:10px 0; width:320px; z-index:99999; border:1px solid #333; box-shadow:0 4px 20px rgba(0,0,0,0.5);}
@@ -175,163 +175,197 @@ let currentAccount = 'demo';
 let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
-let profit = 0.00; let tradeCount = 1;
+let profit = 0.00; 
+let tradeCount = 1;
 
-window.onload = function() { switchAccount(currentAccount); }
+window.onload = function() { 
+    switchAccount(currentAccount); 
+    loadHistory();
+}
 
 function openNav() {
-document.getElementById("mySidebar").style.width = "280px";
-document.getElementById("overlay").style.display = "block";
+    document.getElementById("mySidebar").style.width = "280px";
+    document.getElementById("overlay").style.display = "block";
 }
 function closeNav() {
-document.getElementById("mySidebar").style.width = "0";
-document.getElementById("overlay").style.display = "none";
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("overlay").style.display = "none";
 }
 
-function toggleDropdown() { document.getElementById('dropdown').classList.toggle('active'); }
-function closeModal(id) { document.getElementById(id).style.display = 'none'; }
-function openDeposit() { closeNav(); document.getElementById('depositModal').style.display = 'block'; }
-function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
+function toggleDropdown() { 
+    document.getElementById('dropdown').classList.toggle('active'); 
+}
+function closeModal(id) { 
+    document.getElementById(id).style.display = 'none'; 
+}
+function openDeposit() { 
+    closeNav(); 
+    document.getElementById('depositModal').style.display = 'block'; 
+}
+function showMpesaForm() { 
+    closeModal('depositModal'); 
+    document.getElementById('mpesaForm').style.display = 'block'; 
+}
 
 function resetDemo() {
-demoBal = 100000.00;
-localStorage.setItem('demoBalance', demoBal);
-if(currentAccount === 'demo') switchAccount('demo');
-alert("Demo Balance Reset to $100,000.00");
-toggleDropdown();
+    demoBal = 100000.00;
+    localStorage.setItem('demoBalance', demoBal);
+    if(currentAccount === 'demo') switchAccount('demo');
+    alert("Demo Balance Reset to $100,000.00");
+    toggleDropdown();
 }
 
 function setStake(val) { 
-stake = val; 
-document.getElementById('stakeAmount').value = val; 
-document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); 
-event.target.classList.add('active'); 
+    stake = val; 
+    document.getElementById('stakeAmount').value = val; 
+    document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); 
+    event.target.classList.add('active'); 
 }
 function changeStake(dir) { 
-stake = Math.max(1, stake + dir); 
-document.getElementById('stakeAmount').value = stake; 
-updateStakeButtons();
+    stake = Math.max(1, stake + dir); 
+    document.getElementById('stakeAmount').value = stake; 
+    updateStakeButtons();
 }
 function updateStakeButtons() {
-stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-document.querySelectorAll('.stake-btn').forEach(btn => {
-btn.classList.remove('active');
-if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');
-});
+    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+    document.querySelectorAll('.stake-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');
+    });
 }
 
 function switchAccount(type) { 
-currentAccount = type; 
-document.getElementById('dropdown').classList.remove('active'); 
-if(type === 'demo') { 
-document.getElementById('badge').innerText = 'D'; document.getElementById('badge').className = 'account-badge';
-document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#ff4444';
-document.getElementById('demoActive').innerText = 'Active'; document.getElementById('realActive').innerText = '';
-} else { 
-document.getElementById('badge').innerText = 'R'; document.getElementById('badge').className = 'account-badge real';
-document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); document.getElementById('topBalance').style.color = '#00c853';
-document.getElementById('realActive').innerText = 'Active'; document.getElementById('demoActive').innerText = '';
-} }
-
-function trade(type) { 
-stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-let targetBal = currentAccount === 'demo' ? demoBal : realBal; 
-if(targetBal < stake) return alert("Not enough balance!");
-
-let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
-let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
-let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
-
-let win = Math.random() > 0.5;
-let pnl = win ? stake * multiplier : -stake;
-if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
-if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
-
-profit = pnl;
-targetBal = targetBal + profit;
-if(currentAccount === 'demo') { demoBal = targetBal; localStorage.setItem('demoBalance', demoBal); } 
-else { realBal = targetBal; localStorage.setItem('realBalance', realBal); }
-
-document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
-
-let historyDiv = document.getElementById("history");
-if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; }
-let color = profit >= 0 ? "#00ff88" : "#ff0044";
-let time = new Date().toLocaleTimeString();
-let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
-historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-
-// SAVE TO HISTORY PAGE
-let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
-history.push({type: type.toUpperCase(), stake: stake, pnl: profit, time: time});
-localStorage.setItem('tradeHistory', JSON.stringify(history));
-
-// ADD NOTIFICATION FOR TRADE RESULT
-if(profit >= 0) {
-addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
-} else {
-addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
+    currentAccount = type; 
+    document.getElementById('dropdown').classList.remove('active'); 
+    if(type === 'demo') { 
+        document.getElementById('badge').innerText = 'D'; 
+        document.getElementById('badge').className = 'account-badge';
+        document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+        document.getElementById('topBalance').style.color = '#ff4444';
+        document.getElementById('demoActive').innerText = 'Active'; 
+        document.getElementById('realActive').innerText = '';
+    } else { 
+        document.getElementById('badge').innerText = 'R'; 
+        document.getElementById('badge').className = 'account-badge real';
+        document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+        document.getElementById('topBalance').style.color = '#00c853';
+        document.getElementById('realActive').innerText = 'Active'; 
+        document.getElementById('demoActive').innerText = '';
+    } 
 }
 
-tradeCount++;
+function trade(type) { 
+    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+    let targetBal = currentAccount === 'demo' ? demoBal : realBal; 
+    if(targetBal < stake) return alert("Not enough balance!");
+
+    let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
+    let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+    let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
+
+    let win = Math.random() > 0.5;
+    let pnl = win ? stake * multiplier : -stake;
+    if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
+    if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
+
+    profit = pnl;
+    targetBal = targetBal + profit;
+    if(currentAccount === 'demo') { 
+        demoBal = targetBal; 
+        localStorage.setItem('demoBalance', demoBal); 
+    } else { 
+        realBal = targetBal; 
+        localStorage.setItem('realBalance', realBal); 
+    }
+
+    document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
+
+    let historyDiv = document.getElementById("history");
+    if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; }
+    let color = profit >= 0 ? "#00ff88" : "#ff0044";
+    let time = new Date().toLocaleTimeString();
+    let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
+    historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+
+    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+    history.unshift({type: type.toUpperCase(), stake: stake, pnl: profit, time: new Date().toLocaleString()});
+    localStorage.setItem('tradeHistory', JSON.stringify(history));
+
+    if(profit >= 0) {
+        addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
+    } else {
+        addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
+    }
+
+    tradeCount++;
+}
+
+function loadHistory() {
+    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+    let historyDiv = document.getElementById("history");
+    if(history.length > 0) {
+        historyDiv.innerHTML = "";
+        history.slice(0,10).forEach((t, i) => {
+            let color = t.pnl >= 0 ? "#00ff88" : "#ff0044";
+            historyDiv.innerHTML += `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${i+1}</b> - ${t.type} $${t.stake} - ${t.time} <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span> </p>`;
+        });
+    }
 }
 
 async function doDeposit() { 
-const phone = document.getElementById('depPhone').value; 
-const amount = document.getElementById('depAmount').value; 
-if(!phone || !amount) return alert("Enter phone and amount"); 
-alert("Sending STK Push to " + phone + "..."); 
-closeModal('mpesaForm'); 
-const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
-method: 'POST', headers: { 'Content-Type': 'application/json' }, 
-body: JSON.stringify({ amount: amount, phone: phone }) 
-}); 
-const data = await res.json(); 
-if(data.ResponseCode === "0") { 
-alert("STK Sent! Check your phone"); 
-addNotification('💰', 'Deposit Sent', `KES ${amount} - Waiting for payment`, '#00aaff');
-setTimeout(loadRealBalance, 10000); 
-} 
-else { alert("Error: " + data.ResponseDescription); } 
+    const phone = document.getElementById('depPhone').value; 
+    const amount = document.getElementById('depAmount').value; 
+    if(!phone || !amount) return alert("Enter phone and amount"); 
+    alert("Sending STK Push to " + phone + "..."); 
+    closeModal('mpesaForm'); 
+    const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ amount: amount, phone: phone }) 
+    }); 
+    const data = await res.json(); 
+    if(data.ResponseCode === "0") { 
+        alert("STK Sent! Check your phone"); 
+        addNotification('💰', 'Deposit Sent', `KES ${amount} - Waiting for payment`, '#00aaff');
+        setTimeout(loadRealBalance, 10000); 
+    } else { 
+        alert("Error: " + data.ResponseDescription); 
+    } 
 }
 
 async function loadRealBalance() { 
-const phone = prompt("Enter your phone to check balance:"); 
-if(!phone) return; 
-const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
-const data = await res.json(); 
-realBal = data.balance || 0; 
-localStorage.setItem('realBalance', realBal); 
-if(currentAccount === 'real') switchAccount('real'); 
-if(realBal > 0) { addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); }
+    const phone = prompt("Enter your phone to check balance:"); 
+    if(!phone) return; 
+    const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
+    const data = await res.json(); 
+    realBal = data.balance || 0; 
+    localStorage.setItem('realBalance', realBal); 
+    if(currentAccount === 'real') switchAccount('real'); 
+    if(realBal > 0) { 
+        addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); 
+    }
 }
 
 // NOTIFICATION FUNCTIONS
 function toggleNotif() {
-document.getElementById('notifDropdown').classList.toggle('active');
-}
-function clearNotifs() {
-document.getElementById('notifCount').style.display = 'none';
-document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
-document.getElementById('notifDropdown').classList.remove('active');
-}
-function addNotification(icon, title, text, color) {
-let list = document.getElementById('notifList');
-let count = document.getElementById('notifCount');
-let current = parseInt(count.innerText) || 0;
-count.innerText = current + 1;
-count.style.display = 'flex';
-let newNotif = `<div class="notif-item unread">
-<div class="notif-icon" style="background:${color};">${icon}</div>
-<div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
-</div>`;
-list.innerHTML = newNotif + list.innerHTML;
+    document.getElementById('notifDropdown').classList.toggle('active');
 }
 
-window.onclick = function(e) { 
-if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } 
-if(!e.target.closest('.notif-btn')) { document.getElementById('notifDropdown').classList.remove('active'); } 
+function clearNotifs() {
+    document.getElementById('notifCount').style.display = 'none';
+    document.getElementById('notifCount').innerText = '0';
+    document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
+    document.getElementById('notifDropdown').classList.remove('active');
 }
-</script>
-</body>
-  </html>
+
+function addNotification(icon, title, text, color) {
+    let list = document.getElementById('notifList');
+    let count = document.getElementById('notifCount');
+    let current = parseInt(count.innerText) || 0;
+    count.innerText = current + 1;
+    count.style.display = 'flex';
+    let newNotif = `<div class="notif-item unread">
+    <div class="notif-icon" style="background:${color};">${icon}</div>
+    <div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
+    </div>`;
+    list
