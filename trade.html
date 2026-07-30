@@ -5,12 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
-.sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#111; overflow-x:hidden; transition:0.3s; padding-top:60px; border-right:1px solid #333; }
-.sidebar a { padding:15px 25px; text-decoration:none; font-size:16px; color:#ccc; display:block; transition:0.3s; }
-.sidebar a:hover { background:#1a1a1a; color:#00aaff; }
-.sidebar .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; }
-.sidebar-header { padding:20px; border-bottom:1px solid #333; margin-bottom:10px; }
-.sidebar-header b { color:#00ff88; font-size:18px; }
+/* SIDEBAR MENU - NEW DESIGN */
+.sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
+.sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
+.sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
+.sidebar-header b { color:#00ff88; font-size:20px; font-weight:bold; }
+.sidebar-header small { color:#aaa; font-size:13px; }
+.sidebar a { padding:14px 25px; text-decoration:none; font-size:16px; color:#ddd; display:flex; align-items:center; gap:12px; transition:0.2s; }
+.sidebar a:hover { background:#222; color:#00aaff; }
 .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999998; }
 .account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
 .account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
@@ -46,12 +48,12 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 </head>
 <body>
 
-<!-- SIDEBAR MENU -->
+<!-- SIDEBAR MENU - NEW DESIGN -->
 <div id="mySidebar" class="sidebar">
-<a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
 <div class="sidebar-header">
+<span class="closebtn" onclick="closeNav()">×</span>
 <b>HassanFX</b><br>
-<small style="color:#aaa;">Binary Trading</small>
+<small>Binary Trading</small>
 </div>
 <a href="trade.html">📊 Trade</a>
 <a href="#" onclick="alert('Coming Soon')">📈 Market</a>
@@ -71,12 +73,12 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 </div>
 <div class="account-toggle" onclick="toggleDropdown()">
 <span id="badge" class="account-badge">D</span>
-<span id="topBalance" style="color:#ff4444; font-weight:bold;">$10,000.00</span>
+<span id="topBalance" style="color:#ff4444; font-weight:bold;">$100,000.00</span>
 <span>▼</span>
 <div id="dropdown" class="account-dropdown">
 <div class="account-option" onclick="switchAccount('demo')"><span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span></div>
 <div class="account-option" onclick="switchAccount('real')"><span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span></div>
-<div class="account-option reset-btn" onclick="resetDemo()">🔄 Reset Demo Balance</div> <!-- NEW BUTTON -->
+<div class="account-option reset-btn" onclick="resetDemo()">🔄 Reset Demo Balance</div>
 </div>
 </div>
 <div style="display:flex; align-items:center; gap:10px;">
@@ -146,19 +148,17 @@ new TradingView.widget({
 
 <script>
 let currentAccount = 'demo';
-let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00; // NOW SAVES + STARTS 100K
+let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; let tradeCount = 1;
 
-// LOAD BALANCE ON START
 window.onload = function() {
 switchAccount(currentAccount);
 }
 
-/* SIDEBAR FUNCTIONS */
 function openNav() {
-document.getElementById("mySidebar").style.width = "250px";
+document.getElementById("mySidebar").style.width = "280px"; /* wider like screenshot */
 document.getElementById("overlay").style.display = "block";
 }
 function closeNav() {
@@ -171,7 +171,7 @@ function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function openDeposit() { closeNav(); document.getElementById('depositModal').style.display = 'block'; }
 function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
 
-function resetDemo() { // NEW FUNCTION
+function resetDemo() {
 demoBal = 100000.00;
 localStorage.setItem('demoBalance', demoBal);
 if(currentAccount === 'demo') switchAccount('demo');
@@ -269,4 +269,4 @@ if(currentAccount === 'real') switchAccount('real');
 window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
 </script>
 </body>
-                                                                       </html>
+                                                     </html>
