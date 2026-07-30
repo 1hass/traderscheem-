@@ -7,18 +7,20 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
 body{background:#0a0a0a;color:#fff;overflow-x:hidden}
-.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:#111;border-bottom:1px solid #222}
-.menu-btn,.notif-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:#111;border-bottom:1px solid #222;position:sticky;top:0;z-index:50}
+.menu-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+.top-actions{display:flex;align-items:center;gap:10px}
+.deposit-top-btn{background:#00c853;color:#000;padding:8px 14px;border-radius:20px;font-weight:bold;border:none;cursor:pointer;font-size:14px}
 .account-toggle{display:flex;align-items:center;gap:8px;background:#1a1a1a;padding:6px 12px;border-radius:20px;cursor:pointer;position:relative}
 .account-badge{background:#ff4444;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px}
 .account-badge.real{background:#00c853}
-.balance{color:#fff;font-weight:600}
+.balance{color:#fff;font-weight:600;font-size:14px}
 .dropdown{position:absolute;top:45px;right:0;background:#1a1a1a;border:1px solid #333;border-radius:10px;width:200px;display:none;z-index:100}
 .dropdown.active{display:block}
-.dropdown-item{padding:12px;display:flex;justify-content:space-between;cursor:pointer}
+.dropdown-item{padding:12px;display:flex;justify-content:space-between;cursor:pointer;font-size:14px}
 .dropdown-item:hover{background:#222}
 .sidebar{height:100%;width:0;position:fixed;top:0;left:0;background:#111;overflow-x:hidden;transition:0.3s;z-index:200;padding-top:60px}
-.sidebar a{padding:12px 20px;text-decoration:none;font-size:16px;color:#ccc;display:block}
+.sidebar a{padding:14px 20px;text-decoration:none;font-size:16px;color:#ccc;display:block;border-bottom:1px solid #222}
 .sidebar a:hover{color:#fff;background:#222}
 .overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:150}
 .chart-area{height:300px;background:#0d0d0d;display:flex;align-items:center;justify-content:center;color:#555}
@@ -36,6 +38,7 @@ body{background:#0a0a0a;color:#fff;overflow-x:hidden}
 .stake-btn.active{border-color:#00aaff}
 .stake-input{display:flex;gap:5px}
 .stake-input input{flex:1;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;text-align:center}
+.stake-input button{padding:10px 15px;background:#222;border:none;color:#fff;border-radius:8px}
 .trade-btns{display:flex;gap:10px;margin-top:10px}
 .trade-btn{flex:1;padding:15px;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
 .buy{background:#00c853;color:#000}
@@ -46,50 +49,66 @@ body{background:#0a0a0a;color:#fff;overflow-x:hidden}
 .modal-content{background:#1a1a1a;padding:20px;border-radius:10px;width:90%;max-width:400px}
 .modal-content input{width:100%;padding:10px;margin:10px 0;background:#222;border:1px solid #333;border-radius:8px;color:#fff}
 .modal-content button{width:100%;padding:12px;background:#00c853;border:none;border-radius:8px;color:#000;font-weight:bold;cursor:pointer}
+.notif-btn{background:none;border:none;color:#fff;font-size:22px;cursor:pointer;position:relative}
 .notif-dropdown{position:absolute;top:50px;right:10px;background:#1a1a1a;border:1px solid #333;border-radius:10px;width:300px;max-height:400px;overflow-y:auto;display:none;z-index:100}
 .notif-dropdown.active{display:block}
 .notif-item{display:flex;gap:10px;padding:12px;border-bottom:1px solid #222}
 .notif-item.unread{background:#222}
 .notif-icon{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
-.notif-count{background:#ff4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;position:absolute;top:5px;right:5px}
+.notif-count{background:#ff4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;position:absolute;top:2px;right:2px}
+
+/* LIVE CHAT */
+.chat-btn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:#00aaff;border:none;color:#fff;font-size:28px;cursor:pointer;z-index:250;box-shadow:0 4px 15px rgba(0,170,255,0.4)}
+.chat-box{display:none;position:fixed;bottom:90px;right:20px;width:320px;height:450px;background:#1a1a1a;border:1px solid #333;border-radius:15px;z-index:250;flex-direction:column}
+.chat-header{padding:15px;background:#222;border-bottom:1px solid #333;border-radius:15px 15px 0 0;display:flex;justify-content:space-between;align-items:center}
+.chat-body{flex:1;padding:10px;overflow-y:auto}
+.chat-input{display:flex;padding:10px;border-top:1px solid #333}
+.chat-input input{flex:1;padding:10px;background:#222;border:1px solid #333;border-radius:8px;color:#fff}
+.chat-input button{padding:10px 15px;background:#00aaff;border:none;color:#fff;border-radius:8px;margin-left:5px}
 </style>
 </head>
 <body>
 
 <div class="topbar">
     <button class="menu-btn" onclick="openNav()">☰</button>
-    <div class="account-toggle" onclick="toggleDropdown()">
-        <div id="badge" class="account-badge">D</div>
-        <div>
-            <div id="topBalance" class="balance">$100,000.00</div>
-            <small style="color:#aaa">DEMO</small>
-        </div>
-        <div class="dropdown" id="dropdown">
-            <div class="dropdown-item" onclick="switchAccount('demo')">
-                <span>Demo Account</span><span id="demoActive">Active</span>
+    <div class="top-actions">
+        <button class="deposit-top-btn" onclick="openDeposit()">💰 Deposit</button>
+        <div class="account-toggle" onclick="toggleDropdown()">
+            <div id="badge" class="account-badge">D</div>
+            <div>
+                <div id="topBalance" class="balance">$100,000.00</div>
+                <small style="color:#aaa;font-size:10px">DEMO</small>
             </div>
-            <div class="dropdown-item" onclick="switchAccount('real')">
-                <span>Real Account</span><span id="realActive"></span>
+            <div class="dropdown" id="dropdown">
+                <div class="dropdown-item" onclick="switchAccount('demo')">
+                    <span>Demo Account</span><span id="demoActive">Active</span>
+                </div>
+                <div class="dropdown-item" onclick="switchAccount('real')">
+                    <span>Real Account</span><span id="realActive"></span>
+                </div>
+                <div class="dropdown-item" onclick="resetDemo()">Reset Demo</div>
             </div>
-            <div class="dropdown-item" onclick="resetDemo()">Reset Demo</div>
-            <div class="dropdown-item" onclick="openDeposit()">Deposit</div>
         </div>
-    </div>
-    <button class="notif-btn" onclick="toggleNotif()">🔔<div class="notif-count" id="notifCount" style="display:none">0</div></button>
-    <div class="notif-dropdown" id="notifDropdown">
-        <div style="padding:10px;border-bottom:1px solid #333;display:flex;justify-content:space-between">
-            <b>Notifications</b><span onclick="clearNotifs()" style="color:#00aaff;cursor:pointer">Clear</span>
+        <button class="notif-btn" onclick="toggleNotif()">🔔<div class="notif-count" id="notifCount" style="display:none">0</div></button>
+        <div class="notif-dropdown" id="notifDropdown">
+            <div style="padding:10px;border-bottom:1px solid #333;display:flex;justify-content:space-between">
+                <b>Notifications</b><span onclick="clearNotifs()" style="color:#00aaff;cursor:pointer">Clear</span>
+            </div>
+            <div id="notifList"></div>
         </div>
-        <div id="notifList"></div>
     </div>
 </div>
 
 <div id="mySidebar" class="sidebar">
-    <a href="javascript:void(0)" onclick="closeNav()" style="position:absolute;top:10px;right:20px;font-size:30px">×</a>
-    <a href="#">Home</a>
-    <a href="#">Trade</a>
-    <a href="#">History</a>
-    <a href="#">Profile</a>
+    <a href="javascript:void(0)" onclick="closeNav()" style="position:absolute;top:10px;right:20px;font-size:30px;border:none">×</a>
+    <a href="#">🏠 Home</a>
+    <a href="#">📈 Trade</a>
+    <a href="#">📊 History</a>
+    <a href="#">💰 Deposit</a>
+    <a href="#">💸 Withdraw</a>
+    <a href="#">👤 Profile</a>
+    <a href="#">⚙️ Settings</a>
+    <a href="#">❓ Help & Support</a>
 </div>
 <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
@@ -147,7 +166,7 @@ body{background:#0a0a0a;color:#fff;overflow-x:hidden}
 <!-- DEPOSIT MODAL -->
 <div id="depositModal" class="modal">
     <div class="modal-content">
-        <h3>Deposit</h3>
+        <h3>Deposit Funds</h3>
         <button onclick="showMpesaForm()">M-Pesa</button>
         <button onclick="closeModal('depositModal')" style="background:#333;margin-top:10px">Cancel</button>
     </div>
@@ -160,6 +179,22 @@ body{background:#0a0a0a;color:#fff;overflow-x:hidden}
         <input type="number" id="depAmount" placeholder="Amount in $ USD">
         <button onclick="doDeposit()">Send STK Push</button>
         <button onclick="closeModal('mpesaForm')" style="background:#333;margin-top:10px">Cancel</button>
+    </div>
+</div>
+
+<!-- LIVE CHAT -->
+<button class="chat-btn" onclick="toggleChat()">💬</button>
+<div class="chat-box" id="chatBox">
+    <div class="chat-header">
+        <b>Live Support</b>
+        <span onclick="toggleChat()" style="cursor:pointer;font-size:20px">×</span>
+    </div>
+    <div class="chat-body" id="chatBody">
+        <p style="color:#aaa;font-size:14px">Hi! How can we help you today?</p>
+    </div>
+    <div class="chat-input">
+        <input type="text" id="chatMsg" placeholder="Type message...">
+        <button onclick="sendChat()">Send</button>
     </div>
 </div>
 
@@ -385,49 +420,4 @@ async function doDeposit() {
 
 async function loadRealBalance() { 
     const phone = prompt("Enter your phone to check balance:"); 
-    if(!phone) return; 
-    const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
-    const data = await res.json(); 
-    let balanceKES = data.balance || 0; 
-    realBal = balanceKES * KES_TO_USD;
-    localStorage.setItem('realBalance', realBal); 
-    if(currentAccount === 'real') switchAccount('real'); 
-    if(realBal > 0) { 
-        addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); 
-    }
-}
-
-function toggleNotif() {
-    document.getElementById('notifDropdown').classList.toggle('active');
-}
-function clearNotifs() {
-    document.getElementById('notifCount').style.display = 'none';
-    document.getElementById('notifCount').innerText = '0';
-    document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
-    document.getElementById('notifDropdown').classList.remove('active');
-}
-function addNotification(icon, title, text, color) {
-    let list = document.getElementById('notifList');
-    let count = document.getElementById('notifCount');
-    let current = parseInt(count.innerText) || 0;
-    count.innerText = current + 1;
-    count.style.display = 'flex';
-    let newNotif = `<div class="notif-item unread">
-    <div class="notif-icon" style="background:${color};">${icon}</div>
-    <div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
-    </div>`;
-    list.innerHTML = newNotif + list.innerHTML;
-}
-
-window.onclick = function(e) { 
-    if(!e.target.closest('.account-toggle')) { 
-        document.getElementById('dropdown').classList.remove('active'); 
-    } 
-    if(!e.target.closest('.notif-btn')) { 
-        document.getElementById('notifDropdown').classList.remove('active'); 
-    } 
-}
-</script>
-
-</body>
-              </html>
+    if(!phone) r
