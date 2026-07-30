@@ -89,7 +89,36 @@ app.post('/stkpush', async (req, res) => {
     res.status(500).json({ success: false, message: e.response?.data?.errorMessage || e.message });
   }
 });
+app.get('/balance/:phone', async (req, res) => {
+  try {
+    const phone = req.params.phone;
 
+    const result = await pool.query(
+      'SELECT real_balance FROM users WHERE phone = $1',
+      [phone]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({
+        success: false,
+        message: "User not found"
+      });
+    }
+
+    res.json({
+      success: true,
+      phone,
+      balance: result.rows[0].real_balance
+    });
+
+  } catch (error) {
+    console.error("Balance Error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
+  }
+});
 app.post('/callback', (req, res) => {
   try {
     const callback = req.body.Body.stkCallback;
