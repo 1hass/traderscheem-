@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
-/* SIDEBAR MENU - NEW DESIGN */
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
 .sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
 .sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
@@ -48,24 +47,22 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 </head>
 <body>
 
-<!-- SIDEBAR MENU - NEW DESIGN -->
 <div id="mySidebar" class="sidebar">
 <div class="sidebar-header">
 <span class="closebtn" onclick="closeNav()">×</span>
 <b>HassanFX</b><br>
 <small>Binary Trading</small>
 </div>
-<a href="trade.html">📊 Trade</a>
-<a href="#" onclick="alert('Coming Soon')">📈 Market</a>
-<a href="#" onclick="alert('Coming Soon')">📜 Trade History</a>
-<a href="#" onclick="openDeposit()">💰 Deposit</a>
-<a href="#" onclick="alert('Coming Soon')">🏦 Withdraw</a>
-<a href="#" onclick="alert('Coming Soon')">⚙️ Settings</a>
-<a href="index.html">🚪 Logout</a>
+<a href="trade.html">📊 Trade</a> 
+<a href="#" onclick="alert('Coming Soon')">📈 Market</a> 
+<a href="history.html">📜 Trade History</a> 
+<a href="#" onclick="openDeposit()">💰 Deposit</a> 
+<a href="withdraw.html">🏦 Withdraw</a> 
+<a href="#" onclick="alert('Coming Soon')">⚙️ Settings</a> 
+<a href="index.html">🚪 Logout</a> 
 </div>
 <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
-<!-- TOP BAR -->
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
 <div style="display:flex; align-items:center; gap:10px;">
 <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
@@ -100,7 +97,6 @@ new TradingView.widget({
 });
 </script>
 
-<!-- TRADE PANEL -->
 <div class="trade-panel">
 <label style="color:#00aaff; font-size:12px;">STAKE</label>
 <div class="stake-box">
@@ -134,7 +130,6 @@ new TradingView.widget({
 <p style="color:#888; text-align:center;">No trades yet</p>
 </div>
 
-<!-- DEPOSIT MODAL -->
 <div id="depositModal" class="modal">
 <div style="display:flex; justify-content:space-between;"><h3>Deposit Funds</h3><span onclick="closeModal('depositModal')">X</span></div>
 <div class="pay-option" onclick="showMpesaForm()"><span style="font-size:24px; margin-right:10px;">📱</span><div><b>M-Pesa</b><br><small style="color:#aaa;">Instant mobile money</small></div></div>
@@ -153,12 +148,10 @@ let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; let tradeCount = 1;
 
-window.onload = function() {
-switchAccount(currentAccount);
-}
+window.onload = function() { switchAccount(currentAccount); }
 
 function openNav() {
-document.getElementById("mySidebar").style.width = "280px"; /* wider like screenshot */
+document.getElementById("mySidebar").style.width = "280px";
 document.getElementById("overlay").style.display = "block";
 }
 function closeNav() {
@@ -238,6 +231,12 @@ let color = profit >= 0 ? "#00ff88" : "#ff0044";
 let time = new Date().toLocaleTimeString();
 let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
 historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+
+// SAVE TO HISTORY PAGE
+let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+history.push({type: type.toUpperCase(), stake: stake, pnl: profit, time: time});
+localStorage.setItem('tradeHistory', JSON.stringify(history));
+
 tradeCount++;
 }
 
@@ -269,4 +268,4 @@ if(currentAccount === 'real') switchAccount('real');
 window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
 </script>
 </body>
-                                                     </html>
+  </html>
