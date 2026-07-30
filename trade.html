@@ -1,145 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Binary - Trading</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TraderScheem</title>
 <style>
-body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
-.sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
-.sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
-.sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
-.sidebar-header b { color:#00ff88; font-size:20px; font-weight:bold; }
-.sidebar-header small { color:#aaa; font-size:13px; }
-.sidebar a { padding:14px 25px; text-decoration:none; font-size:16px; color:#ddd; display:flex; align-items:center; gap:12px; transition:0.2s; }
-.sidebar a:hover { background:#222; color:#00aaff; }
-.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999998; }
-.account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
-.account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
-.account-badge.real {background:#00c853;}
-.account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:190px; z-index:9999; border:1px solid #333;}
-.account-dropdown.active {display:block;}
-.account-option {padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px;}
-.account-option:hover {background:#333;}
-.reset-btn { color:#aaa; font-size:13px; }
-.reset-btn:hover { background:#333; color:#00aaff; }
-.dot {width:8px; height:8px; border-radius:50%;}
-.dot.real {background:#00c853;}
-.dot.demo {background:#ff4444;}
-.notif-btn {position:relative; cursor:pointer;}
-.notif-badge {position:absolute; top:-2px; right:-2px; background:#ff4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
-.notif-dropdown {display:none; position:absolute; top:45px; right:0; background:#1a1a1a; border-radius:12px; padding:10px 0; width:320px; z-index:99999; border:1px solid #333; box-shadow:0 4px 20px rgba(0,0,0,0.5);}
-.notif-dropdown.active {display:block;}
-.notif-header {padding:10px 15px; display:flex; justify-content:space-between; border-bottom:1px solid #333; font-weight:bold;}
-.notif-item {padding:12px 15px; display:flex; gap:10px; border-bottom:1px solid #222; cursor:pointer;}
-.notif-item:hover {background:#222;}
-.notif-item.unread {background:#111;}
-.notif-icon {width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px;}
-.modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:99999; border-top:1px solid #333;}
-.pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
-.btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; }
-.trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:10px; }
-.stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; gap:10px; }
-.stake-box button { background:#333; border:none; color:white; width:40px; height:40px; font-size:20px; border-radius:8px; }
-.stake-input { flex:1; text-align:center; font-size:24px; font-weight:bold; color:#00ff88; background:#000; border:1px solid #333; border-radius:8px; padding:10px; }
-.stake-buttons { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin:10px 0; }
-.stake-btn { background:#1a1a1a; border:1px solid #333; color:white; padding:10px; border-radius:8px; cursor:pointer; }
-.stake-btn.active { background:#00aaff; border-color:#00aaff; }
-.risk-grid { display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin:10px 0; }
-.risk-box { background:#1a1a1a; padding:10px; border-radius:8px; text-align:center; }
-.risk-box small { font-size:11px; }
-.risk-input { width:100%; background:#000; border:1px solid #333; color:white; text-align:center; font-size:18px; font-weight:bold; padding:8px 0; border-radius:6px; margin-top:5px; }
-.buy { background: #00ff88; color: black; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
-.sell { background: #ff0044; color: white; flex: 1; padding: 15px; border: none; border-radius: 8px; font-weight: bold; font-size: 18px; }
-.trade-buttons { display:flex; gap:10px; margin-top:15px; }
-h2 { display:none; }
-h3 { margin-top:10px; margin-bottom:5px; }
-.mode-toggle { display:flex; gap:0; margin:10px 0; border-radius:10px; overflow:hidden; }
-.mode-toggle button { flex:1; padding:12px; background:#1a1a1a; border:none; color:#aaa; font-weight:bold; font-size:15px; cursor:pointer; }
-.mode-toggle button.active { background:#00aaff; color:white; }
-.digits-row { display:flex; justify-content:space-between; gap:5px; margin:10px 0; }
-.digit-btn { flex:1; background:#1a1a1a; border:1px solid #333; border-radius:50%; width:35px; height:35px; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; }
-.digit-btn b { font-size:16px; color:white; }
-.digit-btn small { font-size:9px; color:#888; }
-.digit-btn.active { border-color:#00ff88; background:#002211; }
+*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#0a0a0a;color:#fff;overflow-x:hidden}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;background:#111;border-bottom:1px solid #222}
+.menu-btn,.notif-btn{background:none;border:none;color:#fff;font-size:24px;cursor:pointer}
+.account-toggle{display:flex;align-items:center;gap:8px;background:#1a1a1a;padding:6px 12px;border-radius:20px;cursor:pointer;position:relative}
+.account-badge{background:#ff4444;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px}
+.account-badge.real{background:#00c853}
+.balance{color:#fff;font-weight:600}
+.dropdown{position:absolute;top:45px;right:0;background:#1a1a1a;border:1px solid #333;border-radius:10px;width:200px;display:none;z-index:100}
+.dropdown.active{display:block}
+.dropdown-item{padding:12px;display:flex;justify-content:space-between;cursor:pointer}
+.dropdown-item:hover{background:#222}
+.sidebar{height:100%;width:0;position:fixed;top:0;left:0;background:#111;overflow-x:hidden;transition:0.3s;z-index:200;padding-top:60px}
+.sidebar a{padding:12px 20px;text-decoration:none;font-size:16px;color:#ccc;display:block}
+.sidebar a:hover{color:#fff;background:#222}
+.overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);z-index:150}
+.chart-area{height:300px;background:#0d0d0d;display:flex;align-items:center;justify-content:center;color:#555}
+.digits-row{display:flex;gap:5px;padding:10px;overflow-x:auto}
+.digit-btn{min-width:50px;height:50px;background:#1a1a1a;border:2px solid #333;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer}
+.digit-btn.active{border-color:#00aaff;background:#0a1a2a}
+.digit-btn b{font-size:18px}
+.digit-btn small{font-size:10px;color:#aaa}
+.mode-toggle{display:flex;gap:10px;padding:10px}
+.mode-toggle button{flex:1;padding:12px;border:none;border-radius:8px;background:#1a1a1a;color:#fff;font-weight:bold;cursor:pointer}
+.mode-toggle button.active{background:#00c853;color:#000}
+.trade-panel{padding:15px}
+.stake-row{display:flex;gap:8px;margin-bottom:10px}
+.stake-btn{flex:1;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;cursor:pointer}
+.stake-btn.active{border-color:#00aaff}
+.stake-input{display:flex;gap:5px}
+.stake-input input{flex:1;padding:10px;background:#1a1a1a;border:1px solid #333;border-radius:8px;color:#fff;text-align:center}
+.trade-btns{display:flex;gap:10px;margin-top:10px}
+.trade-btn{flex:1;padding:15px;border:none;border-radius:10px;font-size:16px;font-weight:bold;cursor:pointer}
+.buy{background:#00c853;color:#000}
+.sell{background:#ff4444;color:#fff}
+.history{padding:15px}
+.history h3{margin-bottom:10px}
+.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:300;align-items:center;justify-content:center}
+.modal-content{background:#1a1a1a;padding:20px;border-radius:10px;width:90%;max-width:400px}
+.modal-content input{width:100%;padding:10px;margin:10px 0;background:#222;border:1px solid #333;border-radius:8px;color:#fff}
+.modal-content button{width:100%;padding:12px;background:#00c853;border:none;border-radius:8px;color:#000;font-weight:bold;cursor:pointer}
+.notif-dropdown{position:absolute;top:50px;right:10px;background:#1a1a1a;border:1px solid #333;border-radius:10px;width:300px;max-height:400px;overflow-y:auto;display:none;z-index:100}
+.notif-dropdown.active{display:block}
+.notif-item{display:flex;gap:10px;padding:12px;border-bottom:1px solid #222}
+.notif-item.unread{background:#222}
+.notif-icon{width:35px;height:35px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px}
+.notif-count{background:#ff4444;color:#fff;border-radius:50%;width:18px;height:18px;font-size:11px;display:flex;align-items:center;justify-content:center;position:absolute;top:5px;right:5px}
 </style>
 </head>
 <body>
 
-<div id="mySidebar" class="sidebar">
-<div class="sidebar-header">
-<span class="closebtn" onclick="closeNav()">×</span>
-<b>Binary</b><br>
-<small>Binary Trading</small>
-</div>
-<a href="trade.html">📊 Trade</a>
-<a href="#" onclick="alert('Coming Soon')">📈 Market</a>
-<a href="history.html">📜 Trade History</a>
-<a href="#" onclick="openDeposit()">💰 Deposit</a>
-<a href="withdraw.html">🏦 Withdraw</a>
-<a href="#" onclick="alert('Coming Soon')">⚙️ Settings</a>
-<a href="index.html">🚪 Logout</a>
+<div class="topbar">
+    <button class="menu-btn" onclick="openNav()">☰</button>
+    <div class="account-toggle" onclick="toggleDropdown()">
+        <div id="badge" class="account-badge">D</div>
+        <div>
+            <div id="topBalance" class="balance">$100,000.00</div>
+            <small style="color:#aaa">DEMO</small>
+        </div>
+        <div class="dropdown" id="dropdown">
+            <div class="dropdown-item" onclick="switchAccount('demo')">
+                <span>Demo Account</span><span id="demoActive">Active</span>
+            </div>
+            <div class="dropdown-item" onclick="switchAccount('real')">
+                <span>Real Account</span><span id="realActive"></span>
+            </div>
+            <div class="dropdown-item" onclick="resetDemo()">Reset Demo</div>
+            <div class="dropdown-item" onclick="openDeposit()">Deposit</div>
+        </div>
+    </div>
+    <button class="notif-btn" onclick="toggleNotif()">🔔<div class="notif-count" id="notifCount" style="display:none">0</div></button>
+    <div class="notif-dropdown" id="notifDropdown">
+        <div style="padding:10px;border-bottom:1px solid #333;display:flex;justify-content:space-between">
+            <b>Notifications</b><span onclick="clearNotifs()" style="color:#00aaff;cursor:pointer">Clear</span>
+        </div>
+        <div id="notifList"></div>
+    </div>
 </div>
 
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" onclick="closeNav()" style="position:absolute;top:10px;right:20px;font-size:30px">×</a>
+    <a href="#">Home</a>
+    <a href="#">Trade</a>
+    <a href="#">History</a>
+    <a href="#">Profile</a>
+</div>
 <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
-<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
-<div style="display:flex; align-items:center; gap:10px;">
-<button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">B</button>
-<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;" onclick="openNav()">☰</button>
+<div class="chart-area">
+    <h2>CHART GOES HERE</h2>
 </div>
 
-<div class="account-toggle" onclick="toggleDropdown()">
-<span id="badge" class="account-badge">D</span>
-<span id="topBalance" style="color:#ff4444; font-weight:bold;">$100,000.00</span>
-<span>▼</span>
-<div id="dropdown" class="account-dropdown">
-<div class="account-option" onclick="switchAccount('demo')"><span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span></div>
-<div class="account-option" onclick="switchAccount('real')"><span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span></div>
-<div class="account-option reset-btn" onclick="resetDemo()">🔄 Reset Demo Balance</div>
-</div>
-</div>
-
-<div style="display:flex; align-items:center; gap:10px;">
-<span style="font-size:20px;">🔊</span>
-<button style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold;" onclick="openDeposit()">Deposit</button>
-<div class="notif-btn" onclick="toggleNotif()">
-<span style="font-size:20px;">🔔</span>
-<span class="notif-badge" id="notifCount">1</span>
-<div id="notifDropdown" class="notif-dropdown">
-<div class="notif-header"> Notifications <span style="color:#888; font-size:12px;">1 recent</span> </div>
-<div id="notifList">
-<div class="notif-item unread">
-<div class="notif-icon" style="background:#ffaa00;">👋</div>
-<div><b>Welcome to Binary!</b><br><small style="color:#aaa;">Start trading with demo or real money</small></div>
-</div>
-</div>
-<div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs()">Close</div>
-</div>
-</div>
-</div>
-</div>
-
-<h3>EUR/USD Live Chart</h3>
-<div id="tradingview_chart" style="margin:10px 0;"></div>
-<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-<script>
-new TradingView.widget({
-"width": "100%",
-"height": 350,
-"symbol": "FX:EURUSD",
-"interval": "1",
-"timezone": "Etc/UTC",
-"theme": "dark",
-"style": "1",
-"locale": "en",
-"toolbar_bg": "#1a1a1a",
-"enable_publishing": false,
-"allow_symbol_change": true,
-"container_id": "tradingview_chart"
-});
-</script>
-
-<!-- DIGITS 0-9 ROW -->
+<!-- DIGITS 0-9 -->
 <div class="digits-row">
   <div class="digit-btn" onclick="selectDigit(0, this)"><b>0</b><small>7.8%</small></div>
   <div class="digit-btn" onclick="selectDigit(1, this)"><b>1</b><small>11.0%</small></div>
@@ -153,55 +111,56 @@ new TradingView.widget({
   <div class="digit-btn" onclick="selectDigit(9, this)"><b>9</b><small>11.0%</small></div>
 </div>
 
-<!-- AUTO / MANUAL TOGGLE -->
+<!-- AUTO / MANUAL -->
 <div class="mode-toggle">
   <button id="autoBtn" class="active" onclick="setMode('auto')">AUTO</button>
   <button id="manualBtn" onclick="setMode('manual')">MANUAL</button>
 </div>
 
+<!-- TRADE PANEL -->
 <div class="trade-panel">
-<label style="color:#00aaff; font-size:12px;">STAKE</label>
-<div class="stake-box">
-<button onclick="changeStake(-5)">-</button>
-<input type="number" id="stakeAmount" class="stake-input" value="10" onchange="updateStakeButtons()">
-<button onclick="changeStake(5)">+</button>
-</div>
-<div class="stake-buttons">
-<button class="stake-btn" onclick="setStake(1)">$1</button>
-<button class="stake-btn" onclick="setStake(5)">$5</button>
-<button class="stake-btn active" onclick="setStake(10)">$10</button>
-<button class="stake-btn" onclick="setStake(25)">$25</button>
-<button class="stake-btn" onclick="setStake(50)">$50</button>
-<button class="stake-btn" onclick="setStake(100)">$100</button>
-</div>
-
-<div class="risk-grid">
-<div class="risk-box"><small style="color:#00ff88;">TARGET PROFIT</small><input type="number" id="targetProfit" class="risk-input" value="200"></div>
-<div class="risk-box"><small style="color:#ff0044;">STOP LOSS</small><input type="number" id="stopLoss" class="risk-input" value="999"></div>
-<div class="risk-box"><small style="color:#ffaa00;">MULTIPLIER</small><input type="number" id="multiplier" class="risk-input" value="2"></div>
-</div>
-
-<div class="trade-buttons">
-<button class="buy" onclick="trade('buy')">BUY</button>
-<button class="sell" onclick="trade('sell')">SELL</button>
-</div>
+    <div class="stake-row">
+        <button class="stake-btn" onclick="setStake(1)">$1</button>
+        <button class="stake-btn" onclick="setStake(5)">$5</button>
+        <button class="stake-btn active" onclick="setStake(10)">$10</button>
+        <button class="stake-btn" onclick="setStake(50)">$50</button>
+    </div>
+    <div class="stake-input">
+        <button onclick="changeStake(-1)">-</button>
+        <input type="number" id="stakeAmount" value="10" onchange="updateStakeButtons()">
+        <button onclick="changeStake(1)">+</button>
+    </div>
+    <input type="hidden" id="targetProfit" value="0">
+    <input type="hidden" id="stopLoss" value="0">
+    <input type="hidden" id="multiplier" value="1">
+    <div class="trade-btns">
+        <button class="trade-btn buy" onclick="trade('even')">EVEN</button>
+        <button class="trade-btn sell" onclick="trade('odd')">ODD</button>
+    </div>
 </div>
 
-<h3>Trade History</h3>
-<div id="history" style="background:#1a1a1a; padding:10px; border-radius:10px; max-height:150px; overflow-y:auto; margin-bottom:10px;">
-<p style="color:#888; text-align:center;">No trades yet</p>
+<div class="history">
+    <h3>Trade History</h3>
+    <div id="history"><p>No trades yet</p></div>
 </div>
 
+<!-- DEPOSIT MODAL -->
 <div id="depositModal" class="modal">
-<div style="display:flex; justify-content:space-between;"><h3>Deposit Funds</h3><span onclick="closeModal('depositModal')">X</span></div>
-<div class="pay-option" onclick="showMpesaForm()"><span style="font-size:24px; margin-right:10px;">📱</span><div><b>M-Pesa</b><br><small style="color:#aaa;">Instant mobile money</small></div></div>
+    <div class="modal-content">
+        <h3>Deposit</h3>
+        <button onclick="showMpesaForm()">M-Pesa</button>
+        <button onclick="closeModal('depositModal')" style="background:#333;margin-top:10px">Cancel</button>
+    </div>
 </div>
 
 <div id="mpesaForm" class="modal">
-<div style="display:flex; justify-content:space-between;"><h3>M-Pesa Deposit</h3><span onclick="closeModal('mpesaForm')">X</span></div>
-<input id="depPhone" placeholder="2547XXXXXXXX" style="width:100%; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
-<input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
-<button onclick="doDeposit()" class="btn-green">Deposit Now</button>
+    <div class="modal-content">
+        <h3>M-Pesa Deposit</h3>
+        <input type="text" id="depPhone" placeholder="2547XXXXXXXX">
+        <input type="number" id="depAmount" placeholder="Amount in $ USD">
+        <button onclick="doDeposit()">Send STK Push</button>
+        <button onclick="closeModal('mpesaForm')" style="background:#333;margin-top:10px">Cancel</button>
+    </div>
 </div>
 
 <script>
@@ -221,33 +180,254 @@ window.onload = function() {
     loadHistory();
     setMode('auto');
 }
-function openNav() {document.getElementById("mySidebar").style.width = "280px";document.getElementById("overlay").style.display = "block";}
-function closeNav() {document.getElementById("mySidebar").style.width = "0";document.getElementById("overlay").style.display = "none";}
-function toggleDropdown() {document.getElementById('dropdown').classList.toggle('active');}
-function closeModal(id) {document.getElementById(id).style.display = 'none';}
-function openDeposit() {closeNav();document.getElementById('depositModal').style.display = 'block';}
-function showMpesaForm() {closeModal('depositModal');document.getElementById('mpesaForm').style.display = 'block';}
-function resetDemo() {demoBal = 100000.00;localStorage.setItem('demoBalance', demoBal);if(currentAccount === 'demo') switchAccount('demo');alert("Demo Balance Reset to $100,000.00");toggleDropdown();}
-function setStake(val) {stake = val;document.getElementById('stakeAmount').value = val;document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active'));event.target.classList.add('active');}
-function changeStake(dir) {stake = Math.max(1, stake + dir);document.getElementById('stakeAmount').value = stake;updateStakeButtons();}
-function updateStakeButtons() {stake = parseFloat(document.getElementById('stakeAmount').value) || 1;document.querySelectorAll('.stake-btn').forEach(btn => {btn.classList.remove('active');if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');});}
-function selectDigit(digit, element) {selectedDigit = digit;document.querySelectorAll('.digit-btn').forEach(btn => btn.classList.remove('active'));element.classList.add('active');addNotification('🎯', 'Digit Selected', `Target digit: ${digit}`, '#00aaff');}
-function setMode(mode) {tradeMode = mode;document.getElementById('autoBtn').classList.remove('active');document.getElementById('manualBtn').classList.remove('active');if(mode === 'auto') {document.getElementById('autoBtn').classList.add('active');startAutoTrade();addNotification('🤖', 'Auto Mode ON', `Trading digit ${selectedDigit} every 5s`, '#00c853');} else {document.getElementById('manualBtn').classList.add('active');clearInterval(autoInterval);addNotification('✋', 'Manual Mode ON', 'Click Buy/Sell to trade', '#00aaff');}}
-function startAutoTrade() {clearInterval(autoInterval);autoInterval = setInterval(() => {let lastDigit = Math.floor(Math.random() * 10);let type = (lastDigit % 2 === 0) ? 'even' : 'odd';let win = lastDigit === selectedDigit;autoTrade(type, win, lastDigit);}, 5000);}
-function trade(type) {if(tradeMode === 'auto') return;manualTrade(type);}
-function manualTrade(type) {executeTrade(type, Math.random() > 0.5);}
-function autoTrade(type, win, lastDigit) {executeTrade(type, win, lastDigit);}
-function executeTrade(type, win, lastDigit = '?') {stake = parseFloat(document.getElementById('stakeAmount').value) || 1;let targetBal = currentAccount === 'demo' ? demoBal : realBal;if(targetBal < stake) {clearInterval(autoInterval);return alert("Not enough balance! Stopping Auto.");}
-let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
-let pnl = win ? stake * multiplier : -stake;if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
-profit = pnl;targetBal = targetBal + profit;if(currentAccount === 'demo') {demoBal = targetBal;localStorage.setItem('demoBalance', demoBal);} else {realBal = targetBal;localStorage.setItem('realBalance', realBal);}
-document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
-let historyDiv = document.getElementById("history");if(historyDiv.innerHTML.includes("No trades yet")) {historyDiv.innerHTML = "";}let color = profit >= 0 ? "#00ff88" : "#ff0044";let time = new Date().toLocaleTimeString();let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} Digit:${lastDigit} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];history.unshift({type: type.toUpperCase(), stake: stake, pnl: profit, digit: lastDigit, time: new Date().toLocaleString()});localStorage.setItem('tradeHistory', JSON.stringify(history));
-if(profit >= 0) {addNotification('✅', 'Trade Won', `Digit ${lastDigit} +$${profit.toFixed(2)}`, '#00c853');} else {addNotification('❌', 'Trade Lost', `Digit ${lastDigit} -$${Math.abs(profit).toFixed(2)}`, '#ff4444');}
-tradeCount++;}
-function loadHistory() {let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];let historyDiv = document.getElementById("history");if(history.length > 0) {historyDiv.innerHTML = "";history.slice(0,10).forEach((t, i) => {let color = t.pnl >= 0 ? "#00ff88" : "#ff0044";historyDiv.innerHTML += `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${i+1}</b> - ${t.type} Digit:${t.digit} $${t.stake} - ${t.time} <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span> </p>`;});}}
-async function doDeposit() {const phone = document.getElementById('depPhone').value;const amountUSD = parseFloat(document.getElementById('depAmount').value);if(!phone || !amountUSD) return alert("Enter phone and amount");const amountKES = Math.round(amountUSD / KES_TO_USD);alert(`Sending STK Push for $${amountUSD} to ${phone}...`);closeModal('mpesaForm');const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {method: 'POST',headers: { 'Content-Type': 'application/json' },body: JSON.stringify({ amount: amountKES, phone: phone })});const data = await res.json();if(data.ResponseCode === "0") {alert("STK Sent! Check your phone");addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');setTimeout(loadRealBalance, 10000);} else {alert("Error: " + data.ResponseDescription);}}
-async function loadRealBalance() {const phone = prompt("Enter your phone to check balance:");if(!phone) return;const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`);const data = await res.json();let balanceKES = data.balance || 0;realBal = balanceKES * KES_TO_USD;localStorage.setItem('realBalance', realBal);if(currentAccount === 'real') switchAccount('real');if(realBal > 0) {addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853');}}
-function toggleNotif() {document.getElementById('notifDropdown').classList.toggle('active');}
-function clearNotifs() {document.getEleme
+
+function openNav() {
+    document.getElementById("mySidebar").style.width = "280px";
+    document.getElementById("overlay").style.display = "block";
+}
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("overlay").style.display = "none";
+}
+function toggleDropdown() { 
+    document.getElementById('dropdown').classList.toggle('active'); 
+}
+function closeModal(id) { 
+    document.getElementById(id).style.display = 'none'; 
+}
+function openDeposit() { 
+    closeNav(); 
+    document.getElementById('depositModal').style.display = 'block'; 
+}
+function showMpesaForm() { 
+    closeModal('depositModal'); 
+    document.getElementById('mpesaForm').style.display = 'block'; 
+}
+
+function resetDemo() {
+    demoBal = 100000.00;
+    localStorage.setItem('demoBalance', demoBal);
+    if(currentAccount === 'demo') switchAccount('demo');
+    alert("Demo Balance Reset to $100,000.00");
+    toggleDropdown();
+}
+
+function switchAccount(type) { 
+    clearInterval(autoInterval);
+    setMode('manual');
+    currentAccount = type; 
+    document.getElementById('dropdown').classList.remove('active'); 
+    if(type === 'demo') { 
+        document.getElementById('badge').innerText = 'D'; 
+        document.getElementById('badge').className = 'account-badge';
+        document.getElementById('topBalance').innerText = '$' + demoBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+        document.getElementById('topBalance').style.color = '#ff4444';
+        document.getElementById('demoActive').innerText = 'Active'; 
+        document.getElementById('realActive').innerText = '';
+    } else { 
+        document.getElementById('badge').innerText = 'R'; 
+        document.getElementById('badge').className = 'account-badge real';
+        document.getElementById('topBalance').innerText = '$' + realBal.toLocaleString('en-US', {minimumFractionDigits: 2}); 
+        document.getElementById('topBalance').style.color = '#00c853';
+        document.getElementById('realActive').innerText = 'Active'; 
+        document.getElementById('demoActive').innerText = '';
+    } 
+}
+
+function setStake(val) { 
+    stake = val; 
+    document.getElementById('stakeAmount').value = val; 
+    document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active')); 
+    event.target.classList.add('active'); 
+}
+function changeStake(dir) { 
+    stake = Math.max(1, stake + dir); 
+    document.getElementById('stakeAmount').value = stake; 
+    updateStakeButtons();
+}
+function updateStakeButtons() {
+    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+    document.querySelectorAll('.stake-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if(parseFloat(btn.innerText.replace('$','')) === stake) btn.classList.add('active');
+    });
+}
+
+function selectDigit(digit, element) {
+    selectedDigit = digit;
+    document.querySelectorAll('.digit-btn').forEach(btn => btn.classList.remove('active'));
+    element.classList.add('active');
+    addNotification('🎯', 'Digit Selected', `Target digit: ${digit}`, '#00aaff');
+}
+
+function setMode(mode) {
+    tradeMode = mode;
+    document.getElementById('autoBtn').classList.remove('active');
+    document.getElementById('manualBtn').classList.remove('active');
+    
+    if(mode === 'auto') {
+        document.getElementById('autoBtn').classList.add('active');
+        startAutoTrade();
+        addNotification('🤖', 'Auto Mode ON', `Trading digit ${selectedDigit} every 5s`, '#00c853');
+    } else {
+        document.getElementById('manualBtn').classList.add('active');
+        clearInterval(autoInterval);
+        addNotification('✋', 'Manual Mode ON', 'Click Even/Odd to trade', '#00aaff');
+    }
+}
+
+function startAutoTrade() {
+    clearInterval(autoInterval);
+    autoInterval = setInterval(() => {
+        let lastDigit = Math.floor(Math.random() * 10);
+        let type = (lastDigit % 2 === 0) ? 'even' : 'odd';
+        let win = lastDigit === selectedDigit;
+        autoTrade(type, win, lastDigit);
+    }, 5000);
+}
+
+function trade(type) { 
+    if(tradeMode === 'auto') return;
+    manualTrade(type);
+}
+
+function manualTrade(type) {
+    executeTrade(type, Math.random() > 0.5);
+}
+
+function autoTrade(type, win, lastDigit) {
+    executeTrade(type, win, lastDigit);
+}
+
+function executeTrade(type, win, lastDigit = '?') {
+    stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+    let targetBal = currentAccount === 'demo' ? demoBal : realBal; 
+    if(targetBal < stake) {
+        clearInterval(autoInterval);
+        return alert("Not enough balance! Stopping Auto.");
+    }
+
+    let targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
+    let stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+    let multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
+
+    let pnl = win ? stake * multiplier : -stake;
+    if(win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
+    if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
+
+    profit = pnl;
+    targetBal = targetBal + profit;
+    if(currentAccount === 'demo') { 
+        demoBal = targetBal; 
+        localStorage.setItem('demoBalance', demoBal); 
+    } else { 
+        realBal = targetBal; 
+        localStorage.setItem('realBalance', realBal); 
+    }
+
+    document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
+
+    let historyDiv = document.getElementById("history");
+    if(historyDiv.innerHTML.includes("No trades yet")) { historyDiv.innerHTML = ""; }
+    let color = profit >= 0 ? "#00ff88" : "#ff0044";
+    let time = new Date().toLocaleTimeString();
+    let tradeText = `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${tradeCount}</b> - ${type.toUpperCase()} Digit:${lastDigit} $${stake} - ${time} <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span> </p>`;
+    historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+
+    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+    history.unshift({type: type.toUpperCase(), stake: stake, pnl: profit, digit: lastDigit, time: new Date().toLocaleString()});
+    localStorage.setItem('tradeHistory', JSON.stringify(history));
+
+    if(profit >= 0) {
+        addNotification('✅', 'Trade Won', `Digit ${lastDigit} +$${profit.toFixed(2)}`, '#00c853');
+    } else {
+        addNotification('❌', 'Trade Lost', `Digit ${lastDigit} -$${Math.abs(profit).toFixed(2)}`, '#ff4444');
+    }
+
+    tradeCount++;
+}
+
+function loadHistory() {
+    let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+    let historyDiv = document.getElementById("history");
+    if(history.length > 0) {
+        historyDiv.innerHTML = "";
+        history.slice(0,10).forEach((t, i) => {
+            let color = t.pnl >= 0 ? "#00ff88" : "#ff0044";
+            historyDiv.innerHTML += `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;"><b>Trade #${i+1}</b> - ${t.type} Digit:${t.digit} $${t.stake} - ${t.time} <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span> </p>`;
+        });
+    }
+}
+
+async function doDeposit() { 
+    const phone = document.getElementById('depPhone').value; 
+    const amountUSD = parseFloat(document.getElementById('depAmount').value); 
+    if(!phone || !amountUSD) return alert("Enter phone and amount"); 
+    
+    const amountKES = Math.round(amountUSD / KES_TO_USD);
+    alert(`Sending STK Push for $${amountUSD} to ${phone}...`); 
+    closeModal('mpesaForm'); 
+    
+    const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json' }, 
+        body: JSON.stringify({ amount: amountKES, phone: phone })
+    }); 
+    const data = await res.json(); 
+    if(data.ResponseCode === "0") { 
+        alert("STK Sent! Check your phone");
+        addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');
+        setTimeout(loadRealBalance, 10000); 
+    } else { 
+        alert("Error: " + data.ResponseDescription); 
+    } 
+}
+
+async function loadRealBalance() { 
+    const phone = prompt("Enter your phone to check balance:"); 
+    if(!phone) return; 
+    const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
+    const data = await res.json(); 
+    let balanceKES = data.balance || 0; 
+    realBal = balanceKES * KES_TO_USD;
+    localStorage.setItem('realBalance', realBal); 
+    if(currentAccount === 'real') switchAccount('real'); 
+    if(realBal > 0) { 
+        addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); 
+    }
+}
+
+function toggleNotif() {
+    document.getElementById('notifDropdown').classList.toggle('active');
+}
+function clearNotifs() {
+    document.getElementById('notifCount').style.display = 'none';
+    document.getElementById('notifCount').innerText = '0';
+    document.querySelectorAll('.notif-item').forEach(i => i.classList.remove('unread'));
+    document.getElementById('notifDropdown').classList.remove('active');
+}
+function addNotification(icon, title, text, color) {
+    let list = document.getElementById('notifList');
+    let count = document.getElementById('notifCount');
+    let current = parseInt(count.innerText) || 0;
+    count.innerText = current + 1;
+    count.style.display = 'flex';
+    let newNotif = `<div class="notif-item unread">
+    <div class="notif-icon" style="background:${color};">${icon}</div>
+    <div><b>${title}</b><br><small style="color:#aaa;">${text}</small></div>
+    </div>`;
+    list.innerHTML = newNotif + list.innerHTML;
+}
+
+window.onclick = function(e) { 
+    if(!e.target.closest('.account-toggle')) { 
+        document.getElementById('dropdown').classList.remove('active'); 
+    } 
+    if(!e.target.closest('.notif-btn')) { 
+        document.getElementById('notifDropdown').classList.remove('active'); 
+    } 
+}
+</script>
+
+</body>
+              </html>
