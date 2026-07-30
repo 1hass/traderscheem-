@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding: 10px; overflow-x:hidden; }
-/* SIDEBAR MENU */
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#111; overflow-x:hidden; transition:0.3s; padding-top:60px; border-right:1px solid #333; }
 .sidebar a { padding:15px 25px; text-decoration:none; font-size:16px; color:#ccc; display:block; transition:0.3s; }
 .sidebar a:hover { background:#1a1a1a; color:#00aaff; }
@@ -16,10 +15,12 @@ body { background: #0a0a0a; color: white; font-family: Arial; margin:0; padding:
 .account-toggle {background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative;}
 .account-badge {background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center;}
 .account-badge.real {background:#00c853;}
-.account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:170px; z-index:9999; border:1px solid #333;}
+.account-dropdown {display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:190px; z-index:9999; border:1px solid #333;}
 .account-dropdown.active {display:block;}
 .account-option {padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px;}
 .account-option:hover {background:#333;}
+.reset-btn { color:#aaa; font-size:13px; }
+.reset-btn:hover { background:#333; color:#00aaff; }
 .dot {width:8px; height:8px; border-radius:50%;}
 .dot.real {background:#00c853;}
 .dot.demo {background:#ff4444;}
@@ -66,7 +67,7 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
 <div style="display:flex; align-items:center; gap:10px;">
 <button style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
-<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;" onclick="openNav()">☰</button> <!-- MENU BUTTON WORKS NOW -->
+<button style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px;" onclick="openNav()">☰</button>
 </div>
 <div class="account-toggle" onclick="toggleDropdown()">
 <span id="badge" class="account-badge">D</span>
@@ -75,6 +76,7 @@ h2 { display:none; } h3 { margin-top:10px; margin-bottom:5px; }
 <div id="dropdown" class="account-dropdown">
 <div class="account-option" onclick="switchAccount('demo')"><span class="dot demo"></span> Demo Account <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span></div>
 <div class="account-option" onclick="switchAccount('real')"><span class="dot real"></span> Real Account <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span></div>
+<div class="account-option reset-btn" onclick="resetDemo()">🔄 Reset Demo Balance</div> <!-- NEW BUTTON -->
 </div>
 </div>
 <div style="display:flex; align-items:center; gap:10px;">
@@ -144,10 +146,15 @@ new TradingView.widget({
 
 <script>
 let currentAccount = 'demo';
-let demoBal = 10000.00;
+let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00; // NOW SAVES + STARTS 100K
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
 let profit = 0.00; let tradeCount = 1;
+
+// LOAD BALANCE ON START
+window.onload = function() {
+switchAccount(currentAccount);
+}
 
 /* SIDEBAR FUNCTIONS */
 function openNav() {
@@ -163,6 +170,14 @@ function toggleDropdown() { document.getElementById('dropdown').classList.toggle
 function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 function openDeposit() { closeNav(); document.getElementById('depositModal').style.display = 'block'; }
 function showMpesaForm() { closeModal('depositModal'); document.getElementById('mpesaForm').style.display = 'block'; }
+
+function resetDemo() { // NEW FUNCTION
+demoBal = 100000.00;
+localStorage.setItem('demoBalance', demoBal);
+if(currentAccount === 'demo') switchAccount('demo');
+alert("Demo Balance Reset to $100,000.00");
+toggleDropdown();
+}
 
 function setStake(val) { 
 stake = val; 
@@ -212,7 +227,8 @@ if(!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
 
 profit = pnl;
 targetBal = targetBal + profit;
-if(currentAccount === 'demo') demoBal = targetBal; else { realBal = targetBal; localStorage.setItem('realBalance', realBal); }
+if(currentAccount === 'demo') { demoBal = targetBal; localStorage.setItem('demoBalance', demoBal); } 
+else { realBal = targetBal; localStorage.setItem('realBalance', realBal); }
 
 document.getElementById("topBalance").innerHTML = "$" + targetBal.toFixed(2);
 
@@ -253,4 +269,4 @@ if(currentAccount === 'real') switchAccount('real');
 window.onclick = function(e) { if(!e.target.closest('.account-toggle')) { document.getElementById('dropdown').classList.remove('active'); } }
 </script>
 </body>
-  </html>
+                                                                       </html>
