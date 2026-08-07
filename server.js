@@ -90,21 +90,6 @@ app.get('/balance/:phone', async (req, res) => {
     });
   }
 });
-app.post('/callback', (req, res) => {
-  try {
-    const callback = req.body.Body.stkCallback;
-    if(callback.ResultCode === 0) {
-      const items = callback.CallbackMetadata.Item;
-      const amount = items.find(i => i.Name === 'Amount').Value;
-      const phone = items.find(i => i.Name === 'PhoneNumber').Value;
-      console.log(`SUCCESS: Added KES ${amount} from ${phone}`);
-    } else {
-      console.log(`FAILED: ${callback.ResultDesc}`);
-    }
-  } catch (e) {
-    console.error("Callback Error:", e);
-  }
-  res.json({ ResultCode: 0, ResultDesc: "Received" });
-});
+
 
 app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
