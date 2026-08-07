@@ -32,7 +32,34 @@ const CALLBACK_URL = process.env.CALLBACK_URL;
 
 let accessToken = '';
 
+async function getToken() {
+  try {
+    const response = await axios.post(
+      "https://pay.pesapal.com/v3/api/Auth/RequestToken",
+      {
+        consumer_key: PESAPAL_CONSUMER_KEY,
+        consumer_secret: PESAPAL_CONSUMER_SECRET
+      },
+      {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        timeout: 10000
+      }
+    );
 
+    accessToken = response.data.token;
+    return accessToken;
+
+  } catch (error) {
+    console.error(
+      "Pesapal Token Error:",
+      error.response?.data || error.message
+    );
+    throw new Error("Could not get Pesapal token");
+  }
+        }
 
 app.post('/stkpush', async (req, res) => {
   try {
