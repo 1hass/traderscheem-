@@ -32,20 +32,7 @@ const CALLBACK_URL = process.env.CALLBACK_URL;
 
 let accessToken = '';
 
-async function getToken() {
-  try {
-    const auth = Buffer.from(`${CONSUMER_KEY}:${CONSUMER_SECRET}`).toString('base64');
-    const res = await axios.get('https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials', {
-      headers: { Authorization: `Basic ${auth}` },
-      timeout: 10000
-    });
-    accessToken = res.data.access_token;
-    return accessToken;
-  } catch (error) {
-    console.error("Token Error:", error.response?.data || error.message);
-    throw new Error("Could not get Daraja token");
-  }
-}
+
 
 app.post('/stkpush', async (req, res) => {
   try {
