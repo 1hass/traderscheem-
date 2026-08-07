@@ -60,50 +60,6 @@ async function getToken() {
     throw new Error("Could not get Pesapal token");
   }
         }
-
-app.post('/stkpush', async (req, res) => {
-  try {
-    let { amount, phone } = req.body;
-
-    // Validation
-    if (!amount || !phone) {
-      return res.status(400).json({ success: false, message: "amount and phone required" });
-    }
-
-    // Format phone: 07... or +254... to 254...
-    phone = phone.toString().replace(/\+/g, '');
-    if (phone.startsWith('0')) phone = '254' + phone.slice(1);
-    if (!phone.startsWith('254')) phone = '254' + phone;
-
-    await getToken();
-
-    const timestamp = new Date().toISOString().replace(/[^0-9]/g, '').slice(0, 14);
-    const password = Buffer.from(`${SHORTCODE}${PASSKEY}${timestamp}`).toString('base64');
-
-    const response = await axios.post('https://sandbox.safaricom.co.ke/mpesa/stkpush/v1/processrequest', {
-      BusinessShortCode: SHORTCODE,
-      Password: password,
-      Timestamp: timestamp,
-      TransactionType: "CustomerPayBillOnline",
-      Amount: amount,
-      PartyA: phone,
-      PartyB: SHORTCODE,
-      PhoneNumber: phone,
-      CallBackURL: CALLBACK_URL,
-      AccountReference: "TradersCheem",
-      TransactionDesc: "Trading Deposit"
-    }, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-      timeout: 15000
-    });
-
-    res.json({ success: true, data: response.data });
-
-  } catch (e) {
-    console.error("STK Error:", e.response?.data || e.message);
-    res.status(500).json({ success: false, message: e.response?.data?.errorMessage || e.message });
-  }
-});
 app.get('/balance/:phone', async (req, res) => {
   try {
     const phone = req.params.phone;
