@@ -325,39 +325,39 @@ function loadHistory() {
 async function doDeposit() { 
     const phone = document.getElementById('depPhone').value; 
     const amountUSD = parseFloat(document.getElementById('depAmount').value); 
+    
     if(!phone || !amountUSD) return alert("Enter phone and amount"); 
     
-    const amountKES = Math.round(amountUSD / KES_TO_USD);
-    alert(`Sending STK Push for $${amountUSD} to ${phone}...`); 
+    alert(`Sending M-Pesa prompt for $${amountUSD} to ${phone}...`); 
     closeModal('mpesaForm'); 
     
     const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { 
         method: 'POST', 
         headers: { 'Content-Type': 'application/json' }, 
-        body: JSON.stringify({ amount: amountKES, phone: phone })
+        body: JSON.stringify({ amount: amountUSD, phone: phone }) // SEND USD NOT KES
     }); 
-    const data = await res.json();
+    
+    const data = await res.json(); 
+    
+    if (data.success) { 
+        alert(data.message); // "M-Pesa prompt sent..."
+        addNotification('💰', 'Deposit Sent', `$${amountUSD} - Check your phone`, '#00aaff'); 
+        setTimeout(() => loadRealBalance(phone), 15000); // Check balance after 15s
+    } else { 
+        alert("Error: " + data.message); 
+    } 
 
-if (data.success && data.data && data.data.ResponseCode === "0") {
-    alert("STK Sent! Check your phone");
-    addNotification('💰', 'Deposit Sent', `$${amountUSD} - Waiting for payment`, '#00aaff');
-    setTimeout(loadRealBalance, 10000);
-} else {
-    alert("Error: " + (data.message || data.data?.ResponseDescription || "Unknown error"));
-    }
-}
 
-async function loadRealBalance() { 
-    const phone = prompt("Enter your phone to check balance:"); 
+async function loadRealBalance(phone) { 
+    if(!phone) phone = prompt("Enter your phone to check balance:");
     if(!phone) return; 
     const res = await fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`); 
     const data = await res.json(); 
-    let balanceKES = data.balance || 0; 
-    realBal = balanceKES * KES_TO_USD;
+    let balanceUSD = data.balance || 0; // Backend already returns USD
+    realBal = balanceUSD;
     localStorage.setItem('realBalance', realBal); 
     if(currentAccount === 'real') switchAccount('real'); 
-    if(realBal > 0) { 
-        addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); 
+    if(realBal > 0) { addNotification('💰', 'Deposit Received', `+$${realBal.toFixed(2)}`, '#00c853'); } 
     }
 }
 
