@@ -26,11 +26,10 @@ app.get('/', (req, res) => {
 });
 
 // ✅ NOW READING FROM RENDER ENVIRONMENT VARIABLES
-const CONSUMER_KEY = process.env.CONSUMER_KEY;
-const CONSUMER_SECRET = process.env.CONSUMER_SECRET;
-const PASSKEY = process.env.PASSKEY;
-const SHORTCODE = process.env.SHORTCODE;
+const PESAPAL_CONSUMER_KEY = process.env.PESAPAL_CONSUMER_KEY;
+const PESAPAL_CONSUMER_SECRET = process.env.PESAPAL_CONSUMER_SECRET;
 const CALLBACK_URL = process.env.CALLBACK_URL;
+
 let accessToken = '';
 
 async function getToken() {
