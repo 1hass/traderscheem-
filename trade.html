@@ -520,5 +520,72 @@ async function doDeposit() {
     }
 
   } catch (error) {
-    console.error('Deposit error:', error);
-    alert('Could not connect to the deposit server. Pl
+    console.error('Balance error:', error);
+  }
+}
+
+function toggleNotif(event) {
+  if (event) event.stopPropagation();
+
+  document.getElementById('notifDropdown').classList.toggle('active');
+}
+
+function clearNotifs(event) {
+  if (event) event.stopPropagation();
+
+  const count = document.getElementById('notifCount');
+
+  count.style.display = 'none';
+  count.innerText = '0';
+
+  document.querySelectorAll('.notif-item').forEach(function(item) {
+    item.classList.remove('unread');
+  });
+
+  document.getElementById('notifDropdown').classList.remove('active');
+}
+
+function addNotification(icon, title, text, color) {
+  const list = document.getElementById('notifList');
+  const count = document.getElementById('notifCount');
+
+  if (!list || !count) return;
+
+  const current = parseInt(count.innerText) || 0;
+
+  count.innerText = current + 1;
+  count.style.display = 'flex';
+
+  const newNotif =
+    `<div class="notif-item unread">
+      <div class="notif-icon" style="background:${color};">${icon}</div>
+      <div>
+        <b>${title}</b><br>
+        <small style="color:#aaa;">${text}</small>
+      </div>
+    </div>`;
+
+  list.innerHTML = newNotif + list.innerHTML;
+}
+
+/* Close dropdowns when tapping outside them */
+document.addEventListener('click', function(event) {
+  const account = document.querySelector('.account-toggle');
+  const dropdown = document.getElementById('dropdown');
+
+  if (account && dropdown && !account.contains(event.target)) {
+    dropdown.classList.remove('active');
+  }
+
+  const notif = document.querySelector('.notif-btn');
+  const notifDropdown = document.getElementById('notifDropdown');
+
+  if (notif && notifDropdown && !notif.contains(event.target)) {
+    notifDropdown.classList.remove('active');
+  }
+});
+</script>
+
+</body>
+</html>
+  
