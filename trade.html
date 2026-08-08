@@ -235,6 +235,17 @@ try {
   <button type="button" onclick="doDeposit()" class="btn-green">Deposit Now</button>
 </div>
 
+<!-- Pesapal iFrame Modal Overlay -->
+<div id="pesapalModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999999;">
+  <div style="position:relative; width:95%; max-width:500px; height:85vh; margin:5vh auto; background:#181818; border-radius:12px; overflow:hidden; border:1px solid #333;">
+    <div style="background:#111; color:#fff; padding:12px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2a2a2a;">
+      <span style="font-weight:bold; color:#00ff88;">Complete M-Pesa Payment</span>
+      <button onclick="closePesapalModal()" style="background:#ff4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">Close X</button>
+    </div>
+    <iframe id="pesapalFrame" src="" style="width:100%; height:calc(100% - 50px); border:none;"></iframe>
+  </div>
+</div>
+
 <script>
 let currentAccount = 'demo';
 let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
@@ -470,31 +481,22 @@ function loadHistory() {
   });
 }
 
-/*
-  Deposit request.
-  This keeps the existing backend endpoint but adds proper error handling
-  so a network/backend failure does not break the page JavaScript.
-*/
+// Deposit Function integrated with Pesapal iFrame Modal
 async function doDeposit() {
   const phone = document.getElementById('depPhone').value.trim();
   const amountUSD = parseFloat(document.getElementById('depAmount').value);
 
   if (!phone || !amountUSD || amountUSD <= 0) {
-    alert('Enter phone and amount');
+    alert('Please enter a valid phone number and deposit amount.');
     return;
   }
 
-  alert(`Sending M-Pesa prompt for $${amountUSD} to ${phone}...`);
   closeModal('mpesaForm');
-
-  try {
+try {
     const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({
-        amount:amountUSD,
-        phone:phone
-      })
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ amount: amountUSD, phone: phone })
     });
 
     if (!res.ok) {
@@ -503,87 +505,67 @@ async function doDeposit() {
 
     const data = await res.json();
 
-    if (data.success) {
-      alert(data.message || 'M-Pesa prompt sent.');
-      addNotification(
-        '💰',
-        'Deposit Sent',
-        `$${amountUSD} - Check your phone`,
-        '#00aaff'
-      );
-
-      setTimeout(function() {
-        loadRealBalance(phone);
-      }, 15000);
+    if (data.success && data.redirect_url) {
+      document.getElementById('pesapalFrame').src = data.redirect_url;
+      document.getElementById('pesapalModal').style.display = 'block';
+      addNotification('💰', 'Deposit Processing', `$${amountUSD} - Complete M-Pesa on screen`, '#00aaff');
     } else {
-      alert('Error: ' + (data.message || 'Deposit failed.'));
+      alert('Error: ' + (data.message || 'Could not initiate deposit.'));
     }
 
   } catch (error) {
-    console.error('Balance error:', error);
+    console.error('Deposit Error:', error);
+    alert('Error connecting to deposit service.');
   }
+}
+
+function closePesapalModal() {
+  document.getElementById('pesapalModal').style.display = 'none';
+  document.getElementById('pesapalFrame').src = '';
 }
 
 function toggleNotif(event) {
   if (event) event.stopPropagation();
-
   document.getElementById('notifDropdown').classList.toggle('active');
 }
 
 function clearNotifs(event) {
   if (event) event.stopPropagation();
-
-  const count = document.getElementById('notifCount');
-
-  count.style.display = 'none';
-  count.innerText = '0';
-
-  document.querySelectorAll('.notif-item').forEach(function(item) {
-    item.classList.remove('unread');
-  });
-
   document.getElementById('notifDropdown').classList.remove('active');
 }
 
-function addNotification(icon, title, text, color) {
+function addNotification(icon, title, subtitle, color) {
   const list = document.getElementById('notifList');
   const count = document.getElementById('notifCount');
 
-  if (!list || !count) return;
+  const item = document.createElement('div');
+  item.className = 'notif-item unread';
+  item.innerHTML = `
+    <div class="notif-icon" style="background:${color};">${icon}</div>
+    <div>
+      <b>${title}</b><br>
+      <small style="color:#aaa;">${subtitle}</small>
+    </div>
+  `;
 
-  const current = parseInt(count.innerText) || 0;
-
-  count.innerText = current + 1;
-  count.style.display = 'flex';
-
-  const newNotif =
-    `<div class="notif-item unread">
-      <div class="notif-icon" style="background:${color};">${icon}</div>
-      <div>
-        <b>${title}</b><br>
-        <small style="color:#aaa;">${text}</small>
-      </div>
-    </div>`;
-
-  list.innerHTML = newNotif + list.innerHTML;
+  list.prepend(item);
+  count.innerText = parseInt(count.innerText || '0') + 1;
 }
 
-/* Close dropdowns when tapping outside them */
-document.addEventListener('click', function(event) {
-  const account = document.querySelector('.account-toggle');
-  const dropdown = document.getElementById('dropdown');
-
-  if (account && dropdown && !account.contains(event.target)) {
-    dropdown.classList.remove('active');
-  }
-
-  const notif = document.querySelector('.notif-btn');
-  const notifDropdown = document.getElementById('notifDropdown');
-
-  if (notif && notifDropdown && !notif.contains(event.target)) {
-    notifDropdown.classList.remove('active');
-  }
-});
+function loadRealBalance(phone) {
+  fetch(`https://traderscheem-backend-9p9o.onrender.com/balance/${phone}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        realBal = parseFloat(data.balance);
+        localStorage.setItem('realBalance', realBal);
+        if (currentAccount === 'real') {
+          switchAccount('real');
+        }
+      }
+    })
+    .catch(err => console.error('Balance update error:', err));
+}
 </script>
 
 </body>
