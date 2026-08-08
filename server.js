@@ -1,4 +1,4 @@
-Process.on('uncaughtException', err => console.error('CRASH:', err));
+process.on('uncaughtException', err => console.error('CRASH:', err)); // ✅ FIXED
 process.on('unhandledRejection', err => console.error('CRASH:', err));
 
 const express = require('express');
