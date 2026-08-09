@@ -368,10 +368,13 @@ function switchAccount(type, event) {
     badge.innerText = 'R';
     badge.className = 'account-badge real';
 
+        const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
+
     balance.innerText = '$' + realBal.toLocaleString('en-US', {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
     });
+
     balance.style.color = '#00c853';
 
     document.getElementById('realActive').innerText = 'Active';
