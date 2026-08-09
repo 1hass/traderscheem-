@@ -364,21 +364,22 @@ function switchAccount(type, event) {
 
     document.getElementById('demoActive').innerText = 'Active';
     document.getElementById('realActive').innerText = '';
-  } else {
+    } else {
     badge.innerText = 'R';
     badge.className = 'account-badge real';
 
-        const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
+    const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
 
     balance.innerText = '$' + realBal.toLocaleString('en-US', {
       minimumFractionDigits: decimals,
       maximumFractionDigits: decimals
     });
-
     balance.style.color = '#00c853';
 
     document.getElementById('realActive').innerText = 'Active';
     document.getElementById('demoActive').innerText = '';
+}
+      
   }
 }
 
