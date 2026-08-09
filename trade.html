@@ -469,7 +469,6 @@ function trade(type) {
   } else {
     addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
   }
-
 TradeCount++;
 }
 
@@ -544,13 +543,6 @@ async function doDeposit() {
   }
 }
 
-    }
-
-  } catch (error) {
-    console.error('Deposit Error:', error);
-    alert('Error connecting to deposit service.');
-  }
-}
 
 function closePesapalModal() {
   document.getElementById('pesapalModal').style.display = 'none';
