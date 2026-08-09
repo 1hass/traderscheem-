@@ -342,40 +342,59 @@ function updateStakeButtons() {
 }
 
 function switchAccount(type, event) {
+function switchAccount(type, event) {
   if (event) event.stopPropagation();
 
   currentAccount = type;
 
   const dropdown = document.getElementById('dropdown');
-  dropdown.classList.remove('active');
+  if (dropdown) dropdown.classList.remove('active');
 
   const badge = document.getElementById('badge');
   const balance = document.getElementById('topBalance');
 
   if (type === 'demo') {
-    badge.innerText = 'D';
-    badge.className = 'account-badge';
+    if (badge) {
+      badge.innerText = 'D';
+      badge.className = 'account-badge';
+    }
 
-    balance.innerText = '$' + demoBal.toLocaleString('en-US', {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    });
-    balance.style.color = '#ff4444';
+    if (balance) {
+      balance.innerText = '$' + Number(demoBal).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      balance.style.color = '#ff4444';
+    }
 
-    document.getElementById('demoActive').innerText = 'Active';
-    document.getElementById('realActive').innerText = '';
-balance.innerText = '$' + realBal.toLocaleString('en-US', {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
-    });
-      
+    const demoLabel = document.getElementById('demoActive');
+    const realLabel = document.getElementById('realActive');
+    if (demoLabel) demoLabel.innerText = 'Active';
+    if (realLabel) realLabel.innerText = '';
+
+  } else {
+    if (badge) {
+      badge.innerText = 'R';
+      badge.className = 'account-badge real';
+    }
+
+    if (balance) {
+      // Show 3 decimals for fractional USD (e.g. $0.007 for 1 KSh)
+      const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
+
+      balance.innerText = '$' + Number(realBal).toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+      balance.style.color = '#00c853';
+    }
+
+    const demoLabel = document.getElementById('demoActive');
+    const realLabel = document.getElementById('realActive');
+    if (realLabel) realLabel.innerText = 'Active';
+    if (demoLabel) demoLabel.innerText = '';
   }
 }
-
-function trade(type) {
-  stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-
-  let targetBal = currentAccount === 'demo' ? demoBal : realBal;
 
   if (targetBal < stake) {
     alert('Not enough balance!');
