@@ -342,13 +342,15 @@ function updateStakeButtons() {
 }
 
 function switchAccount(type, event) {
-function switchAccount(type, event) {
   if (event) event.stopPropagation();
 
   currentAccount = type;
 
   const dropdown = document.getElementById('dropdown');
   if (dropdown) dropdown.classList.remove('active');
+
+  const chart = document.getElementById('tradingview_chart');
+  if (chart) chart.style.pointerEvents = 'auto';
 
   const badge = document.getElementById('badge');
   const balance = document.getElementById('topBalance');
@@ -379,7 +381,6 @@ function switchAccount(type, event) {
     }
 
     if (balance) {
-      // Show 3 decimals for fractional USD (e.g. $0.007 for 1 KSh)
       const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
 
       balance.innerText = '$' + Number(realBal).toLocaleString('en-US', {
@@ -395,6 +396,11 @@ function switchAccount(type, event) {
     if (demoLabel) demoLabel.innerText = '';
   }
 }
+
+function trade(type) {
+  stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+
+  let targetBal = currentAccount === 'demo' ? demoBal : realBal;
 
   if (targetBal < stake) {
     alert('Not enough balance!');
@@ -434,6 +440,7 @@ function switchAccount(type, event) {
   if (historyDiv.innerHTML.includes('No trades yet')) {
     historyDiv.innerHTML = '';
   }
+  
 
   const color = profit >= 0 ? '#00ff88' : '#ff0044';
   const time = new Date().toLocaleTimeString();
