@@ -470,14 +470,17 @@ function trade(type) {
     addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
   }
 
-  tradeCount++;
+TradeCount++;
 }
 
 function updateTopBalance(balance) {
+  // Dynamically set 3 decimals for small amounts under $0.01
+  const decimals = (balance > 0 && balance < 0.01) ? 3 : 2;
+
   document.getElementById('topBalance').innerText =
     '$' + Number(balance).toLocaleString('en-US', {
-      minimumFractionDigits:2,
-      maximumFractionDigits:2
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals
     });
 }
 
@@ -503,19 +506,20 @@ function loadHistory() {
 // Deposit Function integrated with Pesapal iFrame Modal
 async function doDeposit() {
   const phone = document.getElementById('depPhone').value.trim();
-  const amountUSD = parseFloat(document.getElementById('depAmount').value);
+  const amountKsh = parseFloat(document.getElementById('depAmount').value);
 
-  if (!phone || !amountUSD || amountUSD <= 0) {
+  if (!phone || !amountKsh || amountKsh <= 0) {
     alert('Please enter a valid phone number and deposit amount.');
     return;
   }
 
   closeModal('mpesaForm');
-try {
+
+  try {
     const res = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ amount: amountUSD, phone: phone })
+      body: JSON.stringify({ amount: amountKsh, phone: phone })
     });
 
     if (!res.ok) {
@@ -527,9 +531,19 @@ try {
     if (data.success && data.redirect_url) {
       document.getElementById('pesapalFrame').src = data.redirect_url;
       document.getElementById('pesapalModal').style.display = 'block';
-      addNotification('💰', 'Deposit Processing', `$${amountUSD} - Complete M-Pesa on screen`, '#00aaff');
+      
+      const amountUSD = (amountKsh * 0.0077).toFixed(3);
+      addNotification('💰', 'Deposit Processing', `KSh ${amountKsh} (~$${amountUSD}) - Complete M-Pesa on screen`, '#00aaff');
     } else {
       alert('Error: ' + (data.message || 'Could not initiate deposit.'));
+    }
+
+  } catch (error) {
+    console.error('Deposit Error:', error);
+    alert('Error connecting to deposit service.');
+  }
+}
+
     }
 
   } catch (error) {
