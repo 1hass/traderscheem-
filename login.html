@@ -1,24 +1,67 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Login - HassanFX</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { background: #0a0a0a; color: white; font-family: Arial; text-align: center; padding: 50px; }
-    .box { background: #1a1a1a; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; }
-    input { width: 90%; padding: 12px; margin: 10px 0; border-radius: 5px; border: none; }
-    button { background: #00ff88; color: black; padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; }
-    a { color: #007bff; }
+    * { box-sizing: border-box; }
+    body { background: #0a0a0a; color: white; font-family: Arial, sans-serif; text-align: center; padding: 50px 20px; margin: 0; }
+    .box { background: #1a1a1a; padding: 30px; border-radius: 10px; max-width: 400px; margin: auto; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+    h2 { margin-top: 0; }
+    p { color: #888; font-size: 14px; margin-bottom: 20px; }
+    input { width: 100%; padding: 12px; margin: 10px 0; border-radius: 5px; border: 1px solid #333; background: #222; color: #fff; font-size: 15px; outline: none; }
+    button { width: 100%; background: #00ff88; color: black; padding: 12px; border: none; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; margin-top: 10px; }
+    button:disabled { background: #555; cursor: not-allowed; }
+    a { color: #007bff; text-decoration: none; font-size: 14px; }
+    a:hover { text-decoration: underline; }
+    #msg { margin-top: 15px; font-size: 14px; }
+    .error { color: #ff4d4d; }
+    .success { color: #00ff88; }
   </style>
 </head>
 <body>
+
   <div class="box">
-    <h2>Login to Demo Account</h2>
-    <input type="email" placeholder="Email"><br>
-    <input type="password" placeholder="Password"><br>
-    <button onclick="window.location.href='trade.html'">Create Account</button><br><br>
-    <a href="index.html">← Back to Home</a> | 
-    <a href="register.html">Create Account</a>
+    <h2>Login to HassanFX</h2>
+    <p>Access your trading account</p>
+
+    <form id="loginForm">
+      <input type="email" id="email" placeholder="Email Address" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit" id="submitBtn">Login</button>
+    </form>
+
+    <div id="msg"></div>
+    <br>
+    <span style="color:#888; font-size: 14px;">First time here?</span> 
+    <a href="index.html">Create Account</a>
   </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const msg = document.getElementById('msg');
+    const btn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      msg.className = '';
+      msg.textContent = 'Logging in...';
+      btn.disabled = true;
+
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      // Save user session & load trading dashboard
+      localStorage.setItem('userEmail', email);
+      msg.className = 'success';
+      msg.textContent = 'Login successful! Opening dashboard...';
+      
+      setTimeout(() => {
+        window.location.href = 'trade.html';
+      }, 1000);
+    });
+  </script>
+
 </body>
 </html>
