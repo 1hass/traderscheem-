@@ -526,11 +526,39 @@ function addNotification(icon, title, desc, color) {
 }
 
 function doDeposit() {
-  const amount = document.getElementById('depAmount').value;
-  if (!amount || amount <= 0) {
-    alert('Please enter a valid deposit amount');
+  const phoneInput = document.getElementById('depPhone');
+  const amountInput = document.getElementById('depAmount');
+
+  const phone = phoneInput ? phoneInput.value.trim() : '';
+  const amount = amountInput ? parseFloat(amountInput.value) : 0;
+
+  if (!phone || isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid phone number and amount.');
     return;
   }
+
+  // Request the Pesapal frame link from your backend server
+  fetch('/api/pesapal/stkpush', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone, amount })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.redirect_url) {
+      document.getElementById('pesapalFrame').src = data.redirect_url;
+      document.getElementById('pesapalModal').style.display = 'block';
+      closeModal('mpesaForm');
+    } else {
+      alert(data.message || 'Deposit initiation failed.');
+    }
+  })
+  .catch(err => {
+    console.error('Connection error:', err);
+    alert('Failed to connect to the server.');
+  });
+}
+
   
   // Connect your Pesapal API backend trigger here
   alert('Processing deposit of $' + amount);
