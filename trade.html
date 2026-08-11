@@ -550,7 +550,9 @@ function doDeposit() {
     return;
   }
 
-  fetch('/api/pesapal/stkpush', {
+  fetch('https://YOUR-BACKEND-URL.com/api/pesapal/stkpush', {
+  fetch('https://YOUR-BACKEND-URL.com/api/pesapal/stkpush', {
+  
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone, amount })
