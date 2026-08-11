@@ -3,7 +3,6 @@
 <head>
 <title>Binary - Trading</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <style>
 body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; padding:10px; overflow-x:hidden; }
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
@@ -13,11 +12,7 @@ body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; 
 .sidebar-header small { color:#aaa; font-size:13px; }
 .sidebar a { padding:14px 25px; text-decoration:none; font-size:16px; color:#ddd; display:flex; align-items:center; gap:12px; transition:0.2s; }
 .sidebar a:hover { background:#222; color:#00aaff; }
-
-/* Backdrop Overlays */
 .overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999998; }
-.modal-overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.75); backdrop-filter:blur(3px); z-index:999999; }
-
 .account-toggle { background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative; }
 .account-badge { background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
 .account-badge.real { background:#00c853; }
@@ -38,9 +33,8 @@ body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; 
 .notif-item:hover { background:#222; }
 .notif-item.unread { background:#111; }
 .notif-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
-
-/* Modal Styling */
-.modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#181a20; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:1000000; border-top:1px solid #333; box-sizing:border-box; max-height:90vh; overflow-y:auto; }
+.modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:1000000; border-top:1px solid #333; box-sizing:border-box; }
+.pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
 .btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; cursor:pointer; }
 .trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:10px; }
 .stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; gap:10px; }
@@ -80,7 +74,6 @@ button, a { -webkit-tap-highlight-color:transparent; }
 </div>
 
 <div id="overlay" class="overlay" onclick="closeNav()"></div>
-<div id="modalOverlay" class="modal-overlay" onclick="closeModal('depositModal')"></div>
 
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
 
@@ -214,20 +207,35 @@ try {
   <p style="color:#888; text-align:center;">No trades yet</p>
 </div>
 
-<!-- Initial Deposit Amount Input -->
 <div id="depositModal" class="modal">
-  <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-    <h3 style="margin:0; color:#00ff88;">Deposit Funds</h3>
-    <span style="cursor:pointer; font-weight:bold; font-size:18px;" onclick="closeModal('depositModal')">✕</span>
+  <div style="display:flex; justify-content:space-between;">
+    <h3>Deposit Funds</h3>
+    <span style="cursor:pointer;" onclick="closeModal('depositModal')">X</span>
   </div>
 
-  <label style="display:block; text-align:left; font-size:13px; color:#aaa; margin-bottom:6px;">Deposit Amount (KES):</label>
-  <input type="number" id="depAmount" placeholder="Enter Amount in KES" style="width:100%; box-sizing:border-box; padding:12px; background:#21242d; border:1px solid #2b2f3a; color:white; border-radius:8px; font-size:15px; outline:none; margin-bottom:20px;">
-
-  <button type="button" onclick="doDeposit()" class="btn-green">Proceed to Pay</button>
+  <div class="pay-option" onclick="showMpesaForm()">
+    <span style="font-size:24px; margin-right:10px;">📱</span>
+    <div>
+      <b>M-Pesa</b><br>
+      <small style="color:#aaa;">Mobile money</small>
+    </div>
+  </div>
 </div>
 
-<!-- Pesapal Direct Frame Popup -->
+<div id="mpesaForm" class="modal">
+  <div style="display:flex; justify-content:space-between;">
+    <h3>M-Pesa Deposit</h3>
+    <span style="cursor:pointer;" onclick="closeModal('mpesaForm')">X</span>
+  </div>
+
+  <input id="depPhone" placeholder="2547XXXXXXXX" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
+
+  <input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
+
+  <button type="button" onclick="doDeposit()" class="btn-green">Deposit Now</button>
+</div>
+
+<!-- Pesapal iFrame Modal Overlay -->
 <div id="pesapalModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999999;">
   <div style="position:relative; width:95%; max-width:500px; height:85vh; margin:5vh auto; background:#181818; border-radius:12px; overflow:hidden; border:1px solid #333;">
     <div style="background:#111; color:#fff; padding:12px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2a2a2a;">
@@ -269,50 +277,19 @@ function toggleDropdown(event) {
 function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
-  document.getElementById('modalOverlay').style.display = 'none';
 }
 
 function openDeposit() {
   closeNav();
+  closeModal('mpesaForm');
   const modal = document.getElementById('depositModal');
-  if (modal) {
-    modal.style.display = 'block';
-    document.getElementById('modalOverlay').style.display = 'block';
-  }
+  if (modal) modal.style.display = 'block';
 }
 
-async function doDeposit() {
-  const amount = document.getElementById('depAmount').value.trim();
-  const email = localStorage.getItem('userEmail') || 'user@traderscheem.com';
-
-  if (!amount || amount <= 0) {
-    alert("Please enter a valid deposit amount.");
-    return;
-  }
-
-  try {
-    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/api/deposit/pesapal', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, amount })
-    });
-
-    const data = await response.json();
-    if (data.redirect_url) {
-      document.getElementById('pesapalFrame').src = data.redirect_url;
-      document.getElementById('pesapalModal').style.display = 'block';
-      closeModal('depositModal');
-    } else {
-      alert("Payment initialization failed. Please try again.");
-    }
-  } catch (err) {
-    alert("Server connection error.");
-  }
-}
-
-function closePesapalModal() {
-  document.getElementById('pesapalModal').style.display = 'none';
-  document.getElementById('pesapalFrame').src = '';
+function showMpesaForm() {
+  closeModal('depositModal');
+  const form = document.getElementById('mpesaForm');
+  if (form) form.style.display = 'block';
 }
 
 function resetDemo(event) {
@@ -487,34 +464,11 @@ function trade(type) {
   localStorage.setItem('tradeHistory', JSON.stringify(history));
 
   if (profit >= 0) {
-    addNotification('✅', 'Trade Won', `  const color = profit >= 0 ? '#00ff88' : '#ff0044';
-  const time = new Date().toLocaleTimeString();
-
-  const tradeText =
-    `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
-      <b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time}
-      <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span>
-    </p>`;
-
-  historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-
-  let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
-
-  history.unshift({
-    type: type.toUpperCase(),
-    stake: stake,
-    pnl: profit,
-    time: new Date().toLocaleString()
-  });
-
-  localStorage.setItem('tradeHistory', JSON.stringify(history));
-
-  if (profit >= 0) {
     addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
   } else {
     addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
   }
-  
+
   tradeCount++;
 }
 
@@ -570,8 +524,611 @@ function addNotification(icon, title, desc, color) {
   `;
   list.insertBefore(item, list.firstChild);
 }
+
+function doDeposit() {
+  const amount = document.getElementById('depAmount').value;
+  if (!amount || amount <= 0) {
+    alert('Please enter a valid deposit amount');
+    return;
+  }
+  
+  // Connect your Pesapal API backend trigger here
+  alert('Processing deposit of $' + amount);
+  closeModal('mpesaForm');
+}
+
+function closePesapalModal() {
+  document.getElementById('pesapalModal').style.display = 'none';
+  document.getElementById('pesapalFrame').src = '';
+}
 </script>
 
 </body>
 </html>
-  
+<!DOCTYPE html>
+<html>
+<head>
+<title>Binary - Trading</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; padding:10px; overflow-x:hidden; }
+.sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
+.sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
+.sidebar-header .closebtn { position:absolute; top:10px; right:20px; font-size:30px; color:#fff; cursor:pointer; }
+.sidebar-header b { color:#00ff88; font-size:20px; font-weight:bold; }
+.sidebar-header small { color:#aaa; font-size:13px; }
+.sidebar a { padding:14px 25px; text-decoration:none; font-size:16px; color:#ddd; display:flex; align-items:center; gap:12px; transition:0.2s; }
+.sidebar a:hover { background:#222; color:#00aaff; }
+.overlay { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:999998; }
+.account-toggle { background:#1a1a1a; border-radius:20px; padding:5px 12px; display:flex; align-items:center; gap:8px; cursor:pointer; position:relative; }
+.account-badge { background:#ff4444; color:#fff; font-size:10px; font-weight:bold; width:20px; height:20px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.account-badge.real { background:#00c853; }
+.account-dropdown { display:none; position:absolute; top:40px; left:0; background:#222; border-radius:10px; padding:8px 0; width:190px; z-index:9999; border:1px solid #333; }
+.account-dropdown.active { display:block; }
+.account-option { padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px; }
+.account-option:hover { background:#333; }
+.reset-btn { color:#aaa; font-size:13px; }
+.dot { width:8px; height:8px; border-radius:50%; }
+.dot.real { background:#00c853; }
+.dot.demo { background:#ff4444; }
+.notif-btn { position:relative; cursor:pointer; }
+.notif-badge { position:absolute; top:-2px; right:-2px; background:#ff4444; color:#fff; font-size:9px; font-weight:bold; width:16px; height:16px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+.notif-dropdown { display:none; position:absolute; top:45px; right:0; background:#1a1a1a; border-radius:12px; padding:10px 0; width:320px; max-width:90vw; z-index:99999; border:1px solid #333; box-shadow:0 4px 20px rgba(0,0,0,.5); }
+.notif-dropdown.active { display:block; }
+.notif-header { padding:10px 15px; display:flex; justify-content:space-between; border-bottom:1px solid #333; font-weight:bold; }
+.notif-item { padding:12px 15px; display:flex; gap:10px; border-bottom:1px solid #222; cursor:pointer; }
+.notif-item:hover { background:#222; }
+.notif-item.unread { background:#111; }
+.notif-icon { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+.modal { display:none; position:fixed; bottom:0; left:0; right:0; background:#1a1a1a; color:white; padding:20px; border-radius:20px 20px 0 0; z-index:1000000; border-top:1px solid #333; box-sizing:border-box; }
+.pay-option { background:#2a2a2a; padding:15px; border-radius:12px; margin:10px 0; display:flex; align-items:center; cursor:pointer; }
+.btn-green { width:100%; padding:15px; background:#00c853; border:none; color:white; border-radius:8px; font-weight:bold; font-size:16px; cursor:pointer; }
+.trade-panel { background:#111; padding:15px; border-radius:12px; margin-top:10px; }
+.stake-box { display:flex; align-items:center; background:#1a1a1a; border-radius:10px; padding:10px; margin:10px 0; gap:10px; }
+.stake-box button { background:#333; border:none; color:white; width:40px; height:40px; font-size:20px; border-radius:8px; cursor:pointer; }
+.stake-input { flex:1; text-align:center; font-size:24px; font-weight:bold; color:#00ff88; background:#000; border:1px solid #333; border-radius:8px; padding:10px; min-width:0; }
+.stake-buttons { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0; }
+.stake-btn { background:#1a1a1a; border:1px solid #333; color:white; padding:10px; border-radius:8px; cursor:pointer; }
+.stake-btn.active { background:#00aaff; border-color:#00aaff; }
+.risk-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0; }
+.risk-box { background:#1a1a1a; padding:10px; border-radius:8px; text-align:center; }
+.risk-box small { font-size:11px; }
+.risk-input { width:100%; box-sizing:border-box; background:#000; border:1px solid #333; color:white; text-align:center; font-size:18px; font-weight:bold; padding:8px 0; border-radius:6px; margin-top:5px; }
+.buy { background:#00ff88; color:black; flex:1; padding:15px; border:none; border-radius:8px; font-weight:bold; font-size:18px; cursor:pointer; }
+.sell { background:#ff0044; color:white; flex:1; padding:15px; border:none; border-radius:8px; font-weight:bold; font-size:18px; cursor:pointer; }
+.trade-buttons { display:flex; gap:10px; margin-top:15px; }
+h2 { display:none; }
+h3 { margin-top:10px; margin-bottom:5px; }
+button, a { -webkit-tap-highlight-color:transparent; }
+</style>
+</head>
+
+<body>
+
+<div id="mySidebar" class="sidebar">
+  <div class="sidebar-header">
+    <span class="closebtn" onclick="closeNav()">×</span>
+    <b>Binary</b><br>
+    <small>Binary Trading</small>
+  </div>
+  <a href="trade.html">📊 Trade</a>
+  <a href="#" onclick="event.preventDefault(); alert('Coming Soon')">📈 Market</a>
+  <a href="history.html">📜 Trade History</a>
+  <a href="#" onclick="event.preventDefault(); openDeposit()">💰 Deposit</a>
+  <a href="withdraw.html">🏦 Withdraw</a>
+  <a href="#" onclick="event.preventDefault(); alert('Coming Soon')">⚙️ Settings</a>
+  <a href="index.html">🚪 Logout</a>
+</div>
+
+<div id="overlay" class="overlay" onclick="closeNav()"></div>
+
+<div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
+
+  <div style="display:flex; align-items:center; gap:10px;">
+    <button type="button" style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
+    <button type="button" style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px; cursor:pointer;" onclick="openNav()">☰</button>
+  </div>
+
+  <div class="account-toggle" onclick="toggleDropdown(event)">
+    <span id="badge" class="account-badge">D</span>
+    <span id="topBalance" style="color:#ff4444; font-weight:bold;">$100,000.00</span>
+    <span>▼</span>
+
+    <div id="dropdown" class="account-dropdown">
+      <div class="account-option" onclick="switchAccount('demo', event)">
+        <span class="dot demo"></span>
+        Demo Account
+        <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
+      </div>
+
+      <div class="account-option" onclick="switchAccount('real', event)">
+        <span class="dot real"></span>
+        Real Account
+        <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
+      </div>
+
+      <div class="account-option reset-btn" onclick="resetDemo(event)">🔄 Reset Demo Balance</div>
+    </div>
+  </div>
+
+  <div style="display:flex; align-items:center; gap:10px;">
+    <span style="font-size:20px;">🔊</span>
+
+    <button type="button" style="background:#00aaff; border:none; color:white; padding:8px 15px; border-radius:8px; font-weight:bold; cursor:pointer;" onclick="openDeposit()">Deposit</button>
+
+    <div class="notif-btn" onclick="toggleNotif(event)">
+      <span style="font-size:20px;">🔔</span>
+      <span class="notif-badge" id="notifCount">1</span>
+
+      <div id="notifDropdown" class="notif-dropdown">
+        <div class="notif-header">
+          Notifications
+          <span style="color:#888; font-size:12px;">1 recent</span>
+        </div>
+
+        <div id="notifList">
+          <div class="notif-item unread">
+            <div class="notif-icon" style="background:#ffaa00;">👋</div>
+            <div>
+              <b>Welcome to HassanFX!</b><br>
+              <small style="color:#aaa;">Start with the demo account.</small>
+            </div>
+          </div>
+        </div>
+
+        <div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs(event)">Close</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<h3>EUR/USD Live Chart</h3>
+<div id="tradingview_chart" style="margin:10px 0;"></div>
+
+<script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+<script>
+try {
+  if (typeof TradingView !== 'undefined') {
+    new TradingView.widget({
+      width:"100%",
+      height:350,
+      symbol:"FX:EURUSD",
+      interval:"1",
+      timezone:"Etc/UTC",
+      theme:"dark",
+      style:"1",
+      locale:"en",
+      toolbar_bg:"#1a1a1a",
+      enable_publishing:false,
+      allow_symbol_change:true,
+      container_id:"tradingview_chart"
+    });
+  }
+} catch (e) {
+  console.error("TradingView error:", e);
+}
+</script>
+
+<div class="trade-panel">
+  <label style="color:#00aaff; font-size:12px;">STAKE</label>
+
+  <div class="stake-box">
+    <button type="button" onclick="changeStake(-5)">-</button>
+    <input type="number" id="stakeAmount" class="stake-input" value="10" onchange="updateStakeButtons()">
+    <button type="button" onclick="changeStake(5)">+</button>
+  </div>
+
+  <div class="stake-buttons">
+    <button type="button" class="stake-btn" onclick="setStake(1, event)">$1</button>
+    <button type="button" class="stake-btn" onclick="setStake(5, event)">$5</button>
+    <button type="button" class="stake-btn active" onclick="setStake(10, event)">$10</button>
+    <button type="button" class="stake-btn" onclick="setStake(25, event)">$25</button>
+    <button type="button" class="stake-btn" onclick="setStake(50, event)">$50</button>
+    <button type="button" class="stake-btn" onclick="setStake(100, event)">$100</button>
+  </div>
+
+  <div class="risk-grid">
+    <div class="risk-box">
+      <small style="color:#00ff88;">TARGET PROFIT</small>
+      <input type="number" id="targetProfit" class="risk-input" value="200">
+    </div>
+    <div class="risk-box">
+      <small style="color:#ff0044;">STOP LOSS</small>
+      <input type="number" id="stopLoss" class="risk-input" value="999">
+    </div>
+    <div class="risk-box">
+      <small style="color:#ffaa00;">MULTIPLIER</small>
+      <input type="number" id="multiplier" class="risk-input" value="2">
+    </div>
+  </div>
+
+  <div class="trade-buttons">
+    <button type="button" class="buy" onclick="trade('buy')">BUY</button>
+    <button type="button" class="sell" onclick="trade('sell')">SELL</button>
+  </div>
+</div>
+
+<h3>Trade History</h3>
+<div id="history" style="background:#1a1a1a; padding:10px; border-radius:10px; max-height:150px; overflow-y:auto; margin-bottom:10px;">
+  <p style="color:#888; text-align:center;">No trades yet</p>
+</div>
+
+<div id="depositModal" class="modal">
+  <div style="display:flex; justify-content:space-between;">
+    <h3>Deposit Funds</h3>
+    <span style="cursor:pointer;" onclick="closeModal('depositModal')">X</span>
+  </div>
+
+  <div class="pay-option" onclick="showMpesaForm()">
+    <span style="font-size:24px; margin-right:10px;">📱</span>
+    <div>
+      <b>M-Pesa</b><br>
+      <small style="color:#aaa;">Mobile money</small>
+    </div>
+  </div>
+</div>
+
+<div id="mpesaForm" class="modal">
+  <div style="display:flex; justify-content:space-between;">
+    <h3>M-Pesa Deposit</h3>
+    <span style="cursor:pointer;" onclick="closeModal('mpesaForm')">X</span>
+  </div>
+
+  <input id="depPhone" placeholder="2547XXXXXXXX" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
+
+  <input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
+
+  <button type="button" onclick="doDeposit()" class="btn-green">Deposit Now</button>
+</div>
+
+<!-- Pesapal iFrame Modal Overlay -->
+<div id="pesapalModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:9999999;">
+  <div style="position:relative; width:95%; max-width:500px; height:85vh; margin:5vh auto; background:#181818; border-radius:12px; overflow:hidden; border:1px solid #333;">
+    <div style="background:#111; color:#fff; padding:12px 15px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #2a2a2a;">
+      <span style="font-weight:bold; color:#00ff88;">Complete M-Pesa Payment</span>
+      <button onclick="closePesapalModal()" style="background:#ff4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">Close X</button>
+    </div>
+    <iframe id="pesapalFrame" src="" style="width:100%; height:calc(100% - 50px); border:none;"></iframe>
+  </div>
+</div>
+
+<script>
+let currentAccount = 'demo';
+let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
+let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
+let stake = 10;
+let profit = 0.00;
+let tradeCount = 1;
+
+window.addEventListener('DOMContentLoaded', function() {
+  switchAccount('demo');
+  loadHistory();
+});
+
+function openNav() {
+  document.getElementById('mySidebar').style.width = '280px';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+function closeNav() {
+  document.getElementById('mySidebar').style.width = '0';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+function toggleDropdown(event) {
+  if (event) event.stopPropagation();
+  document.getElementById('dropdown').classList.toggle('active');
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.style.display = 'none';
+}
+
+function openDeposit() {
+  closeNav();
+  closeModal('mpesaForm');
+  const modal = document.getElementById('depositModal');
+  if (modal) modal.style.display = 'block';
+}
+
+function showMpesaForm() {
+  closeModal('depositModal');
+  const form = document.getElementById('mpesaForm');
+  if (form) form.style.display = 'block';
+}
+
+function resetDemo(event) {
+  if (event) event.stopPropagation();
+
+  demoBal = 100000.00;
+  localStorage.setItem('demoBalance', demoBal);
+
+  if (currentAccount === 'demo') {
+    switchAccount('demo');
+  }
+
+  document.getElementById('dropdown').classList.remove('active');
+  alert('Demo Balance Reset to $100,000.00');
+}
+
+function setStake(val, event) {
+  stake = val;
+  document.getElementById('stakeAmount').value = val;
+
+  document.querySelectorAll('.stake-btn').forEach(function(btn) {
+    btn.classList.remove('active');
+  });
+
+  if (event && event.currentTarget) {
+    event.currentTarget.classList.add('active');
+  }
+}
+
+function changeStake(dir) {
+  const input = document.getElementById('stakeAmount');
+  let value = parseFloat(input.value) || 1;
+
+  value = Math.max(1, value + dir);
+  stake = value;
+  input.value = value;
+
+  updateStakeButtons();
+}
+
+function updateStakeButtons() {
+  const input = document.getElementById('stakeAmount');
+  stake = Math.max(1, parseFloat(input.value) || 1);
+  input.value = stake;
+
+  document.querySelectorAll('.stake-btn').forEach(function(btn) {
+    const buttonValue = parseFloat(btn.innerText.replace('$', ''));
+    btn.classList.toggle('active', buttonValue === stake);
+  });
+}
+
+function switchAccount(type, event) {
+  if (event) event.stopPropagation();
+
+  currentAccount = type;
+
+  const dropdown = document.getElementById('dropdown');
+  if (dropdown) dropdown.classList.remove('active');
+
+  const chart = document.getElementById('tradingview_chart');
+  if (chart) chart.style.pointerEvents = 'auto';
+
+  const badge = document.getElementById('badge');
+  const balance = document.getElementById('topBalance');
+
+  if (type === 'demo') {
+    if (badge) {
+      badge.innerText = 'D';
+      badge.className = 'account-badge';
+    }
+
+    if (balance) {
+      balance.innerText = '$' + Number(demoBal).toLocaleString('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+      balance.style.color = '#ff4444';
+    }
+
+    const demoLabel = document.getElementById('demoActive');
+    const realLabel = document.getElementById('realActive');
+    if (demoLabel) demoLabel.innerText = 'Active';
+    if (realLabel) realLabel.innerText = '';
+
+  } else {
+    if (badge) {
+      badge.innerText = 'R';
+      badge.className = 'account-badge real';
+    }
+
+    if (balance) {
+      const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
+
+      balance.innerText = '$' + Number(realBal).toLocaleString('en-US', {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+      });
+      balance.style.color = '#00c853';
+    }
+
+    const demoLabel = document.getElementById('demoActive');
+    const realLabel = document.getElementById('realActive');
+    if (realLabel) realLabel.innerText = 'Active';
+    if (demoLabel) demoLabel.innerText = '';
+  }
+}
+
+function trade(type) {
+  stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
+
+  let targetBal = currentAccount === 'demo' ? demoBal : realBal;
+
+  if (targetBal < stake) {
+    alert('Not enough balance!');
+    return;
+  }
+
+  const targetProfit = parseFloat(document.getElementById('targetProfit').value) || 0;
+  const stopLoss = parseFloat(document.getElementById('stopLoss').value) || 0;
+  const multiplier = parseFloat(document.getElementById('multiplier').value) || 1;
+
+  const win = Math.random() > 0.5;
+  let pnl = win ? stake * multiplier : -stake;
+
+  if (win && targetProfit > 0) {
+    pnl = Math.min(pnl, targetProfit);
+  }
+
+  if (!win && stopLoss > 0) {
+    pnl = Math.max(pnl, -stopLoss);
+  }
+
+  profit = pnl;
+  targetBal += profit;
+
+  if (currentAccount === 'demo') {
+    demoBal = targetBal;
+    localStorage.setItem('demoBalance', demoBal);
+  } else {
+    realBal = targetBal;
+    localStorage.setItem('realBalance', realBal);
+  }
+
+  updateTopBalance(targetBal);
+
+  const historyDiv = document.getElementById('history');
+
+  if (historyDiv.innerHTML.includes('No trades yet')) {
+    historyDiv.innerHTML = '';
+  }
+
+  const color = profit >= 0 ? '#00ff88' : '#ff0044';
+  const time = new Date().toLocaleTimeString();
+
+  const tradeText =
+    `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
+      <b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time}
+      <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span>
+    </p>`;
+
+  historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
+
+  let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+
+  history.unshift({
+    type: type.toUpperCase(),
+    stake: stake,
+    pnl: profit,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem('tradeHistory', JSON.stringify(history));
+
+  if (profit >= 0) {
+    addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
+  } else {
+    addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
+  }
+
+  tradeCount++;
+}
+
+function updateTopBalance(balance) {
+  document.getElementById('topBalance').innerText =
+    '$' + Number(balance).toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+}
+
+function loadHistory() {
+  const history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
+  const historyDiv = document.getElementById('history');
+
+  if (!history.length) return;
+
+  historyDiv.innerHTML = '';
+
+  history.slice(0, 10).forEach(function(t, i) {
+    const color = t.pnl >= 0 ? '#00ff88' : '#ff0044';
+
+    historyDiv.innerHTML +=
+      `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
+        <b>Trade #${i + 1}</b> - ${t.type} $${t.stake} - ${t.time}
+        <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span>
+      </p>`;
+  });
+}
+
+function toggleNotif(event) {
+  if (event) event.stopPropagation();
+  const notif = document.getElementById('notifDropdown');
+  if (notif) notif.classList.toggle('active');
+}
+
+function addNotification(icon, title, desc, color) {
+  const notifList = document.getElementById('notifList');
+  if (!notifList) return;
+
+  const notifItem = document.createElement('div');
+  notifItem.className = 'notif-item unread';
+  notifItem.innerHTML = `
+    <div class="notif-icon" style="background:${color};">${icon}</div>
+    <div>
+      <b>${title}</b><br>
+      <small style="color:#aaa;">${desc}</small>
+    </div>
+  `;
+
+  notifList.prepend(notifItem);
+
+  const badge = document.getElementById('notifCount');
+  if (badge) {
+    let count = parseInt(badge.innerText) || 0;
+    badge.innerText = count + 1;
+    badge.style.display = 'flex';
+  }
+}
+
+function clearNotifs(event) {
+  if (event) event.stopPropagation();
+  const dropdown = document.getElementById('notifDropdown');
+  if (dropdown) dropdown.classList.remove('active');
+
+  const badge = document.getElementById('notifCount');
+  if (badge) {
+    badge.innerText = '0';
+    badge.style.display = 'none';
+  }
+}
+
+function doDeposit() {
+  const phone = document.getElementById('depPhone').value.trim();
+  const amount = parseFloat(document.getElementById('depAmount').value);
+
+  if (!phone || isNaN(amount) || amount <= 0) {
+    alert('Please enter a valid phone number and amount.');
+    return;
+  }
+
+  fetch('/api/pesapal/stkpush', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ phone, amount })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.redirect_url) {
+      document.getElementById('pesapalFrame').src = data.redirect_url;
+      document.getElementById('pesapalModal').style.display = 'block';
+      closeModal('mpesaForm');
+    } else {
+      alert(data.message || 'Deposit initiation failed.');
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Failed to connect to the server.');
+  });
+}
+
+function closePesapalModal() {
+  document.getElementById('pesapalModal').style.display = 'none';
+  document.getElementById('pesapalFrame').src = '';
+}
+
+document.addEventListener('click', function() {
+  const dropdown = document.getElementById('dropdown');
+  const notifDropdown = document.getElementById('notifDropdown');
+  if (dropdown) dropdown.classList.remove('active');
+  if (notifDropdown) notifDropdown.classList.remove('active');
+});
+</script>
+</body>
+</html>
