@@ -550,14 +550,20 @@ function doDeposit() {
     return;
   }
 
-  fetch('https://YOUR-BACKEND-URL.com/api/pesapal/stkpush', {
-  fetch('https://YOUR-BACKEND-URL.com/api/pesapal/stkpush', {
-  
+  // REPLACE 'https://YOUR-BACKEND-URL.com' WITH YOUR ACTUAL LIVE BACKEND LINK
+  const BACKEND_URL = 'https://YOUR-BACKEND-URL.com';
+
+  fetch(`${BACKEND_URL}/api/pesapal/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ phone, amount })
   })
-  .then(res => res.json())
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`Server returned status: ${res.status}`);
+    }
+    return res.json();
+  })
   .then(data => {
     if (data.redirect_url) {
       document.getElementById('pesapalFrame').src = data.redirect_url;
@@ -569,7 +575,7 @@ function doDeposit() {
   })
   .catch(err => {
     console.error('Connection error:', err);
-    alert('Failed to connect to the server.');
+    alert('Failed to connect to backend: ' + err.message);
   });
 }
 
