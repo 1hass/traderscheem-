@@ -544,8 +544,6 @@ function doDeposit() {
 
   const phone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? parseFloat(amountInput.value) : 0;
-  
-  // Retrieve saved email or supply fallback for Pesapal billing
   const userEmail = localStorage.getItem('userEmail') || 'trader@traderscheem.com';
 
   if (!phone || isNaN(amount) || amount <= 0) {
@@ -585,7 +583,6 @@ function doDeposit() {
   });
 }
 
-
 function closePesapalModal() {
   document.getElementById('pesapalModal').style.display = 'none';
   document.getElementById('pesapalFrame').src = '';
@@ -599,4 +596,4 @@ document.addEventListener('click', function() {
 });
 </script>
 </body>
-</html
+</html>
