@@ -21,7 +21,7 @@ body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; 
 .account-option { padding:10px 15px; display:flex; align-items:center; gap:8px; cursor:pointer; color:#fff; font-size:14px; }
 .account-option:hover { background:#333; }
 .reset-btn { color:#aaa; font-size:13px; }
-.dot { width:8px; height:8px; border-radius:50%; }
+.dot { width:8px; height:8px; border-radius:50%; b6}
 .dot.real { background:#00c853; }
 .dot.demo { background:#ff4444; }
 .notif-btn { position:relative; cursor:pointer; }
@@ -250,8 +250,6 @@ let currentAccount = 'demo';
 let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
 let stake = 10;
-let profit = 0.00;
-let tradeCount = 1;
 
 window.addEventListener('DOMContentLoaded', function() {
   switchAccount('demo');
@@ -273,33 +271,29 @@ function toggleDropdown(event) {
   document.getElementById('dropdown').classList.toggle('active');
 }
 
+function toggleNotif(event) {
+  if (event) event.stopPropagation();
+  const notif = document.getElementById('notifDropdown');
+  if (notif) notif.classList.toggle('active');
+}
+
 function closeModal(id) {
   const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
 }
 
-function openDeposit() {
-  closeNav();
-  closeModal('mpesaForm');
-  const modal = document.getElementById('depositModal');
-  if (modal) modal.style.display = 'block';
-}
-  function showMpesaForm() {
-  closeModal('depositModal');
+function showMpesaForm() {
+  const dropdown = document.getElementById('dropdown');
+  if (dropdown) dropdown.classList.remove('active');
   const form = document.getElementById('mpesaForm');
   if (form) form.style.display = 'block';
 }
 
 function resetDemo(event) {
   if (event) event.stopPropagation();
-
   demoBal = 100000.00;
   localStorage.setItem('demoBalance', demoBal);
-
-  if (currentAccount === 'demo') {
-    switchAccount('demo');
-  }
-
+  if (currentAccount === 'demo') switchAccount('demo');
   document.getElementById('dropdown').classList.remove('active');
   alert('Demo Balance Reset to $100,000.00');
 }
@@ -307,33 +301,23 @@ function resetDemo(event) {
 function setStake(val, event) {
   stake = val;
   document.getElementById('stakeAmount').value = val;
-
-  document.querySelectorAll('.stake-btn').forEach(function(btn) {
-    btn.classList.remove('active');
-  });
-
-  if (event && event.currentTarget) {
-    event.currentTarget.classList.add('active');
-  }
+  document.querySelectorAll('.stake-btn').forEach(btn => btn.classList.remove('active'));
+  if (event && event.currentTarget) event.currentTarget.classList.add('active');
 }
 
 function changeStake(dir) {
   const input = document.getElementById('stakeAmount');
   let value = parseFloat(input.value) || 1;
-
   value = Math.max(1, value + dir);
   stake = value;
   input.value = value;
-
   updateStakeButtons();
 }
 
 function updateStakeButtons() {
   const input = document.getElementById('stakeAmount');
   stake = Math.max(1, parseFloat(input.value) || 1);
-  input.value = stake;
-
-  document.querySelectorAll('.stake-btn').forEach(function(btn) {
+  document.querySelectorAll('.stake-btn').forEach(btn => {
     const buttonValue = parseFloat(btn.innerText.replace('$', ''));
     btn.classList.toggle('active', buttonValue === stake);
   });
@@ -341,63 +325,33 @@ function updateStakeButtons() {
 
 function switchAccount(type, event) {
   if (event) event.stopPropagation();
-
   currentAccount = type;
-
   const dropdown = document.getElementById('dropdown');
   if (dropdown) dropdown.classList.remove('active');
-
-  const chart = document.getElementById('tradingview_chart');
-  if (chart) chart.style.pointerEvents = 'auto';
 
   const badge = document.getElementById('badge');
   const balance = document.getElementById('topBalance');
 
   if (type === 'demo') {
-    if (badge) {
-      badge.innerText = 'D';
-      badge.className = 'account-badge';
-    }
-
-    if (balance) {
-      balance.innerText = '$' + Number(demoBal).toLocaleString('en-US', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
-      balance.style.color = '#ff4444';
-    }
-
-    const demoLabel = document.getElementById('demoActive');
-    const realLabel = document.getElementById('realActive');
-    if (demoLabel) demoLabel.innerText = 'Active';
-    if (realLabel) realLabel.innerText = '';
-
+    badge.innerText = 'D';
+    badge.className = 'account-badge';
+    balance.innerText = '$' + Number(demoBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    balance.style.color = '#ff4444';
+    if (document.getElementById('demoActive')) document.getElementById('demoActive').innerText = 'Active';
+    if (document.getElementById('realActive')) document.getElementById('realActive').innerText = '';
   } else {
-    if (badge) {
-      badge.innerText = 'R';
-      badge.className = 'account-badge real';
-    }
-
-    if (balance) {
-      const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
-
-      balance.innerText = '$' + Number(realBal).toLocaleString('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals
-      });
-      balance.style.color = '#00c853';
-    }
-
-    const demoLabel = document.getElementById('demoActive');
-    const realLabel = document.getElementById('realActive');
-    if (realLabel) realLabel.innerText = 'Active';
-    if (demoLabel) demoLabel.innerText = '';
+    badge.innerText = 'R';
+    badge.className = 'account-badge real';
+    const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
+    balance.innerText = '$' + Number(realBal).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    balance.style.color = '#00c853';
+    if (document.getElementById('realActive')) document.getElementById('realActive').innerText = 'Active';
+    if (document.getElementById('demoActive')) document.getElementById('demoActive').innerText = '';
   }
 }
 
 function trade(type) {
   stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
-
   let targetBal = currentAccount === 'demo' ? demoBal : realBal;
 
   if (targetBal < stake) {
@@ -412,16 +366,10 @@ function trade(type) {
   const win = Math.random() > 0.5;
   let pnl = win ? stake * multiplier : -stake;
 
-  if (win && targetProfit > 0) {
-    pnl = Math.min(pnl, targetProfit);
-  }
+  if (win && targetProfit > 0) pnl = Math.min(pnl, targetProfit);
+  if (!win && stopLoss > 0) pnl = Math.max(pnl, -stopLoss);
 
-  if (!win && stopLoss > 0) {
-    pnl = Math.max(pnl, -stopLoss);
-  }
-
-  profit = pnl;
-  targetBal += profit;
+  targetBal += pnl;
 
   if (currentAccount === 'demo') {
     demoBal = targetBal;
@@ -433,55 +381,29 @@ function trade(type) {
 
   updateTopBalance(targetBal);
 
-  const historyDiv = document.getElementById('history');
-
-  if (historyDiv.innerHTML.includes('No trades yet')) {
-    historyDiv.innerHTML = '';
-  }
-
-  const color = profit >= 0 ? '#00ff88' : '#ff0044';
   const time = new Date().toLocaleTimeString();
-
-  const tradeText =
-    `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
-      <b>Trade #${tradeCount}</b> - ${type.toUpperCase()} $${stake} - ${time}
-      <span style="color:${color}; float:right;">$${profit.toFixed(2)}</span>
-    </p>`;
-
-  historyDiv.innerHTML = tradeText + historyDiv.innerHTML;
-
+  const newTrade = { type: type.toUpperCase(), stake: stake, pnl: pnl, time: time };
+  
   let history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
-
-  history.unshift({
-    type: type.toUpperCase(),
-    stake: stake,
-    pnl: profit,
-    time: new Date().toLocaleString()
-  });
-
+  history.unshift(newTrade);
   localStorage.setItem('tradeHistory', JSON.stringify(history));
 
-  if (profit >= 0) {
-    addNotification('✅', 'Trade Won', `+$${profit.toFixed(2)}`, '#00c853');
-  } else {
-    addNotification('❌', 'Trade Lost', `-$${Math.abs(profit).toFixed(2)}`, '#ff4444');
-  }
+  loadHistory();
+}
 
-  tradeCount++;
-  }
-  function updateTopBalance(balance) {
-  document.getElementById('topBalance').innerText =
-    '$' + Number(balance).toLocaleString('en-US', {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+function updateTopBalance(balance) {
+  document.getElementById('topBalance').innerText = '$' + Number(balance).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 }
 
 function loadHistory() {
   const history = JSON.parse(localStorage.getItem('tradeHistory')) || [];
   const historyDiv = document.getElementById('history');
 
-  if (!history.length) return;
+  if (!historyDiv) return;
+  if (!history.length) {
+    historyDiv.innerHTML = '<p style="color:#848e9c; margin:0; font-size:14px;">No trades yet</p>';
+    return;
+  }
 
   historyDiv.innerHTML = '';
 
@@ -490,16 +412,10 @@ function loadHistory() {
 
     historyDiv.innerHTML +=
       `<p style="margin:5px 0; border-bottom:1px solid #333; padding-bottom:5px; font-size:14px;">
-        <b>Trade #${i + 1}</b> - ${t.type} $${t.stake} - ${t.time}
+        <b>Trade #${history.length - i}</b> - ${t.type} $${t.stake} - ${t.time}
         <span style="color:${color}; float:right;">$${t.pnl.toFixed(2)}</span>
       </p>`;
   });
-}
-
-function toggleNotif(event) {
-  if (event) event.stopPropagation();
-  const notif = document.getElementById('notifDropdown');
-  if (notif) notif.classList.toggle('active');
 }
 
 function addNotification(icon, title, desc, color) {
@@ -552,7 +468,6 @@ function doDeposit() {
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
-  // Requesting /stkpush directly to match server.js
   fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -569,27 +484,6 @@ function doDeposit() {
   })
   .then(data => {
     if (data.success && data.redirect_url) {
-      document.getElementById('pesapalFrame').src = data.redirect_url;
-      document.getElementById('pesapalModal').style.display = 'block';
-      closeModal('mpesaForm');
-    } else {
-      alert(data.message || 'Deposit initiation failed.');
-    }
-  })
-  .catch(err => {
-    console.error('Connection error:', err);
-    alert('Failed to connect to backend: ' + err.message);
-  });
-}
-
-  .then(res => {
-    if (!res.ok) {
-      throw new Error(`Server returned status: ${res.status}`);
-    }
-    return res.json();
-  })
-  .then(data => {
-    if (data.redirect_url) {
       document.getElementById('pesapalFrame').src = data.redirect_url;
       document.getElementById('pesapalModal').style.display = 'block';
       closeModal('mpesaForm');
