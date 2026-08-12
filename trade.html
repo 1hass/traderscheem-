@@ -454,15 +454,15 @@ function clearNotifs(event) {
   }
 }
 
-function doDeposit() {
-  const phoneInput = document.getElementById('depPhone');
-  const amountInput = document.getElementById('depAmount');
+function triggerPesapalDeposit() {
+  if (typeof closeNav === 'function') closeNav();
 
-  const phone = phoneInput ? phoneInput.value.trim() : '';
-  const amount = amountInput ? parseFloat(amountInput.value) : 0;
+  const inputAmount = prompt("Enter deposit amount in KES:", "1");
+  if (!inputAmount) return;
 
-  if (!phone || isNaN(amount) || amount <= 0) {
-    alert('Please enter a valid phone number and amount.');
+  const amount = parseFloat(inputAmount);
+  if (isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid deposit amount.");
     return;
   }
 
@@ -471,22 +471,16 @@ function doDeposit() {
   fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      phone: phone, 
-      amount: amount 
-    })
+    body: JSON.stringify({ amount: amount })
   })
   .then(res => {
-    if (!res.ok) {
-      throw new Error(`Server returned status: ${res.status}`);
-    }
+    if (!res.ok) throw new Error(`Server returned status: ${res.status}`);
     return res.json();
   })
   .then(data => {
     if (data.redirect_url) {
       document.getElementById('pesapalFrame').src = data.redirect_url;
       document.getElementById('pesapalModal').style.display = 'block';
-      closeModal('mpesaForm');
     } else {
       alert(data.message || 'Deposit initiation failed.');
     }
@@ -498,9 +492,12 @@ function doDeposit() {
 }
 
 function closePesapalModal() {
-  document.getElementById('pesapalModal').style.display = 'none';
-  document.getElementById('pesapalFrame').src = '';
+  const modal = document.getElementById('pesapalModal');
+  const frame = document.getElementById('pesapalFrame');
+  if (modal) modal.style.display = 'none';
+  if (frame) frame.src = '';
 }
+
 
 
 document.addEventListener('click', function() {
