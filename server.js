@@ -1,4 +1,4 @@
-Process.on('uncaughtException', err => console.error('CRASH:', err));
+process.on('uncaughtException', err => console.error('CRASH:', err));
 process.on('unhandledRejection', err => console.error('CRASH:', err));
 
 const express = require('express');
@@ -8,6 +8,7 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 const { Pool } = require('pg');
+
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
