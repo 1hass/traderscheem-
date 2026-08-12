@@ -457,11 +457,10 @@ function clearNotifs(event) {
 
 
 function triggerPesapalDeposit() {
-  
-  alert("Button clicked! Starting Pesapal..."); // Debug test alert
-
   const inputAmount = prompt("Enter deposit amount in KES:", "1");
-  if (!inputAmount) return;
+  
+  // Exit if user clicks Cancel or enters nothing
+  if (inputAmount === null || inputAmount.trim() === "") return;
 
   const amount = parseFloat(inputAmount);
   if (isNaN(amount) || amount <= 0) {
@@ -474,7 +473,10 @@ function triggerPesapalDeposit() {
   fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ amount: amount })
+    body: JSON.stringify({ 
+      amount: amount,
+      email: 'trader@traderscheem.com'
+    })
   })
   .then(res => {
     if (!res.ok) throw new Error(`Server returned status: ${res.status}`);
@@ -482,8 +484,16 @@ function triggerPesapalDeposit() {
   })
   .then(data => {
     if (data.redirect_url) {
-      document.getElementById('pesapalFrame').src = data.redirect_url;
-      document.getElementById('pesapalModal').style.display = 'block';
+      const pesapalFrame = document.getElementById('pesapalFrame');
+      const pesapalModal = document.getElementById('pesapalModal');
+      
+      if (pesapalFrame && pesapalModal) {
+        pesapalFrame.src = data.redirect_url;
+        pesapalModal.style.display = 'block';
+      } else {
+        // Fallback: Open payment page directly if modal element isn't in HTML
+        window.location.href = data.redirect_url;
+      }
     } else {
       alert(data.message || 'Deposit initiation failed.');
     }
@@ -493,6 +503,7 @@ function triggerPesapalDeposit() {
     alert('Failed to connect to backend: ' + err.message);
   });
 }
+
 
 function closePesapalModal() {
   const modal = document.getElementById('pesapalModal');
