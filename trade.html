@@ -544,19 +544,25 @@ function doDeposit() {
 
   const phone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? parseFloat(amountInput.value) : 0;
+  
+  // Retrieve saved email or supply fallback for Pesapal billing
+  const userEmail = localStorage.getItem('userEmail') || 'trader@traderscheem.com';
 
   if (!phone || isNaN(amount) || amount <= 0) {
     alert('Please enter a valid phone number and amount.');
     return;
   }
 
-  // REPLACE 'https://YOUR-BACKEND-URL.com' WITH YOUR ACTUAL LIVE BACKEND LINK
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
   fetch(`${BACKEND_URL}/api/pesapal/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ phone, amount })
+    body: JSON.stringify({ 
+      phone: phone, 
+      amount: amount, 
+      email: userEmail 
+    })
   })
   .then(res => {
     if (!res.ok) {
@@ -578,6 +584,7 @@ function doDeposit() {
     alert('Failed to connect to backend: ' + err.message);
   });
 }
+
 
 function closePesapalModal() {
   document.getElementById('pesapalModal').style.display = 'none';
