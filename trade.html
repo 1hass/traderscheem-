@@ -544,7 +544,6 @@ function doDeposit() {
 
   const phone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? parseFloat(amountInput.value) : 0;
-  const userEmail = localStorage.getItem('userEmail') || 'trader@traderscheem.com';
 
   if (!phone || isNaN(amount) || amount <= 0) {
     alert('Please enter a valid phone number and amount.');
@@ -553,15 +552,36 @@ function doDeposit() {
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
-  fetch(`${BACKEND_URL}/api/pesapal/stkpush`, {
+  // Requesting /stkpush directly to match server.js
+  fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       phone: phone, 
-      amount: amount, 
-      email: userEmail 
+      amount: amount 
     })
   })
+  .then(res => {
+    if (!res.ok) {
+      throw new Error(`Server returned status: ${res.status}`);
+    }
+    return res.json();
+  })
+  .then(data => {
+    if (data.success && data.redirect_url) {
+      document.getElementById('pesapalFrame').src = data.redirect_url;
+      document.getElementById('pesapalModal').style.display = 'block';
+      closeModal('mpesaForm');
+    } else {
+      alert(data.message || 'Deposit initiation failed.');
+    }
+  })
+  .catch(err => {
+    console.error('Connection error:', err);
+    alert('Failed to connect to backend: ' + err.message);
+  });
+}
+
   .then(res => {
     if (!res.ok) {
       throw new Error(`Server returned status: ${res.status}`);
