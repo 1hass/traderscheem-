@@ -454,7 +454,8 @@ function clearNotifs(event) {
   }
 }
 
-function triggerPesapalDeposit() {
+<script>
+function triggerPesapalDeposit() {  // ✅ Fixed lowercase "f"
   if (typeof closeNav === 'function') closeNav();
 
   const inputAmount = prompt("Enter deposit amount in KES:", "1");
@@ -497,8 +498,6 @@ function closePesapalModal() {
   if (modal) modal.style.display = 'none';
   if (frame) frame.src = '';
 }
-
-
 
 document.addEventListener('click', function() {
   const dropdown = document.getElementById('dropdown');
