@@ -1,9 +1,10 @@
-process.on('uncaughtException', err => console.error('CRASH:', err)); // ✅ FIXED
+Process.on('uncaughtException', err => console.error('CRASH:', err));
 process.on('unhandledRejection', err => console.error('CRASH:', err));
 
 const express = require('express');
 const axios = require('axios');
 const cors = require('cors');
+const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 const { Pool } = require('pg');
@@ -13,8 +14,13 @@ const pool = new Pool({
     ssl: { rejectUnauthorized: false }
 });
 
+// Parsers to handle JSON and URL-encoded POST body data from Pesapal
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
+
+// Serve static dashboard files
+app.use(express.static(path.join(__dirname, 'public')));
 
 const PESAPAL_CONSUMER_KEY = process.env.PESAPAL_CONSUMER_KEY;
 const PESAPAL_CONSUMER_SECRET = process.env.PESAPAL_CONSUMER_SECRET;
@@ -75,8 +81,9 @@ app.post('/stkpush', async (req, res) => {
                 currency: "KES",
                 amount: amountKES,
                 description: `TraderScheem Deposit $${amount}`,
-                callback_url: "https://traderscheem.duckdns.org/trade.html",
-                notification_id: notificationId, // REQUIRED FIX
+                // FIXED: Direct Pesapal POST responses to API route rather than static page
+                callback_url: "https://traderscheem.duckdns.org/callback",
+                notification_id: notificationId,
                 billing_address: { 
                     phone_number: formattedPhone, 
                     email_address: "trader@traderscheem.com", 
@@ -86,7 +93,6 @@ app.post('/stkpush', async (req, res) => {
             { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" }, timeout: 15000 }
         );
 
-        // Send the iframe payment URL back to the frontend
         res.json({ 
             success: true, 
             redirect_url: pesapalResponse.data.redirect_url, 
@@ -99,32 +105,38 @@ app.post('/stkpush', async (req, res) => {
     }
 });
 
-// 4. Correct IPN Callback Endpoint
-app.get('/callback', async (req, res) => {
+// 4. Handles GET and POST callbacks from Pesapal & redirects safely back to trade.html
+app.all('/callback', async (req, res) => {
     try {
-        const { OrderTrackingId, OrderNotificationType } = req.query;
+        const orderTrackingId = req.query.OrderTrackingId || req.body.OrderTrackingId;
 
-        if (OrderTrackingId) {
+        if (orderTrackingId) {
             const token = await getToken();
             const statusRes = await axios.get(
-                `${PESAPAL_BASE_URL}/Transactions/GetTransactionStatus?orderTrackingId=${OrderTrackingId}`,
+                `${PESAPAL_BASE_URL}/Transactions/GetTransactionStatus?orderTrackingId=${orderTrackingId}`,
                 { headers: { Authorization: `Bearer ${token}` } }
             );
 
-            const { payment_status_description, amount, description } = statusRes.data;
+            const { payment_status_description, amount } = statusRes.data;
 
             if (payment_status_description === "Completed") {
                 const amountUSD = amount / USD_TO_KES;
                 console.log(`✅ Payment confirmed! Crediting $${amountUSD}`);
-                // Update balance here
+                // TODO: Update database balance here
             }
         }
 
-        res.status(200).json({ orderNotificationType: OrderNotificationType, orderTrackingId: OrderTrackingId, status: 200 });
+        return res.redirect('/trade.html?status=success');
+
     } catch (error) {
         console.error("Callback Error:", error.message);
-        res.status(500).send("Error");
+        return res.redirect('/trade.html?status=error');
     }
+});
+
+// 5. Catch-all fallback if Pesapal posts directly to trade.html
+app.post('/trade.html', (req, res) => {
+    res.redirect('/trade.html');
 });
 
 // App Listen
@@ -132,4 +144,3 @@ app.listen(PORT, async () => {
     console.log(`✅ Server running on port ${PORT}`);
     await initIPN();
 });
-                                          
