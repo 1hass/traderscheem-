@@ -454,9 +454,7 @@ function clearNotifs(event) {
   }
 }
 
-function triggerPesapalDeposit() {  // ✅ Fixed lowercase "f"
-  if (typeof closeNav === 'function') closeNav();
-
+function triggerPesapalDeposit() {
   const inputAmount = prompt("Enter deposit amount in KES:", "1");
   if (!inputAmount) return;
 
@@ -498,12 +496,17 @@ function closePesapalModal() {
   if (frame) frame.src = '';
 }
 
-document.addEventListener('click', function() {
-  const dropdown = document.getElementById('dropdown');
-  const notifDropdown = document.getElementById('notifDropdown');
-  if (dropdown) dropdown.classList.remove('active');
-  if (notifDropdown) notifDropdown.classList.remove('active');
-});
+function showMpesaForm() {
+  // If someone clicks M-Pesa inside depositModal, trigger Pesapal directly
+  const depositModal = document.getElementById('depositModal');
+  if (depositModal) depositModal.style.display = 'none';
+  triggerPesapalDeposit();
+}
+
+function doDeposit() {
+  triggerPesapalDeposit();
+}
 </script>
 </body>
 </html>
+
