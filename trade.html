@@ -460,15 +460,42 @@ function closeModal(id) {
 }
 
 function showMpesaForm() {
-  const dropdown = document.getElementById('dropdown');
-  if (dropdown) dropdown.classList.remove('active');
+  console.log("Deposit button clicked!");
   
-  const form = document.getElementById('mpesaForm');
-  if (form) {
-    form.style.display = 'block';
-  } else {
-    handleDeposit();
+  let rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
+  if (!rawPhone) return;
+
+  let amtStr = prompt("Enter deposit amount:", "10");
+  let amount = parseFloat(amtStr);
+  if (isNaN(amount) || amount <= 0) {
+    alert("Please enter a valid deposit amount.");
+    return;
   }
+
+  const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
+  const fullPhoneNumber = '255' + cleanPhone;
+
+  fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      amount: amount,
+      phone: fullPhoneNumber,
+      countryCode: '255'
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.redirect_url) {
+      window.location.href = data.redirect_url;
+    } else {
+      alert(data.message || 'Failed to initiate deposit.');
+    }
+  })
+  .catch(err => {
+    console.error('Deposit error:', err);
+    alert('Failed to connect to backend.');
+  });
 }
 
 
