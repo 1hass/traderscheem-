@@ -353,10 +353,8 @@ try {
   handleDeposit();
   }
   
-function showMpesaForm() {
+async function showMpesaForm() {
   console.log("Deposit button clicked!");
-  alert("Deposit button is working!");
-  }
   
   let rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
   if (!rawPhone) return;
