@@ -359,11 +359,9 @@ try {
   }
   
 async function showMpesaForm() {
-async function showMpesaForm() {
   const countrySelect = document.getElementById('countryCode') || document.getElementById('countryCodeSelect');
   const countryCode = countrySelect ? countrySelect.value : '255';
 
-  // Pop open a prompt directly so it never depends on hidden form fields
   let rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
   if (!rawPhone) return;
 
@@ -412,11 +410,15 @@ function closePesapalModal() {
   if (modal) modal.style.display = 'none';
 }
 
+// Automatically bind showMpesaForm to ALL buttons containing the word "Deposit"
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('button').forEach(btn => {
+    if (btn.textContent.trim().toLowerCase().includes('deposit')) {
+      btn.onclick = showMpesaForm;
+    }
+  });
+});
 
-function closePesapalModal() {
-  const modal = document.getElementById('pesapalModal');
-  if (modal) modal.style.display = 'none';
-}
 
 
 function closePesapalModal() {
