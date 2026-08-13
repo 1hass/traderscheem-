@@ -573,20 +573,26 @@ function clearNotifs(event) {
 
 
 async function handleDeposit() {
-  // Check multiple possible IDs for the inputs to prevent blank values
   const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
-  const phoneInput = document.getElementById('depPhone') || document.getElementById('phone');
-  const amountInput = document.getElementById('depAmount') || document.getElementById('amount');
+  const phoneInput = document.getElementById('depPhone');
+  const amountInput = document.getElementById('depAmount');
 
+  // Grab the values and log them to see what's missing
   const countryCode = countrySelect ? countrySelect.value : '254';
   const rawPhone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? amountInput.value.trim() : '';
 
-  // Debugging log to see what values are captured
-  console.log("Submitting Deposit -> Amount:", amount, "Phone:", rawPhone, "Country:", countryCode);
+  console.log("DEBUG - Amount:", amount, "| Phone:", rawPhone, "| Country:", countryCode);
 
-  if (!amount || !rawPhone) {
-    alert("Please enter both an amount and a phone number.");
+  if (!amount || amount === "") {
+    alert("Please enter a deposit amount.");
+    if (amountInput) amountInput.focus();
+    return;
+  }
+
+  if (!rawPhone || rawPhone === "") {
+    alert("Please enter your phone number.");
+    if (phoneInput) phoneInput.focus();
     return;
   }
 
