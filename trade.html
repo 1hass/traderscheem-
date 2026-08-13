@@ -391,9 +391,15 @@ function closeModal(id) {
 function showMpesaForm() {
   const dropdown = document.getElementById('dropdown');
   if (dropdown) dropdown.classList.remove('active');
+  
   const form = document.getElementById('mpesaForm');
-  if (form) form.style.display = 'block';
+  if (form) {
+    form.style.display = 'block';
+  } else {
+    handleDeposit();
+  }
 }
+
 
 function resetDemo(event) {
   if (event) event.stopPropagation();
@@ -401,7 +407,7 @@ function resetDemo(event) {
   localStorage.setItem('demoBalance', demoBal);
   if (currentAccount === 'demo') switchAccount('demo');
   document.getElementById('dropdown').classList.remove('active');
-  alert('Demo Balance Reset to $100,000.00');
+  alert('Demo Balance Reset to $10,000.00');
 }
 
 function setStake(val, event) {
