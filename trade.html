@@ -257,18 +257,21 @@ try {
     <span style="cursor:pointer;" onclick="closeModal('mpesaForm')">X</span>
   </div>
 
-  <div class="phone-input-container">
+<div class="phone-input-container">
   <select id="countryCode" class="country-select">
+    <!-- African Countries with Native Mobile Money Support -->
     <option value="254" selected>🇰🇪 +254 (Kenya)</option>
-    <option value="255">🇹🇿 +255 (Tanzania)</option>
+    <option value="255">🇹ℤ +255 (Tanzania)</option>
     <option value="256">🇺🇬 +256 (Uganda)</option>
     <option value="250">🇷🇼 +250 (Rwanda)</option>
+    
+    <!-- Other Major African Nations -->
+    <option value="234">🇳🇬 +234 (Nigeria)</option>
+    <option value="233">🇬🇭 +233 (Ghana)</option>
+    <option value="27">🇿🇦 +27 (South Africa)</option>
     <option value="260">🇿🇲 +260 (Zambia)</option>
     <option value="263">🇿🇼 +263 (Zimbabwe)</option>
     <option value="265">🇲🇼 +265 (Malawi)</option>
-    <option value="234">🇳🇬 +234 (Nigeria)</option>
-    <option value="27">🇿🇦 +27 (South Africa)</option>
-    <option value="233">🇬🇭 +233 (Ghana)</option>
     <option value="251">🇪🇹 +251 (Ethiopia)</option>
     <option value="213">🇩🇿 +213 (Algeria)</option>
     <option value="244">🇦🇴 +244 (Angola)</option>
@@ -281,9 +284,8 @@ try {
     <option value="236">🇨🇫 +236 (Central African Rep.)</option>
     <option value="235">🇹🇩 +235 (Chad)</option>
     <option value="269">🇰🇲 +269 (Comoros)</option>
-    <option value="242">🇨🇬 +242 (Congo)</option>
+    <option value="242">🇨🇬 +242 (Congo - Brazzaville)</option>
     <option value="243">🇨🇩 +243 (DR Congo)</option>
-    <option value="225">🇨🇮 +225 (Ivory Coast)</option>
     <option value="253">🇩🇯 +253 (Djibouti)</option>
     <option value="20">🇪🇬 +20 (Egypt)</option>
     <option value="240">🇬🇶 +240 (Equatorial Guinea)</option>
@@ -293,6 +295,7 @@ try {
     <option value="220">🇬🇲 +220 (Gambia)</option>
     <option value="224">🇬🇳 +224 (Guinea)</option>
     <option value="245">🇬🇼 +245 (Guinea-Bissau)</option>
+    <option value="225">🇨🇮 +225 (Ivory Coast)</option>
     <option value="266">🇱🇸 +266 (Lesotho)</option>
     <option value="231">🇱🇷 +231 (Liberia)</option>
     <option value="218">🇱🇾 +218 (Libya)</option>
@@ -304,7 +307,7 @@ try {
     <option value="258">🇲🇿 +258 (Mozambique)</option>
     <option value="264">🇳🇦 +264 (Namibia)</option>
     <option value="227">🇳🇪 +227 (Niger)</option>
-    <option value="239">🇸🇹 +239 (Sao Tome & Principe)</option>
+    <option value="239">🇸🇹 +239 (São Tomé & Príncipe)</option>
     <option value="221">🇸🇳 +221 (Senegal)</option>
     <option value="248">🇸🇨 +248 (Seychelles)</option>
     <option value="232">🇸🇱 +232 (Sierra Leone)</option>
@@ -313,10 +316,22 @@ try {
     <option value="249">🇸🇩 +249 (Sudan)</option>
     <option value="228">🇹🇬 +228 (Togo)</option>
     <option value="216">🇹🇳 +216 (Tunisia)</option>
+
+    <!-- Global / International Countries -->
+    <option value="1">🇺🇸/🇨🇦 +1 (USA / Canada)</option>
+    <option value="44">🇬🇧 +44 (United Kingdom)</option>
+    <option value="91">🇮🇳 +91 (India)</option>
+    <option value="971">🇦🇪 +971 (UAE)</option>
+    <option value="966">🇸🇦 +966 (Saudi Arabia)</option>
+    <option value="49">🇩🇪 +49 (Germany)</option>
+    <option value="33">🇫🇷 +33 (France)</option>
+    <option value="86">🇨🇳 +86 (China)</option>
+    <option value="61">🇦🇺 +61 (Australia)</option>
   </select>
 
-  <input id="depPhone" class="phone-input" placeholder="7XXXXXXXX" required />
-  </div>
+  <input type="tel" id="depPhone" class="phone-input" placeholder="7XXXXXXXX" required />
+</div>
+
   
 
   <input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
