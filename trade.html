@@ -357,61 +357,60 @@ try {
   handleDeposit();
   }
   
-  async function showMpesaForm() {
-    const countrySelect = document.getElementById('countryCode') || document.getElementById('countryCodeSelect');
-    const phoneInput = document.getElementById('depPhone');
-    const amountInput = document.getElementById('depAmount');
+async function showMpesaForm() {
+  const countrySelect = document.getElementById('countryCode') || document.getElementById('countryCodeSelect');
+  const phoneInput = document.getElementById('depPhone');
+  const amountInput = document.getElementById('depAmount');
 
-    const countryCode = countrySelect ? countrySelect.value : '254';
-    let rawPhone = phoneInput ? phoneInput.value.trim() : '';
-    let amount = amountInput ? parseFloat(amountInput.value) : 0;
+  const countryCode = countrySelect ? countrySelect.value : '254';
+  const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+  const amount = amountInput ? parseFloat(amountInput.value) : 0;
 
-    if (!rawPhone) {
-      rawPhone = prompt("Enter your phone number (e.g., 712345678):", "");
-      if (!rawPhone) return;
-    }
-
-    if (isNaN(amount) || amount <= 0) {
-      let amtStr = prompt("Enter deposit amount:", "16");
-      amount = parseFloat(amtStr);
-      if (isNaN(amount) || amount <= 0) {
-        alert("Please enter a valid deposit amount.");
-        return;
-      }
-    }
-
-    const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
-    const fullPhoneNumber = countryCode + cleanPhone;
-
-    try {
-      const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          amount: amount,
-          phone: fullPhoneNumber,
-          countryCode: countryCode
-        })
-      });
-      
-      const data = await response.json();
-      if (data.redirect_url) {
-        const iframe = document.getElementById('pesapalFrame');
-        const modal = document.getElementById('pesapalModal');
-        if (iframe && modal) {
-          iframe.src = data.redirect_url;
-          modal.style.display = 'block';
-        } else {
-          window.location.href = data.redirect_url;
-        }
-      } else {
-        alert(data.message || 'Failed to initiate deposit.');
-      }
-    } catch (err) {
-      console.error('Deposit error:', err);
-      alert('Failed to connect to backend.');
-    }
+  if (!rawPhone) {
+    alert("Please type your phone number into the phone box.");
+    if (phoneInput) phoneInput.focus();
+    return;
   }
+
+  if (isNaN(amount) || amount <= 0) {
+    alert("Please type a valid amount into the amount box.");
+    if (amountInput) amountInput.focus();
+    return;
+  }
+
+  const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
+  const fullPhoneNumber = countryCode + cleanPhone;
+
+  try {
+    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: amount,
+        phone: fullPhoneNumber,
+        countryCode: countryCode
+      })
+    });
+    
+    const data = await response.json();
+    if (data.redirect_url) {
+      const iframe = document.getElementById('pesapalFrame');
+      const modal = document.getElementById('pesapalModal');
+      if (iframe && modal) {
+        iframe.src = data.redirect_url;
+        modal.style.display = 'block';
+      } else {
+        window.location.href = data.redirect_url;
+      }
+    } else {
+      alert(data.message || 'Failed to initiate deposit.');
+    }
+  } catch (err) {
+    console.error('Deposit error:', err);
+    alert('Failed to connect to backend.');
+  }
+}
+
 
   function closePesapalModal() {
     const modal = document.getElementById('pesapalModal');
