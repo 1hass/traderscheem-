@@ -614,6 +614,12 @@ function triggerPesapalDeposit() {
   });
 }
 
+// Map doDeposit directly to triggerPesapalDeposit so both deposit buttons execute this logic
+function doDeposit() {
+  triggerPesapalDeposit();
+}
+
+
 
 
 
