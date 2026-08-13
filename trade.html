@@ -468,6 +468,10 @@ function triggerPesapalDeposit() {
     return;
   }
 
+  // Prompt for phone number required by Pesapal for M-Pesa
+  const phoneNumber = prompt("Enter your M-Pesa phone number (e.g., 254712345678):", "254");
+  if (!phoneNumber) return;
+
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
   fetch(`${BACKEND_URL}/stkpush`, {
@@ -475,12 +479,17 @@ function triggerPesapalDeposit() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       amount: amount,
+      phoneNumber: phoneNumber.trim(),
       email: 'trader@traderscheem.com'
     })
   })
-  .then(res => {
-    if (!res.ok) throw new Error(`Server returned status: ${res.status}`);
-    return res.json();
+  .then(async res => {
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      // Throw the detailed server error message if available
+      throw new Error(data.message || data.error || `Server returned status: ${res.status}`);
+    }
+    return data;
   })
   .then(data => {
     if (data.redirect_url) {
@@ -503,6 +512,7 @@ function triggerPesapalDeposit() {
     alert('Failed to connect to backend: ' + err.message);
   });
 }
+
 
 
 function closePesapalModal() {
