@@ -367,7 +367,7 @@ async function showMpesaForm() {
   }
 
   const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
-  const fullPhoneNumber = '255' + cleanPhone; // Change '255' to your country code if needed
+  const fullPhoneNumber = '254' + cleanPhone; // Change '255' to your country code if needed
 
   try {
     const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
