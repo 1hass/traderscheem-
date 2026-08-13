@@ -352,6 +352,10 @@ try {
 </div>
 
 <script>
+  function triggerPesapalDeposit() {
+  handleDeposit();
+  }
+  
 let currentAccount = 'demo';
 let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
 let realBal = parseFloat(localStorage.getItem('realBalance')) || 0.00;
