@@ -614,17 +614,9 @@ async function handleDeposit() {
   }
 }
 
-
-  
-
 function doDeposit() {
-  triggerPesapalDeposit();
+  handleDeposit();
 }
-
-
-
-
-
 
 function closePesapalModal() {
   const modal = document.getElementById('pesapalModal');
@@ -634,11 +626,7 @@ function closePesapalModal() {
 }
 
 function showMpesaForm() {
-  triggerPesapalDeposit();
-}
-
-function doDeposit() {
-  triggerPesapalDeposit();
+  handleDeposit();
 }
 </script>
 </body>
