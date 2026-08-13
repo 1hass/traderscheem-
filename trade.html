@@ -573,34 +573,39 @@ function clearNotifs(event) {
 
 
 async function handleDeposit() {
-  // Get the country code dropdown and phone input values
+  // Check multiple possible IDs for the inputs to prevent blank values
   const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
-  const phoneInput = document.getElementById('depPhone');
-  const amountInput = document.getElementById('depAmount');
+  const phoneInput = document.getElementById('depPhone') || document.getElementById('phone');
+  const amountInput = document.getElementById('depAmount') || document.getElementById('amount');
 
-  const countryCode = countrySelect ? countrySelect.value : '254'; // Default to 254 if missing
+  const countryCode = countrySelect ? countrySelect.value : '254';
   const rawPhone = phoneInput ? phoneInput.value.trim() : '';
-  const amount = amountInput ? amountInput.value : '';
+  const amount = amountInput ? amountInput.value.trim() : '';
 
-  // Clean phone number (remove leading zero if user typed it, e.g., 0712345678 -> 712345678)
+  // Debugging log to see what values are captured
+  console.log("Submitting Deposit -> Amount:", amount, "Phone:", rawPhone, "Country:", countryCode);
+
+  if (!amount || !rawPhone) {
+    alert("Please enter both an amount and a phone number.");
+    return;
+  }
+
   const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
-  const fullPhoneNumber = countryCode + cleanPhone; // Combines country code + phone (e.g., 2557XXXXXXXX)
+  const fullPhoneNumber = countryCode + cleanPhone;
 
-  // Send fullPhoneNumber and amount to your backend
   try {
-    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { // <--- FIXED ENDPOINT HERE
+    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         amount: amount,
         phone: fullPhoneNumber,
-        countryCode: countryCode // <--- Matching backend expected property name
+        countryCode: countryCode
       })
     });
     
     const data = await response.json();
     if (data.redirect_url) {
-      // Open Pesapal iframe/modal with the generated link
       const iframe = document.getElementById('pesapalFrame');
       const modal = document.getElementById('pesapalModal');
       if (iframe && modal) {
@@ -612,7 +617,7 @@ async function handleDeposit() {
     }
   } catch (err) {
     console.error('Deposit error:', err);
-    alert('Failed to initiate deposit. Please try again.');
+    alert('Failed to connect to backend.');
   }
 }
 
