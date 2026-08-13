@@ -109,7 +109,8 @@ button, a { -webkit-tap-highlight-color:transparent; }
     <button type="button" style="background:#ff4444; border:none; color:white; width:35px; height:35px; border-radius:8px; font-weight:bold;">T</button>
     <button type="button" style="background:#333; border:none; color:white; padding:5px 10px; border-radius:20px; cursor:pointer;" onclick="openNav()">☰</button>
   </div>
-
+<button type="button" onclick="showMpesaForm()" style="background:#0085ff; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">Deposit</button>
+  
   <div class="account-toggle" onclick="toggleDropdown(event)">
     <span id="badge" class="account-badge">D</span>
     <span id="topBalance" style="color:#ff4444; font-weight:bold;">$100,000.00</span>
@@ -329,18 +330,11 @@ try {
     <option value="61">🇦🇺 +61 (Australia)</option>
   </select>
 
-  <input type="tel" id="depPhone" class="phone-input" placeholder="7XXXXXXXX" required />
+<input type="tel" id="depPhone" class="phone-input" placeholder="7XXXXXXXX" required />
 </div>
 
-  
+<input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
 
-  <input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
-
-<button type="button" id="headerDepositBtn" onclick="showMpesaForm()" class="...">Deposit</button>
-
-  
-  
-  
 </div>
 
 <!-- Pesapal iFrame Modal Overlay -->
@@ -353,6 +347,7 @@ try {
     <iframe id="pesapalFrame" src="" style="width:100%; height:calc(100% - 50px); border:none;"></iframe>
   </div>
 </div>
+
 
 <script>
   function triggerPesapalDeposit() {
