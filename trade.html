@@ -574,23 +574,28 @@ function clearNotifs(event) {
 
 async function handleDeposit() {
   const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
-  const phoneInput = document.getElementById('depPhone');
-  const amountInput = document.getElementById('depAmount');
+  const phoneInput = document.getElementById('depPhone') || document.getElementById('phone');
+  
+  // Checks multiple possible IDs for the amount box
+  const amountInput = document.getElementById('depAmount') || 
+                      document.getElementById('amount') || 
+                      document.getElementById('depositAmount') || 
+                      document.getElementById('sum');
 
-  // Grab the values and log them to see what's missing
   const countryCode = countrySelect ? countrySelect.value : '254';
   const rawPhone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? amountInput.value.trim() : '';
 
-  console.log("DEBUG - Amount:", amount, "| Phone:", rawPhone, "| Country:", countryCode);
+  console.log("Found Amount Input Element:", amountInput);
+  console.log("Captured Value -> Amount:", amount, "| Phone:", rawPhone);
 
-  if (!amount || amount === "") {
-    alert("Please enter a deposit amount.");
+  if (!amount) {
+    alert("Amount field not found or empty! Please check input ID.");
     if (amountInput) amountInput.focus();
     return;
   }
 
-  if (!rawPhone || rawPhone === "") {
+  if (!rawPhone) {
     alert("Please enter your phone number.");
     if (phoneInput) phoneInput.focus();
     return;
