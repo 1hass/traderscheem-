@@ -358,30 +358,19 @@ try {
   }
   
 async function showMpesaForm() {
+async function showMpesaForm() {
   const countrySelect = document.getElementById('countryCode') || document.getElementById('countryCodeSelect');
-  
-  // Search for the phone and amount inputs by ID, class, or type across the whole document
-  const phoneInput = document.getElementById('depPhone') || document.querySelector('.phone-input') || document.querySelector('input[type="tel"]');
-  const amountInput = document.getElementById('depAmount') || document.querySelector('input[type="number"]');
-
   const countryCode = countrySelect ? countrySelect.value : '255';
-  
-  // Get values or fallback to prompts if inputs are missing/hidden
-  let rawPhone = phoneInput ? phoneInput.value.trim() : '';
-  let amount = amountInput ? parseFloat(amountInput.value) : 0;
 
-  if (!rawPhone) {
-    rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
-    if (!rawPhone) return;
-  }
+  // Pop open a prompt directly so it never depends on hidden form fields
+  let rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
+  if (!rawPhone) return;
 
+  let amtStr = prompt("Enter deposit amount:", "16");
+  let amount = parseFloat(amtStr);
   if (isNaN(amount) || amount <= 0) {
-    let amtStr = prompt("Enter deposit amount:", "16");
-    amount = parseFloat(amtStr);
-    if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid amount.");
-      return;
-    }
+    alert("Please enter a valid deposit amount.");
+    return;
   }
 
   const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
@@ -421,6 +410,7 @@ function closePesapalModal() {
   const modal = document.getElementById('pesapalModal');
   if (modal) modal.style.display = 'none';
 }
+
 
 function closePesapalModal() {
   const modal = document.getElementById('pesapalModal');
