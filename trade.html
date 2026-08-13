@@ -458,8 +458,6 @@ function clearNotifs(event) {
 
 function triggerPesapalDeposit() {
   const inputAmount = prompt("Enter deposit amount in KES:", "1");
-  
-  // Exit if user clicks Cancel or enters nothing
   if (inputAmount === null || inputAmount.trim() === "") return;
 
   const amount = parseFloat(inputAmount);
@@ -468,9 +466,11 @@ function triggerPesapalDeposit() {
     return;
   }
 
-  // Prompt for phone number required by Pesapal for M-Pesa
-  const phoneNumber = prompt("Enter your M-Pesa phone number (e.g., 254712345678):", "254");
-  if (!phoneNumber) return;
+  const phoneNumber = prompt("Enter your M-Pesa phone number (e.g., 0712345678):", "");
+  if (phoneNumber === null || phoneNumber.trim() === "") {
+    alert("Phone number is required.");
+    return;
+  }
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
@@ -479,15 +479,14 @@ function triggerPesapalDeposit() {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       amount: amount,
-      phoneNumber: phoneNumber.trim(),
+      phone: phoneNumber.trim(),
       email: 'trader@traderscheem.com'
     })
   })
   .then(async res => {
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
-      // Throw the detailed server error message if available
-      throw new Error(data.message || data.error || `Server returned status: ${res.status}`);
+      throw new Error(data.message || data.details || `Server returned status: ${res.status}`);
     }
     return data;
   })
@@ -500,7 +499,6 @@ function triggerPesapalDeposit() {
         pesapalFrame.src = data.redirect_url;
         pesapalModal.style.display = 'block';
       } else {
-        // Fallback: Open payment page directly if modal element isn't in HTML
         window.location.href = data.redirect_url;
       }
     } else {
@@ -512,6 +510,7 @@ function triggerPesapalDeposit() {
     alert('Failed to connect to backend: ' + err.message);
   });
 }
+
 
 
 
