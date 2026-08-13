@@ -573,42 +573,23 @@ function clearNotifs(event) {
 
 
 async function triggerPesapalDeposit() {
-  // 1. Find inputs safely by looking at all text/number inputs inside your deposit container
   const countrySelect = document.getElementById('countryCode');
-  const allInputs = document.querySelectorAll('.M-Pesa-Deposit input, input[type="text"], input[type="number"]');
-  
-  // Grab the phone and amount based on typical positions or types
-  let phoneInput = null;
-  let amountInput = null;
+  const phoneInput = document.getElementById('depPhone');
+  const amountInput = document.getElementById('depAmount');
 
-  allInputs.forEach(input => {
-    const type = input.getAttribute('type');
-    // If it looks like a phone field or text field near the country code
-    if (type === 'text' || input.id.toLowerCase().includes('phone')) {
-      if (!phoneInput) phoneInput = input;
-    }
-    // If it's a number field or amount field
-    if (type === 'number' || input.id.toLowerCase().includes('amount') || input.id.toLowerCase().includes('sum')) {
-      amountInput = input;
-    }
-  });
-
-  // Fallbacks if querySelector fails
-  const rawPhone = phoneInput ? phoneInput.value.trim() : '';
-  const amount = amountInput ? amountInput.value.trim() : '';
   const countryCode = countrySelect ? countrySelect.value : '255';
+  const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+  const amount = amountInput ? parseFloat(amountInput.value) : 0;
 
-  console.log("Detected Phone:", rawPhone, "| Detected Amount:", amount);
-
-  if (!amount) {
-    alert("Please type a valid amount in the amount box.");
-    if (amountInput) amountInput.focus();
+  if (!rawPhone) {
+    alert("Please type your phone number in the box.");
+    if (phoneInput) phoneInput.focus();
     return;
   }
 
-  if (!rawPhone) {
-    alert("Please type your phone number.");
-    if (phoneInput) phoneInput.focus();
+  if (isNaN(amount) || amount <= 0) {
+    alert("Please type a valid amount in the amount box.");
+    if (amountInput) amountInput.focus();
     return;
   }
 
