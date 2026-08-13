@@ -4,6 +4,35 @@
 <title>Binary - Trading</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
+  .phone-input-container {
+  display: flex;
+  align-items: center;
+  border: 1px solid #333;
+  border-radius: 4px;
+  background-color: #111;
+  margin-top: 8px;
+}
+
+.country-select {
+  background-color: #222;
+  color: #fff;
+  border: none;
+  padding: 12px 8px;
+  font-size: 14px;
+  outline: none;
+  max-width: 140px;
+}
+
+.phone-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  padding: 12px;
+  font-size: 14px;
+  outline: none;
+}
+  
 body { background:#0a0a0a; color:white; font-family:Arial,sans-serif; margin:0; padding:10px; overflow-x:hidden; }
 .sidebar { height:100%; width:0; position:fixed; z-index:999999; top:0; left:0; background:#181818; overflow-x:hidden; transition:0.3s; padding-top:20px; }
 .sidebar-header { padding:20px; border-bottom:1px solid #2a2a2a; margin-bottom:10px; position:relative; }
@@ -228,7 +257,67 @@ try {
     <span style="cursor:pointer;" onclick="closeModal('mpesaForm')">X</span>
   </div>
 
-  <input id="depPhone" placeholder="2547XXXXXXXX" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
+  <div class="phone-input-container">
+  <select id="countryCode" class="country-select">
+    <option value="254" selected>🇰🇪 +254 (Kenya)</option>
+    <option value="255">🇹🇿 +255 (Tanzania)</option>
+    <option value="256">🇺🇬 +256 (Uganda)</option>
+    <option value="250">🇷🇼 +250 (Rwanda)</option>
+    <option value="260">🇿🇲 +260 (Zambia)</option>
+    <option value="263">🇿🇼 +263 (Zimbabwe)</option>
+    <option value="265">🇲🇼 +265 (Malawi)</option>
+    <option value="234">🇳🇬 +234 (Nigeria)</option>
+    <option value="27">🇿🇦 +27 (South Africa)</option>
+    <option value="233">🇬🇭 +233 (Ghana)</option>
+    <option value="251">🇪🇹 +251 (Ethiopia)</option>
+    <option value="213">🇩🇿 +213 (Algeria)</option>
+    <option value="244">🇦🇴 +244 (Angola)</option>
+    <option value="229">🇧🇯 +229 (Benin)</option>
+    <option value="267">🇧🇼 +267 (Botswana)</option>
+    <option value="226">🇧🇫 +226 (Burkina Faso)</option>
+    <option value="257">🇧🇮 +257 (Burundi)</option>
+    <option value="237">🇨🇲 +237 (Cameroon)</option>
+    <option value="238">🇨🇻 +238 (Cape Verde)</option>
+    <option value="236">🇨🇫 +236 (Central African Rep.)</option>
+    <option value="235">🇹🇩 +235 (Chad)</option>
+    <option value="269">🇰🇲 +269 (Comoros)</option>
+    <option value="242">🇨🇬 +242 (Congo)</option>
+    <option value="243">🇨🇩 +243 (DR Congo)</option>
+    <option value="225">🇨🇮 +225 (Ivory Coast)</option>
+    <option value="253">🇩🇯 +253 (Djibouti)</option>
+    <option value="20">🇪🇬 +20 (Egypt)</option>
+    <option value="240">🇬🇶 +240 (Equatorial Guinea)</option>
+    <option value="291">🇪🇷 +291 (Eritrea)</option>
+    <option value="268">🇸🇿 +268 (Eswatini)</option>
+    <option value="241">🇬🇦 +241 (Gabon)</option>
+    <option value="220">🇬🇲 +220 (Gambia)</option>
+    <option value="224">🇬🇳 +224 (Guinea)</option>
+    <option value="245">🇬🇼 +245 (Guinea-Bissau)</option>
+    <option value="266">🇱🇸 +266 (Lesotho)</option>
+    <option value="231">🇱🇷 +231 (Liberia)</option>
+    <option value="218">🇱🇾 +218 (Libya)</option>
+    <option value="261">🇲🇬 +261 (Madagascar)</option>
+    <option value="223">🇲🇱 +223 (Mali)</option>
+    <option value="222">🇲🇷 +222 (Mauritania)</option>
+    <option value="230">🇲🇺 +230 (Mauritius)</option>
+    <option value="212">🇲🇦 +212 (Morocco)</option>
+    <option value="258">🇲🇿 +258 (Mozambique)</option>
+    <option value="264">🇳🇦 +264 (Namibia)</option>
+    <option value="227">🇳🇪 +227 (Niger)</option>
+    <option value="239">🇸🇹 +239 (Sao Tome & Principe)</option>
+    <option value="221">🇸🇳 +221 (Senegal)</option>
+    <option value="248">🇸🇨 +248 (Seychelles)</option>
+    <option value="232">🇸🇱 +232 (Sierra Leone)</option>
+    <option value="252">🇸🇴 +252 (Somalia)</option>
+    <option value="211">🇸🇸 +211 (South Sudan)</option>
+    <option value="249">🇸🇩 +249 (Sudan)</option>
+    <option value="228">🇹🇬 +228 (Togo)</option>
+    <option value="216">🇹🇳 +216 (Tunisia)</option>
+  </select>
+
+  <input id="depPhone" class="phone-input" placeholder="7XXXXXXXX" required />
+  </div>
+  
 
   <input id="depAmount" type="number" placeholder="Amount USD" style="width:100%; box-sizing:border-box; padding:12px; margin:5px 0; background:#333; border:none; color:white; border-radius:8px;">
 
@@ -457,29 +546,42 @@ function clearNotifs(event) {
 
 
 function triggerPesapalDeposit() {
-  const inputAmount = prompt("Enter deposit amount in KES:", "1");
-  if (inputAmount === null || inputAmount.trim() === "") return;
+  // 1. Get Country Code & Phone Input
+  const countryCode = document.getElementById('countryCode') ? document.getElementById('countryCode').value : '254';
+  let rawPhone = document.getElementById('depPhone') ? document.getElementById('depPhone').value.trim() : '';
 
-  const amount = parseFloat(inputAmount);
+  // Clean phone input: remove spaces/dashes and leading zeros
+  rawPhone = rawPhone.replace(/\D/g, '');
+  if (rawPhone.startsWith('0')) {
+    rawPhone = rawPhone.substring(1);
+  }
+
+  if (!rawPhone) {
+    alert("Phone number is required.");
+    return;
+  }
+
+  // Combine country code + cleaned phone (e.g., 255712345678)
+  const fullPhone = countryCode + rawPhone;
+
+  // 2. Get Amount Input
+  const amountInput = document.getElementById('depAmount') ? document.getElementById('depAmount').value : '';
+  const amount = parseFloat(amountInput);
+
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid deposit amount.");
     return;
   }
 
-  const phoneNumber = prompt("Enter your M-Pesa phone number (e.g., 0712345678):", "");
-  if (phoneNumber === null || phoneNumber.trim() === "") {
-    alert("Phone number is required.");
-    return;
-  }
-
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
+  // 3. Initiate Request to Backend
   fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ 
       amount: amount,
-      phone: phoneNumber.trim(),
+      phone: fullPhone,
       email: 'trader@traderscheem.com'
     })
   })
@@ -510,6 +612,7 @@ function triggerPesapalDeposit() {
     alert('Failed to connect to backend: ' + err.message);
   });
 }
+
 
 
 
