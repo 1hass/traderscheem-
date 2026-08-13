@@ -562,12 +562,12 @@ function clearNotifs(event) {
 
 
 async function handleDeposit() {
-  // 1. Get elements from HTML
-  const countrySelect = document.getElementById('countryCodeSelect'); // Your country dropdown element
-  const phoneInput = document.getElementById('depositPhone');        // Phone number input
-  const amountInput = document.getElementById('depositAmount');      // Amount input
+  // 1. Get elements with ID fallbacks
+  const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
+  const phoneInput = document.getElementById('depositPhone') || document.getElementById('phoneInput');
+  const amountInput = document.getElementById('depositAmount') || document.getElementById('amountInput');
 
-  // 2. Extract selected prefix (e.g. "255" for Tanzania, "254" for Kenya)
+  // 2. Extract selected prefix
   let rawCountryCode = countrySelect ? countrySelect.value.replace(/\D/g, '') : '254';
   let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
 
@@ -582,15 +582,15 @@ async function handleDeposit() {
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
-  // 3. Send request with countryCode explicitly included
+  // 3. Send request
   try {
     const response = await fetch(`${BACKEND_URL}/stkpush`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        amount: amount,
+        amount: isNaN(amount) || amount <= 0 ? 1 : amount,
         phone: fullPhone,
-        countryCode: rawCountryCode, // <-- CRITICAL: Pass '255' here!
+        countryCode: rawCountryCode, // Passes '255' for Tanzania
         email: 'trader@traderscheem.com'
       })
     });
@@ -598,15 +598,22 @@ async function handleDeposit() {
     const data = await response.json();
 
     if (data.redirect_url) {
-      // Set iframe source to Pesapal redirect URL
-      document.getElementById('pesapalIframe').src = data.redirect_url;
+      // Set iframe source or redirect
+      const pesapalIframe = document.getElementById('pesapalIframe');
+      if (pesapalIframe) {
+        pesapalIframe.src = data.redirect_url;
+      } else {
+        window.location.href = data.redirect_url;
+      }
     } else {
-      alert("Error loading payment page.");
+      alert("Error: " + (data.message || "Failed to load payment page."));
     }
   } catch (err) {
     console.error("Deposit request failed:", err);
+    alert("Connection error. Please check your backend.");
   }
 }
+
 
   
 
