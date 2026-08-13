@@ -605,6 +605,7 @@ function triggerPesapalDeposit() {
     body: JSON.stringify({ 
       amount: amount,
       phone: fullPhone,
+      countryCode: countryCode, // <--- ADDED HERE! Passes '255', '256', etc.
       email: 'trader@traderscheem.com'
     })
   })
@@ -634,7 +635,8 @@ function triggerPesapalDeposit() {
     console.error('Connection error:', err);
     alert('Failed to connect to backend: ' + err.message);
   });
-}
+  }
+  
 
 function doDeposit() {
   triggerPesapalDeposit();
