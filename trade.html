@@ -359,27 +359,27 @@ try {
   
 async function showMpesaForm() {
   const countrySelect = document.getElementById('countryCode') || document.getElementById('countryCodeSelect');
-  const phoneInput = document.getElementById('depPhone');
+  
+  // Find phone input by ID or by its class name
+  const phoneInput = document.getElementById('depPhone') || document.querySelector('.phone-input');
   const amountInput = document.getElementById('depAmount');
 
-  const countryCode = countrySelect ? countrySelect.value : '254';
-  
-  // Grab values from inputs if they exist on screen, otherwise ask via prompt
-  let rawPhone = phoneInput ? phoneInput.value.trim() : '';
-  let amount = amountInput ? parseFloat(amountInput.value) : 0;
+  const countryCode = countrySelect ? countrySelect.value : '255';
+  const rawPhone = phoneInput ? phoneInput.value.trim() : '';
+  const amount = amountInput ? parseFloat(amountInput.value) : 0;
+
+  console.log("Captured Phone:", rawPhone, "Amount:", amount);
 
   if (!rawPhone) {
-    rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
-    if (!rawPhone) return;
+    alert("Please type your phone number into the box.");
+    if (phoneInput) phoneInput.focus();
+    return;
   }
 
   if (isNaN(amount) || amount <= 0) {
-    let amtStr = prompt("Enter deposit amount:", "16");
-    amount = parseFloat(amtStr);
-    if (isNaN(amount) || amount <= 0) {
-      alert("Please enter a valid deposit amount.");
-      return;
-    }
+    alert("Please enter a valid amount.");
+    if (amountInput) amountInput.focus();
+    return;
   }
 
   const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
@@ -414,6 +414,12 @@ async function showMpesaForm() {
     alert('Failed to connect to backend.');
   }
 }
+
+function closePesapalModal() {
+  const modal = document.getElementById('pesapalModal');
+  if (modal) modal.style.display = 'none';
+}
+
 
 function closePesapalModal() {
   const modal = document.getElementById('pesapalModal');
