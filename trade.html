@@ -561,81 +561,53 @@ function clearNotifs(event) {
 }
 
 
-function triggerPesapalDeposit() {
-  const phoneInput = document.getElementById('depPhone');
-  const amountInput = document.getElementById('depAmount');
-  const countrySelect = document.getElementById('countryCode');
+async function handleDeposit() {
+  // 1. Get elements from HTML
+  const countrySelect = document.getElementById('countryCodeSelect'); // Your country dropdown element
+  const phoneInput = document.getElementById('depositPhone');        // Phone number input
+  const amountInput = document.getElementById('depositAmount');      // Amount input
 
-  // 1. If modal/inputs aren't visible or phone is empty, open modal & focus
-  let rawPhone = phoneInput ? phoneInput.value.trim() : '';
-  
-  if (!rawPhone) {
-    // Show the modal if it's hidden
-    const modal = document.getElementById('mpesaForm');
-    if (modal) modal.style.display = 'block';
-    
-    if (phoneInput) phoneInput.focus();
-    alert("Please enter your phone number to proceed.");
-    return;
-  }
+  // 2. Extract selected prefix (e.g. "255" for Tanzania, "254" for Kenya)
+  let rawCountryCode = countrySelect ? countrySelect.value.replace(/\D/g, '') : '254';
+  let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
 
-  // 2. Format international phone number
-  const countryCode = countrySelect ? countrySelect.value : '254';
-  rawPhone = rawPhone.replace(/\D/g, '');
+  // Remove leading 0 if present
   if (rawPhone.startsWith('0')) {
     rawPhone = rawPhone.substring(1);
   }
 
-  const fullPhone = countryCode + rawPhone;
-
-  // 3. Get Amount Input
+  // Build full phone string (e.g. "255799867528")
+  const fullPhone = rawCountryCode + rawPhone;
   const amount = parseFloat(amountInput ? amountInput.value : '0');
-  if (isNaN(amount) || amount <= 0) {
-    alert("Please enter a valid deposit amount.");
-    if (amountInput) amountInput.focus();
-    return;
-  }
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
-  // 4. Send Request
-  fetch(`${BACKEND_URL}/stkpush`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ 
-      amount: amount,
-      phone: fullPhone,
-      countryCode: countryCode, // <--- ADDED HERE! Passes '255', '256', etc.
-      email: 'trader@traderscheem.com'
-    })
-  })
-  .then(async res => {
-    const data = await res.json().catch(() => ({}));
-    if (!res.ok) {
-      throw new Error(data.message || data.details || `Server returned status: ${res.status}`);
-    }
-    return data;
-  })
-  .then(data => {
+  // 3. Send request with countryCode explicitly included
+  try {
+    const response = await fetch(`${BACKEND_URL}/stkpush`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        amount: amount,
+        phone: fullPhone,
+        countryCode: rawCountryCode, // <-- CRITICAL: Pass '255' here!
+        email: 'trader@traderscheem.com'
+      })
+    });
+
+    const data = await response.json();
+
     if (data.redirect_url) {
-      const pesapalFrame = document.getElementById('pesapalFrame');
-      const pesapalModal = document.getElementById('pesapalModal');
-      
-      if (pesapalFrame && pesapalModal) {
-        pesapalFrame.src = data.redirect_url;
-        pesapalModal.style.display = 'block';
-      } else {
-        window.location.href = data.redirect_url;
-      }
+      // Set iframe source to Pesapal redirect URL
+      document.getElementById('pesapalIframe').src = data.redirect_url;
     } else {
-      alert(data.message || 'Deposit initiation failed.');
+      alert("Error loading payment page.");
     }
-  })
-  .catch(err => {
-    console.error('Connection error:', err);
-    alert('Failed to connect to backend: ' + err.message);
-  });
+  } catch (err) {
+    console.error("Deposit request failed:", err);
   }
+}
+
   
 
 function doDeposit() {
