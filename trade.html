@@ -588,13 +588,13 @@ async function handleDeposit() {
 
   // Send fullPhoneNumber and amount to your backend
   try {
-    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/api/pesapal/submit-order', {
+    const response = await fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', { // <--- FIXED ENDPOINT HERE
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         amount: amount,
         phone: fullPhoneNumber,
-        country: countryCode
+        countryCode: countryCode // <--- Matching backend expected property name
       })
     });
     
@@ -607,12 +607,15 @@ async function handleDeposit() {
         iframe.src = data.redirect_url;
         modal.style.display = 'block';
       }
+    } else {
+      alert(data.message || 'Failed to initiate deposit.');
     }
   } catch (err) {
     console.error('Deposit error:', err);
     alert('Failed to initiate deposit. Please try again.');
   }
 }
+
 
 function doDeposit() {
   handleDeposit();
