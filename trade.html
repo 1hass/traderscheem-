@@ -572,25 +572,18 @@ function clearNotifs(event) {
 }
 
 
-async function handleDeposit() {
-  const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
-  const phoneInput = document.getElementById('depPhone') || document.getElementById('phone');
-  
-  // Checks multiple possible IDs for the amount box
-  const amountInput = document.getElementById('depAmount') || 
-                      document.getElementById('amount') || 
-                      document.getElementById('depositAmount') || 
-                      document.getElementById('sum');
+async function triggerPesapalDeposit() {
+  // Grab elements using the exact structure from your M-Pesa Deposit card
+  const countrySelect = document.getElementById('countryCode');
+  const phoneInput = document.querySelector('.M-Pesa-Deposit input[type="text"]') || document.getElementById('depPhone');
+  const amountInput = document.querySelector('.M-Pesa-Deposit input[type="number"]') || document.getElementById('depAmount');
 
   const countryCode = countrySelect ? countrySelect.value : '254';
   const rawPhone = phoneInput ? phoneInput.value.trim() : '';
   const amount = amountInput ? amountInput.value.trim() : '';
 
-  console.log("Found Amount Input Element:", amountInput);
-  console.log("Captured Value -> Amount:", amount, "| Phone:", rawPhone);
-
-  if (!amount) {
-    alert("Amount field not found or empty! Please check input ID.");
+  if (!amount || amount <= 0) {
+    alert("Please enter a valid deposit amount.");
     if (amountInput) amountInput.focus();
     return;
   }
@@ -617,11 +610,14 @@ async function handleDeposit() {
     
     const data = await response.json();
     if (data.redirect_url) {
+      // If you are loading it into an iframe or modal, handle it here:
       const iframe = document.getElementById('pesapalFrame');
       const modal = document.getElementById('pesapalModal');
       if (iframe && modal) {
         iframe.src = data.redirect_url;
         modal.style.display = 'block';
+      } else {
+        window.location.href = data.redirect_url;
       }
     } else {
       alert(data.message || 'Failed to initiate deposit.');
