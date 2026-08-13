@@ -547,36 +547,43 @@ function clearNotifs(event) {
 
 
 function triggerPesapalDeposit() {
-  // 1. Get Country Code & Phone Input
-  const countryCode = document.getElementById('countryCode') ? document.getElementById('countryCode').value : '254';
-  let rawPhone = document.getElementById('depPhone') ? document.getElementById('depPhone').value.trim() : '';
+  const phoneInput = document.getElementById('depPhone');
+  const amountInput = document.getElementById('depAmount');
+  const countrySelect = document.getElementById('countryCode');
 
-  // Clean phone input: remove spaces/dashes and leading zeros
+  // 1. If modal/inputs aren't visible or phone is empty, open modal & focus
+  let rawPhone = phoneInput ? phoneInput.value.trim() : '';
+  
+  if (!rawPhone) {
+    // Show the modal if it's hidden
+    const modal = document.getElementById('mpesaForm');
+    if (modal) modal.style.display = 'block';
+    
+    if (phoneInput) phoneInput.focus();
+    alert("Please enter your phone number to proceed.");
+    return;
+  }
+
+  // 2. Format international phone number
+  const countryCode = countrySelect ? countrySelect.value : '254';
   rawPhone = rawPhone.replace(/\D/g, '');
   if (rawPhone.startsWith('0')) {
     rawPhone = rawPhone.substring(1);
   }
 
-  if (!rawPhone) {
-    alert("Phone number is required.");
-    return;
-  }
-
-  // Combine country code + cleaned phone (e.g., 255712345678)
   const fullPhone = countryCode + rawPhone;
 
-  // 2. Get Amount Input
-  const amountInput = document.getElementById('depAmount') ? document.getElementById('depAmount').value : '';
-  const amount = parseFloat(amountInput);
-
+  // 3. Get Amount Input
+  const amount = parseFloat(amountInput ? amountInput.value : '0');
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid deposit amount.");
+    if (amountInput) amountInput.focus();
     return;
   }
 
   const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
 
-  // 3. Initiate Request to Backend
+  // 4. Send Request
   fetch(`${BACKEND_URL}/stkpush`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -614,7 +621,6 @@ function triggerPesapalDeposit() {
   });
 }
 
-// Map doDeposit directly to triggerPesapalDeposit so both deposit buttons execute this logic
 function doDeposit() {
   triggerPesapalDeposit();
 }
