@@ -561,50 +561,65 @@ function clearNotifs(event) {
 }
 
 
-async function handleDeposit() {
-  // 1. Get elements from HTML
-  const countrySelect = document.getElementById('countryCodeSelect'); // Your country dropdown element
-  const phoneInput = document.getElementById('depositPhone');        // Phone number input
-  const amountInput = document.getElementById('depositAmount');      // Amount input
-
-  // 2. Extract selected prefix (e.g. "255" for Tanzania, "254" for Kenya)
-  let rawCountryCode = countrySelect ? countrySelect.value.replace(/\D/g, '') : '254';
-  let rawPhone = phoneInput ? phoneInput.value.replace(/\D/g, '') : '';
-
-  // Remove leading 0 if present
-  if (rawPhone.startsWith('0')) {
-    rawPhone = rawPhone.substring(1);
-  }
-
-  // Build full phone string (e.g. "255799867528")
-  const fullPhone = rawCountryCode + rawPhone;
-  const amount = parseFloat(amountInput ? amountInput.value : '0');
-
-  const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
-
-  // 3. Send request with countryCode explicitly included
+async function processMpesaDeposit() {
   try {
+    // 1. Get HTML Elements safely
+    const countrySelect = document.getElementById('countryCodeSelect') || document.getElementById('countryCode');
+    const phoneInput = document.getElementById('depositPhone') || document.getElementById('phoneInput');
+    const amountInput = document.getElementById('depositAmount') || document.getElementById('amountInput');
+
+    if (!phoneInput || !amountInput) {
+      alert("Form inputs not found. Please check element IDs.");
+      return;
+    }
+
+    // 2. Extract country code & phone number
+    let rawCountryCode = countrySelect ? countrySelect.value.replace(/\D/g, '') : '254';
+    let rawPhone = phoneInput.value.replace(/\D/g, '');
+
+    if (rawPhone.startsWith('0')) {
+      rawPhone = rawPhone.substring(1);
+    }
+
+    const fullPhone = rawCountryCode + rawPhone;
+    const amount = parseFloat(amountInput.value || '0');
+
+    if (isNaN(amount) || amount <= 0) {
+      alert("Please enter a valid deposit amount.");
+      return;
+    }
+
+    const BACKEND_URL = 'https://traderscheem-backend-9p9o.onrender.com';
+
+    // 3. Send payload to backend
     const response = await fetch(`${BACKEND_URL}/stkpush`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         amount: amount,
         phone: fullPhone,
-        countryCode: rawCountryCode, // <-- CRITICAL: Pass '255' here!
+        countryCode: rawCountryCode,
         email: 'trader@traderscheem.com'
       })
     });
 
     const data = await response.json();
 
+    // 4. Load Pesapal iframe or redirect
     if (data.redirect_url) {
-      // Set iframe source to Pesapal redirect URL
-      document.getElementById('pesapalIframe').src = data.redirect_url;
+      const iframe = document.getElementById('pesapalIframe');
+      if (iframe) {
+        iframe.src = data.redirect_url;
+      } else {
+        window.location.href = data.redirect_url;
+      }
     } else {
-      alert("Error loading payment page.");
+      alert("Error generating payment URL: " + (data.message || "Unknown error"));
     }
+
   } catch (err) {
-    console.error("Deposit request failed:", err);
+    console.error("Deposit Error:", err);
+    alert("Connection error. Check your internet or server status.");
   }
 }
 
