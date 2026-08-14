@@ -280,6 +280,10 @@ button, a { -webkit-tap-highlight-color:transparent; }
   <span style="font-size:20px;">🔊</span> 
   <button type="button" onclick="openModal('depositModal')" style="background:#0085ff; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">Deposit</button> 
   
+  <div style="display:flex; align-items:center; gap:10px; position: relative;"> 
+  <span style="font-size:20px;">🔊</span> 
+  <button type="button" onclick="openModal('depositModal')" style="background:#0085ff; color:#fff; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:bold;">Deposit</button> 
+  
   <div style="position: relative; display: inline-block;"> 
     <!-- Bell Icon Button -->
     <button onclick="toggleNotifDropdown()" style="background: none; border: none; color: #fff; cursor: pointer; font-size: 20px; padding: 0; position: relative;"> 
@@ -320,17 +324,15 @@ button, a { -webkit-tap-highlight-color:transparent; }
 <script> 
 function toggleNotifDropdown() { 
   const box = document.getElementById('notifDropdown'); 
-  if (box) {
-    box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none'; 
-  }
+  box.style.display = (box.style.display === 'none' || box.style.display === '') ? 'block' : 'none'; 
 } 
 
 // Close dropdown when clicking outside
 window.addEventListener('click', function(e) { 
   const box = document.getElementById('notifDropdown'); 
   const bellBtn = e.target.closest('button[onclick="toggleNotifDropdown()"]');
-  if (box && !e.target.closest('#notifDropdown') && !bellBtn) { 
-    box.style.display = 'none'; 
+  if (!e.target.closest('#notifDropdown') && !bellBtn) { 
+    if (box) box.style.display = 'none'; 
   } 
 }); 
 </script>
