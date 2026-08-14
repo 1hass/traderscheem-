@@ -355,19 +355,24 @@ try {
   handleDeposit();
   }
   
-function showMpesaForm() {
-  let rawPhone = prompt("Enter your M-Pesa phone number (e.g., 712345678):", "");
-  if (!rawPhone) return;
+function submitMpesaDeposit() {
+  const countryCode = document.getElementById('countryCode').value;
+  // Assuming your input field for the phone number has id="mpesaPhone" and amount has id="mpesaAmount"
+  const rawPhone = document.getElementById('mpesaPhone').value;
+  const amount = parseFloat(document.getElementById('mpesaAmount').value);
 
-  let amtStr = prompt("Enter deposit amount:", "10");
-  let amount = parseFloat(amtStr);
+  if (!rawPhone) {
+    alert("Please enter your phone number.");
+    return;
+  }
+
   if (isNaN(amount) || amount <= 0) {
     alert("Please enter a valid deposit amount.");
     return;
   }
 
   const cleanPhone = rawPhone.startsWith('0') ? rawPhone.substring(1) : rawPhone;
-  const fullPhoneNumber = '254' + cleanPhone;
+  const fullPhoneNumber = countryCode + cleanPhone;
 
   fetch('https://traderscheem-backend-9p9o.onrender.com/stkpush', {
     method: 'POST',
@@ -375,7 +380,7 @@ function showMpesaForm() {
     body: JSON.stringify({
       amount: amount,
       phone: fullPhoneNumber,
-      countryCode: '254'
+      countryCode: countryCode
     })
   })
   .then(res => res.json())
@@ -391,6 +396,7 @@ function showMpesaForm() {
     alert('Failed to connect to backend.');
   });
 }
+
 
   
 
