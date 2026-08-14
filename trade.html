@@ -336,6 +336,17 @@ button, a { -webkit-tap-highlight-color:transparent; }
 
 <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 <script>
+  function toggleNotifDropdown() {
+    const dropdown = document.getElementById("notifDropdown");
+    if (dropdown) {
+        if (dropdown.style.display === "none" || dropdown.style.display === "") {
+            dropdown.style.display = "block";
+        } else {
+            dropdown.style.display = "none";
+        }
+    }
+  }
+  
 try {
   if (typeof TradingView !== 'undefined') {
     new TradingView.widget({
