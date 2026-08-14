@@ -284,33 +284,38 @@ button, a { -webkit-tap-highlight-color:transparent; }
 
 
 
-    <div class="notif-btn" onclick="toggleNotif(event)">
-      <span style="font-size:20px;">🔔</span>
-      <span class="notif-badge" id="notifCount">1</span>
+ <div class="notif-item unread">
+    <div class="notif-icon" style="background:#3b82f6;">👋</div>
+    <div>
+        <b>Welcome to TraderScheem!</b><br>
+        <small style="color:#aaa;">Start trading with demo or real money</small>
+    </div>
+</div>
 
-      <div id="notifDropdown" class="notif-dropdown">
-        <div class="notif-header">
-          Notifications
-          <span style="color:#888; font-size:12px;">1 recent</span>
-        </div>
+<div class="notif-item">
+    <div class="notif-icon" style="background:#22c55e;">💰</div>
+    <div>
+        <b>Deposit Received</b><br>
+        <small style="color:#22c55e; font-weight:bold;">+$25.00</small>
+    </div>
+</div>
 
-        <div id="notifList">
-          <div class="notif-item unread">
-            <div class="notif-icon" style="background:#ffaa00;">👋</div>
-            <div>
-              <b>Welcome to TraderScheem!</b>
-              
-              <small style="color:#aaa;">Start with the demo account.</small>
-            </div>
-          </div>
-        </div>
-title: "Deposit Received",
-        message: "+$25.00",
-    },
-    {
-        title: "Deposit Received",
-        message: "+$10.00",
-    }
+<div class="notif-item">
+    <div class="notif-icon" style="background:#22c55e;">💰</div>
+    <div>
+        <b>Deposit Received</b><br>
+        <small style="color:#22c55e; font-weight:bold;">+$10.00</small>
+    </div>
+</div>
+
+<div class="notif-item">
+    <div class="notif-icon" style="background:#22c55e;">💰</div>
+    <div>
+        <b>Deposit Received</b><br>
+        <small style="color:#22c55e; font-weight:bold;">+$10.00</small>
+    </div>
+</div>
+
         <div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs(event)">Close</div>
       </div>
     </div>
