@@ -689,6 +689,10 @@ function updateStakeButtons() {
 
 function switchAccount(type, event) {
   if (event) event.stopPropagation();
+  
+  // Save account preference to prevent auto-switching on refresh
+  localStorage.setItem('selectedAccount', type);
+
   currentAccount = type;
   const dropdown = document.getElementById('dropdown');
   if (dropdown) dropdown.classList.remove('active');
@@ -696,23 +700,34 @@ function switchAccount(type, event) {
   const badge = document.getElementById('badge');
   const balance = document.getElementById('topBalance');
 
+  const demoActive = document.getElementById('demoActive');
+  const realActive = document.getElementById('realActive');
+
   if (type === 'demo') {
     badge.innerText = 'D';
     badge.className = 'account-badge';
-    balance.innerText = '$' + Number(demoBal).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    badge.style.background = '#ff4444';
+    balance.innerText = '$' + Number(demoBal).toLocaleString();
     balance.style.color = '#ff4444';
-    if (document.getElementById('demoActive')) document.getElementById('demoActive').innerText = 'Active';
-    if (document.getElementById('realActive')) document.getElementById('realActive').innerText = '';
+    if (demoActive) demoActive.innerText = 'Active';
+    if (realActive) realActive.innerText = '';
   } else {
     badge.innerText = 'R';
     badge.className = 'account-badge real';
-    const decimals = (realBal > 0 && realBal < 0.01) ? 3 : 2;
-    balance.innerText = '$' + Number(realBal).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
+    badge.style.background = '#00c853'; // Green for Real account
+    balance.innerText = '$' + Number(realBal).toLocaleString();
     balance.style.color = '#00c853';
-    if (document.getElementById('realActive')) document.getElementById('realActive').innerText = 'Active';
-    if (document.getElementById('demoActive')) document.getElementById('demoActive').innerText = '';
+    if (realActive) realActive.innerText = 'Active';
+    if (demoActive) demoActive.innerText = '';
   }
 }
+
+// Automatically load the saved account type on page load / refresh
+window.addEventListener('DOMContentLoaded', () => {
+  const savedAccount = localStorage.getItem('selectedAccount') || 'demo';
+  switchAccount(savedAccount);
+});
+
 
 function trade(type) {
   stake = parseFloat(document.getElementById('stakeAmount').value) || 1;
