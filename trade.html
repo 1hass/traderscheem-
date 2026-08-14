@@ -668,7 +668,7 @@ function showMpesaForm() {
 
 function resetDemo(event) {
   if (event) event.stopPropagation();
-  demoBal = 100000.00;
+  demoBal = 10000.00;
   localStorage.setItem('demoBalance', demoBal);
   if (currentAccount === 'demo') switchAccount('demo');
   document.getElementById('dropdown').classList.remove('active');
