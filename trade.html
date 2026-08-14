@@ -393,36 +393,16 @@ function showMpesaForm() {
 
   
 
-function closePesapalModal() {
-  const modal = document.getElementById('pesapalModal');
+function openModal(id) {
+  const modal = document.getElementById(id);
+  if (modal) modal.style.display = 'block';
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
   if (modal) modal.style.display = 'none';
 }
 
-// Automatically bind showMpesaForm to ALL buttons containing the word "Deposit"
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('button').forEach(btn => {
-    if (btn.textContent.trim().toLowerCase().includes('deposit')) {
-      btn.onclick = showMpesaForm;
-    }
-  });
-});
-
-
-
-
-function closePesapalModal() {
-  const modal = document.getElementById('pesapalModal');
-  if (modal) modal.style.display = 'none';
-}
-
-
-
-
-  function closePesapalModal() {
-    const modal = document.getElementById('pesapalModal');
-    if (modal) modal.style.display = 'none';
-  }
-  
 
   let currentAccount = 'demo';
 let demoBal = parseFloat(localStorage.getItem('demoBalance')) || 100000.00;
