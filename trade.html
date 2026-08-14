@@ -707,7 +707,7 @@ function switchAccount(type, event) {
     badge.innerText = 'D';
     badge.className = 'account-badge';
     badge.style.background = '#ff4444';
-    balance.innerText = '$' + Number(demoBal).toLocaleString();
+    balance.innerText = '$' + Number(demoBal).toFixed(2);
     balance.style.color = '#ff4444';
     if (demoActive) demoActive.innerText = 'Active';
     if (realActive) realActive.innerText = '';
@@ -715,7 +715,7 @@ function switchAccount(type, event) {
     badge.innerText = 'R';
     badge.className = 'account-badge real';
     badge.style.background = '#00c853'; // Green for Real account
-    balance.innerText = '$' + Number(realBal).toLocaleString();
+    balance.innerText = '$' + Number(realBal).toFixed(2);
     balance.style.color = '#00c853';
     if (realActive) realActive.innerText = 'Active';
     if (demoActive) demoActive.innerText = '';
