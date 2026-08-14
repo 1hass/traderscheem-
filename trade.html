@@ -284,37 +284,24 @@ button, a { -webkit-tap-highlight-color:transparent; }
 
 
 
- <div class="notif-item unread">
-    <div class="notif-icon" style="background:#3b82f6;">👋</div>
-    <div>
-        <b>Welcome to TraderScheem!</b><br>
-        <small style="color:#aaa;">Start trading with demo or real money</small>
-    </div>
-</div>
+ const notifications = [
+    {
+        title: "Welcome to TraderScheem!", 
+        message: "Start trading with demo or real money"
+    },
+    // The auto-trading object has been removed from here
+    {
+        title: "Deposit Received",
+        message: "+$25.00",
+        date: "2026"
+    },
+    {
+        title: "Deposit Received",
+        message: "+$10.00",
+        date: "2026"
+    }
+];
 
-<div class="notif-item">
-    <div class="notif-icon" style="background:#22c55e;">💰</div>
-    <div>
-        <b>Deposit Received</b><br>
-        <small style="color:#22c55e; font-weight:bold;">+$25.00</small>
-    </div>
-</div>
-
-<div class="notif-item">
-    <div class="notif-icon" style="background:#22c55e;">💰</div>
-    <div>
-        <b>Deposit Received</b><br>
-        <small style="color:#22c55e; font-weight:bold;">+$10.00</small>
-    </div>
-</div>
-
-<div class="notif-item">
-    <div class="notif-icon" style="background:#22c55e;">💰</div>
-    <div>
-        <b>Deposit Received</b><br>
-        <small style="color:#22c55e; font-weight:bold;">+$10.00</small>
-    </div>
-</div>
 
         <div style="text-align:center; padding:10px; color:#888; cursor:pointer;" onclick="clearNotifs(event)">Close</div>
       </div>
