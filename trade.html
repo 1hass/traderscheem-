@@ -87,19 +87,167 @@ button, a { -webkit-tap-highlight-color:transparent; }
 
 <body>
 
-<div id="mySidebar" class="sidebar">
-  <div class="sidebar-header">
-    <span class="closebtn" onclick="closeNav()">×</span>
-    <b>Binary</b><br>
-    <small>Binary Trading</small>
-  </div>
-  <a href="trade.html">📊 Trade</a>
-  <a href="#" onclick="event.preventDefault(); alert('Coming Soon')">📈 Market</a>
-  <a href="history.html">📜 Trade History</a>
-  <a href="withdraw.html">🏦 Withdraw</a>
-  <a href="#" onclick="event.preventDefault(); alert('Coming Soon')">⚙️ Settings</a>
-  <a href="index.html">🚪 Logout</a>
+<div id="mySidebar" class="sidebar" aria-label="User Navigation Sidebar">
+    <div class="sidebar-header">
+        <button class="closebtn" onclick="closeNav()" aria-label="Close Sidebar">&times;</button>
+        <div class="sidebar-user-info">
+            <b id="sidebarName">User Name</b>
+            <small id="sidebarEmail">user@email.com</small>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+        <a href="trade.html">📈 Trade</a>
+        <a href="#" onclick="openSettingsModal(); return false;">⚙️ Account settings</a>
+        <a href="#" onclick="triggerPesapalDeposit(); return false;">💳 Deposit</a>
+        <a href="withdraw.html">🏦 Withdraw</a>
+        <a href="history.html">📜 History</a>
+        <a href="#" onclick="copyReferralLink(); return false;">🎁 Refer & Earn</a>
+        
+        <div class="sidebar-theme-toggle">
+            <span>🌙 Dark theme</span>
+            <input type="checkbox" id="themeToggle" checked aria-label="Toggle dark and light theme">
+        </div>
+
+        <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer">💬 Live Chat (WhatsApp)</a>
+        <a href="mailto:support@traderscheem.duckdns.org">✉️ Email Support</a>
+        <a href="index.html" onclick="localStorage.clear();" class="logout-link">🚪 Log out</a>
+    </nav>
 </div>
+
+<!-- Account Settings Modal -->
+<div id="settingsModal" style="display:none; position:fixed; z-index:2000; left:0; top:0; width:100%; height:100%; background:rgba(0,0,0,0.7); align-items:center; justify-content:center;">
+    <div style="background:#1e1e2d; padding:25px; border-radius:12px; width:90%; max-width:420px; color:#fff; position:relative; box-shadow: 0 4px 20px rgba(0,0,0,0.5);">
+        <span onclick="document.getElementById('settingsModal').style.display='none'" style="position:absolute; right:15px; top:10px; font-size:24px; cursor:pointer; color:#aaa;">&times;</span>
+        <h3 style="margin-top:0; color:#3b82f6;">⚙️ Account Settings</h3>
+        
+        <form id="settingsForm" onsubmit="saveAccountSettings(event)">
+            <div style="margin-bottom:12px;">
+                <label style="font-size:12px; color:#aaa;">Display Name</label>
+                <input type="text" id="editUserName" style="width:100%; padding:10px; background:#2a2a3d; border:1px solid #444; border-radius:6px; color:#fff; margin-top:4px; box-sizing: border-box;" required>
+            </div>
+            <div style="margin-bottom:12px;">
+                <label style="font-size:12px; color:#aaa;">Email Address</label>
+                <input type="email" id="editUserEmail" style="width:100%; padding:10px; background:#2a2a3d; border:1px solid #444; border-radius:6px; color:#fff; margin-top:4px; box-sizing: border-box;" required>
+            </div>
+            <div style="margin-bottom:15px;">
+                <label style="font-size:12px; color:#aaa;">Phone Number</label>
+                <input type="text" id="editUserPhone" placeholder="+254..." style="width:100%; padding:10px; background:#2a2a3d; border:1px solid #444; border-radius:6px; color:#fff; margin-top:4px; box-sizing: border-box;">
+            </div>
+            <button type="submit" style="width:100%; padding:12px; background:#3b82f6; border:none; border-radius:6px; color:#fff; font-weight:bold; cursor:pointer;">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+<style>
+    .sidebar-header {
+        padding: 20px;
+        position: relative;
+        border-bottom: 1px solid #333;
+    }
+    .sidebar-user-info {
+        color: #fff;
+        padding-top: 5px;
+    }
+    .sidebar-user-info small {
+        color: #aaa;
+        word-break: break-all;
+    }
+    .sidebar .closebtn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        font-size: 30px;
+        background: none;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+    }
+    .sidebar-theme-toggle {
+        padding: 12px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: #fff;
+        border-bottom: 1px solid #333;
+        border-top: 1px solid #333;
+        margin: 5px 0;
+    }
+    .sidebar-theme-toggle input[type="checkbox"] {
+        cursor: pointer;
+        width: 18px;
+        height: 18px;
+    }
+    .logout-link {
+        color: #ff4444 !important;
+    }
+</style>
+
+<script>
+    // Automatically displays the logged-in user's name and email
+    const loggedInUser = localStorage.getItem('userName') || 'User';
+    const loggedInEmail = localStorage.getItem('userEmail') || 'user@email.com';
+
+    document.getElementById('sidebarName').innerText = loggedInUser;
+    document.getElementById('sidebarEmail').innerText = loggedInEmail;
+
+    // Theme toggle synchronization
+    const themeToggle = document.getElementById('themeToggle');
+    const currentTheme = localStorage.getItem('theme') || 'dark';
+
+    if (currentTheme === 'light') {
+        document.body.classList.add('light-mode');
+        themeToggle.checked = false;
+    }
+
+    themeToggle.addEventListener('change', function() {
+        if (this.checked) {
+            document.body.classList.remove('light-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.add('light-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+
+    // Helper functions for alerts/clipboard actions
+    function copyReferralLink() {
+        const refLink = 'https://traderscheem.duckdns.org';
+        navigator.clipboard.writeText(refLink).then(() => {
+            alert('Referral link copied to clipboard: ' + refLink);
+        }).catch(() => {
+            alert('Your referral link: ' + refLink);
+        });
+    }
+
+    // Account Settings Modal Functions
+    function openSettingsModal() {
+        document.getElementById('editUserName').value = localStorage.getItem('userName') || loggedInUser;
+        document.getElementById('editUserEmail').value = localStorage.getItem('userEmail') || loggedInEmail;
+        document.getElementById('editUserPhone').value = localStorage.getItem('userPhone') || '';
+        document.getElementById('settingsModal').style.display = 'flex';
+    }
+
+    function saveAccountSettings(event) {
+        event.preventDefault();
+        const newName = document.getElementById('editUserName').value;
+        const newEmail = document.getElementById('editUserEmail').value;
+        const newPhone = document.getElementById('editUserPhone').value;
+
+        // Save updated data
+        localStorage.setItem('userName', newName);
+        localStorage.setItem('userEmail', newEmail);
+        localStorage.setItem('userPhone', newPhone);
+
+        // Update sidebar dynamically in real-time
+        document.getElementById('sidebarName').innerText = newName;
+        document.getElementById('sidebarEmail').innerText = newEmail;
+
+        document.getElementById('settingsModal').style.display = 'none';
+        alert('Account settings updated successfully!');
+    }
+</script>
+
 <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
 <div style="display:flex; justify-content:space-between; align-items:center; padding:10px; background:#0d0d0d; border-bottom:1px solid #1a1a1a;">
