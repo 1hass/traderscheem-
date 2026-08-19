@@ -476,22 +476,24 @@ function closeNav() {
     <span style="background: rgba(255, 255, 255, 0.15); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; font-size: 10px; color: #fff;">▼</span>
 
 
-    <div id="dropdown" class="account-dropdown">
-      <div class="account-option" onclick="switchAccount('demo', event)">
-        <span class="dot demo"></span>
-        Demo Account
-        <span style="margin-left:auto; color:#ff4444; font-size:12px;" id="demoActive">Active</span>
-      </div>
-
-      <div class="account-option" onclick="switchAccount('real', event)">
-        <span class="dot real"></span>
-        Real Account
-        <span style="margin-left:auto; color:#00c853; font-size:12px;" id="realActive"></span>
-      </div>
-
-      <div class="account-option reset-btn" onclick="resetDemo(event)">🔄 Reset Demo Balance</div>
+        <div id="dropdown" class="account-dropdown">
+        <div class="account-option" onclick="switchAccount('demo', event)">
+            <span class="dot demo"></span>
+            Demo Account
+            <span id="demoActive" style="margin-left:auto; color:#ff4444; font-weight:bold;">Active</span>
+        </div>
+        
+        <div class="account-option" onclick="switchAccount('real', event)">
+            <span class="dot real"></span>
+            Real Account
+            <span id="realActive" style="margin-left:auto; color:#00c853; font-weight:bold;"></span>
+        </div>
+        
+        <div class="account-option reset-btn" onclick="resetDemoBalance(event)">
+            Reset Demo Balance
+        </div>
     </div>
-  </div>
+
 
   
       <div style="position: relative; display: inline-block;">
