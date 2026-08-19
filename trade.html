@@ -192,7 +192,17 @@ function switchAccount(type, event) {
 function openSettingsModal() {
   const modal = document.getElementById('settingsModal');
   if (modal) modal.style.display = 'flex';
-}
+}function toggleDirectAccount(event) {
+    if (event) event.stopPropagation();
+    const currentAccount = localStorage.getItem('selectedAccount') || 'demo';
+    
+    if (currentAccount === 'demo') {
+        switchAccount('real', event);
+    } else {
+        switchAccount('demo', event);
+    }
+  }
+  
 
 window.addEventListener('DOMContentLoaded', () => {
   const savedAccount = localStorage.getItem('selectedAccount') || 'demo';
