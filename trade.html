@@ -112,26 +112,8 @@ button, a { -webkit-tap-highlight-color:transparent; }
         <button type="button" style="background: #ff4444; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 !important; cursor: pointer; flex-shrink: 0;">T</button>
         <button type="button" style="background: #333; border: none; color: white; padding: 4px 8px !important; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0;" onclick="openNav()">☰</button>
         
-        <!-- Account Switcher / Balance Toggle -->
-        <div class="account-toggle" onclick="toggleDropdown(event)" style="display: flex; align-items: center; background: #1a1a24; border: 1px solid #2a2a3a; padding: 4px 8px; border-radius: 16px; cursor: pointer; min-width: 0; gap: 6px;">
-            <span id="badge" style="background: #ff4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">D</span>
-            <span id="topBalance" style="color: #ff4444; font-size: 12px; font-weight: bold;">$10000.00</span>
-            <span style="color: #aaa; font-size: 10px;">▼</span>
-        </div>
-    </div>
-
     <!-- Right Side: Audio, Deposit, and Bell -->
-    <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
-        <button type="button" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">🔊</button>
-        
         <button class="deposit-btn" onclick="openDepositModal()" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; white-space: nowrap;">Deposit</button>
-        
-        <!-- Notification Bell with Dropdown Menu -->
-        <div style="position: relative; display: inline-block;">
-            <button type="button" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; position: relative; padding: 0;" onclick="toggleNotifDropdown(event)">
-                🔔
-                <span style="position: absolute; top: -4px; right: -6px; background-color: #ff4444; color: white; font-size: 9px; padding: 1px 4px; border-radius: 10px; font-weight: bold;">3</span>
-            </button>
             
             <!-- Notification Dropdown Box -->
             <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 32px; width: 260px; background: #1e1e2d; border: 1px solid #333; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 3000; padding: 10px; color: #fff;">
