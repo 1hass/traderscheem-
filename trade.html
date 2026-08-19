@@ -312,36 +312,42 @@ function closeNav() {
 }
 </script>
 <!-- Sidebar Drawer Structure -->
+<!-- Sidebar Drawer Structure -->
 <div id="mySidebar" class="sidebar">
   <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;">
     <div>
       <b id="sidebarName" style="display:block; font-size:15px; color:#fff;">TraderScheem User</b>
       <small id="sidebarEmail" style="color:#aaa;">user@traderscheem.com</small>
     </div>
-    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:28px; cursor:pointer;" aria-label="Close Sidebar">&times;</button>
+    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:28px; cursor:pointer; padding: 5px;" aria-label="Close Sidebar">&times;</button>
   </div>
   
-  <div style="padding: 15px;">
-    <a href="trade.html" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">📈 Trade</a>
-    <a href="#" onclick="openSettingsModal(); closeNav(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">⚙️ Account settings</a>
-    <a href="history.html" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">📜 History</a>
-    <a href="#" onclick="copyReferralLink(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">🎁 Refer & Earn</a>
+  <div style="padding: 10px 0;">
+    <a href="trade.html" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">📈 Trade</a>
     
-    <div style="padding: 12px 0; display: flex; justify-content: space-between; align-items: center; color: #ffffff; font-size: 14px; font-weight: 500;">
+    <a href="#" onclick="openSettingsModal(); closeNav(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">⚙️ Account settings</a>
+    
+    <a href="history.html" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">📜 History</a>
+    
+    <a href="#" onclick="copyReferralLink(); closeNav(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">🎁 Refer & Earn</a>
+    
+    <div style="padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; font-size: 15px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.05);">
         <span>🌙 Dark theme</span>
-        <input type="checkbox" id="themeToggle" checked aria-label="Toggle dark and light theme">
+        <input type="checkbox" id="themeToggle" checked onchange="toggleDarkTheme(this)" style="width: 18px; height: 18px; cursor: pointer;" aria-label="Toggle dark and light theme">
     </div>
 
-    <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">💬 Live Chat (WhatsApp)</a>
-    <a href="mailto:support@traderscheem.duckdns.org" style="display:block; color:#ffffff; text-decoration:none; padding:12px 0; font-size:14px; font-weight:500;">✉️ Email Support</a>
-    <a href="index.html" onclick="localStorage.clear();" style="display:block; color:#ff4444; text-decoration:none; padding:12px 0; font-size:14px; font-weight:bold; margin-top:15px;">🚪 Log out</a>
+    <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">💬 Live Chat (WhatsApp)</a>
+    
+    <a href="mailto:support@traderscheem.duckdns.org" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">✉️ Email Support</a>
+    
+    <a href="index.html" onclick="localStorage.clear();" style="display:block; color:#ff4444; text-decoration:none; padding:16px 20px; font-size:15px; font-weight:bold; margin-top:10px;">🚪 Log out</a>
   </div>
 </div>
 
 <style>
 .sidebar {
   height: 100%;
-  width: 260px;
+  width: 270px;
   position: fixed;
   z-index: 4000;
   top: 0;
@@ -349,9 +355,61 @@ function closeNav() {
   background-color: #1a1a24;
   overflow-x: hidden;
   transition: 0.3s;
-  box-shadow: 5px 0 15px rgba(0,0,0,0.7);
+  box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+}
+.sidebar a:active, .sidebar div:active {
+  background-color: rgba(255, 255, 255, 0.08);
 }
 </style>
+
+<script>
+// Load User Info and theme preference on Startup
+document.addEventListener("DOMContentLoaded", function() {
+    const savedName = localStorage.getItem("userName") || localStorage.getItem("name") || "TraderScheem User";
+    const savedEmail = localStorage.getItem("userEmail") || localStorage.getItem("email") || "user@traderscheem.com";
+    
+    const nameEl = document.getElementById("sidebarName");
+    const emailEl = document.getElementById("sidebarEmail");
+    
+    if (nameEl) nameEl.textContent = savedName;
+    if (emailEl) emailEl.textContent = savedEmail;
+
+    // Restore theme toggle state
+    const savedTheme = localStorage.getItem("theme");
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+        themeToggle.checked = savedTheme !== "light";
+    }
+});
+
+// Copy Referral Link function
+function copyReferralLink() {
+    const refLink = window.location.origin + "/index.html?ref=" + encodeURIComponent(localStorage.getItem("userEmail") || "user");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(refLink).then(() => {
+            alert("Referral link copied to clipboard!");
+        }).catch(() => {
+            prompt("Copy your referral link:", refLink);
+        });
+    } else {
+        prompt("Copy your referral link:", refLink);
+    }
+}
+
+// Dark theme toggle handler
+function toggleDarkTheme(checkbox) {
+    if (checkbox.checked) {
+        localStorage.setItem("theme", "dark");
+        document.body.style.backgroundColor = "#121212";
+        document.body.style.color = "#fff";
+    } else {
+        localStorage.setItem("theme", "light");
+        document.body.style.backgroundColor = "#f4f4f4";
+        document.body.style.color = "#000";
+    }
+}
+</script>
+
 
 
       </style>
