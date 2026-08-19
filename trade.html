@@ -105,7 +105,7 @@ button, a { -webkit-tap-highlight-color:transparent; }
 </head>
 
 <body>
-  <div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 6px; padding: 6px 10px; background: #121212; box-sizing: border-box;">
+<div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 6px; padding: 6px 10px; background: #121212; box-sizing: border-box;">
     
     <!-- Left Group: T Button, Menu Drawer & Balance Switcher -->
     <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex-shrink: 1;">
@@ -120,13 +120,28 @@ button, a { -webkit-tap-highlight-color:transparent; }
         </div>
     </div>
 
-    <!-- Right Side: Deposit Button -->
-    <div style="display: flex; align-items: center; flex-shrink: 0;">
+    <!-- Right Side: Audio, Deposit, and Bell -->
+    <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+        <button type="button" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer;">🔊</button>
+        
         <button class="deposit-btn" onclick="openDepositModal()" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; white-space: nowrap;">Deposit</button>
+        
+        <button type="button" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; position: relative;" onclick="toggleNotifDropdown()">
+            🔔
+            <span style="position: absolute; top: -4px; right: -4px; background-color: #ff4444; color: white; font-size: 9px; padding: 1px 4px; border-radius: 10px; font-weight: bold;">3</span>
+        </button>
     </div>
 </div>
 
-
+<!-- Sidebar properly wrapped so it hides correctly -->
+<div id="mySidebar" class="sidebar" aria-label="User Navigation Sidebar">
+    <div class="sidebar-header">
+        <button class="closebtn" onclick="closeNav()" aria-label="Close Sidebar">&times;</button>
+        <div class="sidebar-user-info">
+            <b id="sidebarName">User Name</b>
+            <small id="sidebarEmail">user@email.com</small>
+        </div>
+    </div>
     
     <nav class="sidebar-nav">
         <a href="trade.html">📈 Trade</a>
@@ -168,6 +183,7 @@ button, a { -webkit-tap-highlight-color:transparent; }
         </form>
     </div>
 </div>
+
 
 
 
