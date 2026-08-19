@@ -105,28 +105,27 @@ button, a { -webkit-tap-highlight-color:transparent; }
 </head>
 
 <body>
-  <div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; width: 100%;">
+  <div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; width: 100%; gap: 6px; padding: 6px 10px; background: #121212; box-sizing: border-box;">
+    
     <!-- Left Group: T Button, Menu Drawer & Balance Switcher -->
-    <div style="display: flex; align-items: center; gap: 4px; min-width: 0; flex-shrink: 1;">
+    <div style="display: flex; align-items: center; gap: 6px; min-width: 0; flex-shrink: 1;">
         <button type="button" style="background: #ff4444; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 !important; cursor: pointer; flex-shrink: 0;">T</button>
-        <button type="button" style="background: #333; border: none; color: white; padding: 4px 6px !important; border-radius: 14px; cursor: pointer; font-size: 13px; flex-shrink: 0;" onclick="openNav()">☰</button>
+        <button type="button" style="background: #333; border: none; color: white; padding: 4px 8px !important; border-radius: 6px; cursor: pointer; font-size: 13px; flex-shrink: 0;" onclick="openNav()">☰</button>
         
         <!-- Account Switcher / Balance Toggle -->
-        <div class="account-toggle" onclick="toggleAccountDropdown()" style="display: flex; align-items: center; background: #222; padding: 3px 8px; border-radius: 16px; cursor: pointer; min-width: 0; flex-shrink: 1;">
+        <div class="account-toggle" onclick="toggleDropdown(event)" style="display: flex; align-items: center; background: #1a1a24; border: 1px solid #2a2a3a; padding: 4px 8px; border-radius: 16px; cursor: pointer; min-width: 0; gap: 6px;">
+            <span id="badge" style="background: #ff4444; color: white; border-radius: 50%; width: 16px; height: 16px; font-size: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold;">D</span>
+            <span id="topBalance" style="color: #ff4444; font-size: 12px; font-weight: bold;">$10000.00</span>
+            <span style="color: #aaa; font-size: 10px;">▼</span>
         </div>
     </div>
-        <button class="deposit-btn" onclick="openDepositModal()" style="background: #0085ff; border: none; color: white; padding: 5px 12px; border-radius: 6px; font-weight: bold; font-size: 11px; cursor: pointer; white-space: nowrap;">Deposit</button>
+
+    <!-- Right Side: Deposit Button -->
+    <div style="display: flex; align-items: center; flex-shrink: 0;">
+        <button class="deposit-btn" onclick="openDepositModal()" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer; white-space: nowrap;">Deposit</button>
     </div>
 </div>
 
-<div id="mySidebar" class="sidebar" aria-label="User Navigation Sidebar">
-    <div class="sidebar-header">
-        <button class="closebtn" onclick="closeNav()" aria-label="Close Sidebar">&times;</button>
-        <div class="sidebar-user-info">
-            <b id="sidebarName">User Name</b>
-            <small id="sidebarEmail">user@email.com</small>
-        </div>
-    </div>
     
     <nav class="sidebar-nav">
         <a href="trade.html">📈 Trade</a>
