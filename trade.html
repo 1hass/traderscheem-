@@ -312,57 +312,110 @@ function closeNav() {
 }
 </script>
 <!-- Sidebar Drawer Structure -->
-<!-- Sidebar Drawer Structure -->
 <div id="mySidebar" class="sidebar">
-  <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333;">
+  <div style="padding: 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; background: #16161f;">
     <div>
-      <b id="sidebarName" style="display:block; font-size:15px; color:#fff;">TraderScheem User</b>
-      <small id="sidebarEmail" style="color:#aaa;">user@traderscheem.com</small>
+      <b id="sidebarName" style="display:block; font-size:15px; color:#ffffff;">TraderScheem User</b>
+      <small id="sidebarEmail" style="color:#00bfff; font-weight: bold;">user@traderscheem.com</small>
     </div>
-    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:28px; cursor:pointer; padding: 5px;" aria-label="Close Sidebar">&times;</button>
+    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:30px; cursor:pointer; padding: 0 5px;" aria-label="Close Sidebar">&times;</button>
   </div>
   
-  <div style="padding: 10px 0;">
-    <a href="trade.html" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">📈 Trade</a>
+  <div style="padding: 5px 0;">
+    <!-- Trade Page -->
+    <a href="trade.html" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">📈 <span style="margin-left: 10px;">Trade</span></a>
     
-    <a href="#" onclick="openSettingsModal(); closeNav(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">⚙️ Account settings</a>
+    <!-- Account Settings Modal Trigger -->
+    <a href="javascript:void(0);" onclick="openSettingsModal(); closeNav();" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">⚙️ <span style="margin-left: 10px;">Account settings</span></a>
     
-    <a href="history.html" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">📜 History</a>
+    <!-- History Page -->
+    <a href="history.html" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">📜 <span style="margin-left: 10px;">History</span></a>
     
-    <a href="#" onclick="copyReferralLink(); closeNav(); return false;" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">🎁 Refer & Earn</a>
+    <!-- Refer & Earn Link Copier -->
+    <a href="javascript:void(0);" onclick="copyReferralLink(); closeNav();" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">🎁 <span style="margin-left: 10px;">Refer & Earn</span></a>
     
-    <div style="padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; font-size: 15px; font-weight: 500; border-bottom: 1px solid rgba(255,255,255,0.05);">
+    <!-- Dark Theme Toggle -->
+    <div style="padding: 14px 20px; display: flex; justify-content: space-between; align-items: center; color: #ffffff; font-size: 15px; font-weight: 600; border-bottom: 1px solid #2a2a3d;">
         <span>🌙 Dark theme</span>
-        <input type="checkbox" id="themeToggle" checked onchange="toggleDarkTheme(this)" style="width: 18px; height: 18px; cursor: pointer;" aria-label="Toggle dark and light theme">
+        <input type="checkbox" id="themeToggle" checked onchange="toggleDarkTheme(this)" style="width: 20px; height: 20px; cursor: pointer;" aria-label="Toggle dark and light theme">
     </div>
 
-    <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">💬 Live Chat (WhatsApp)</a>
+    <!-- WhatsApp Live Chat -->
+    <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">💬 <span style="margin-left: 10px;">Live Chat (WhatsApp)</span></a>
     
-    <a href="mailto:support@traderscheem.duckdns.org" style="display:block; color:#ffffff; text-decoration:none; padding:14px 20px; font-size:15px; font-weight:500; border-bottom: 1px solid rgba(255,255,255,0.05);">✉️ Email Support</a>
+    <!-- Email Support -->
+    <a href="mailto:support@traderscheem.duckdns.org" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">✉️ <span style="margin-left: 10px;">Email Support</span></a>
     
-    <a href="index.html" onclick="localStorage.clear();" style="display:block; color:#ff4444; text-decoration:none; padding:16px 20px; font-size:15px; font-weight:bold; margin-top:10px;">🚪 Log out</a>
+    <!-- Logout / Clears Session -->
+    <a href="index.html" onclick="localStorage.clear();" style="display:flex; align-items:center; color:#ff4d4d; text-decoration:none; padding:16px 20px; font-size:15px; font-weight:bold; margin-top:5px; background: transparent;">🚪 <span style="margin-left: 10px;">Log out</span></a>
   </div>
 </div>
 
 <style>
 .sidebar {
   height: 100%;
-  width: 270px;
+  width: 280px;
   position: fixed;
-  z-index: 4000;
+  z-index: 99999;
   top: 0;
   left: 0;
-  background-color: #1a1a24;
+  background-color: #121218;
   overflow-x: hidden;
-  transition: 0.3s;
-  box-shadow: 5px 0 20px rgba(0,0,0,0.8);
+  transition: 0.3s ease;
+  box-shadow: 8px 0 25px rgba(0,0,0,0.9);
 }
-.sidebar a:active, .sidebar div:active {
-  background-color: rgba(255, 255, 255, 0.08);
+.sidebar a:active {
+  background-color: rgba(255, 255, 255, 0.12) !important;
 }
 </style>
 
 <script>
+// Load User Info and theme preference on Startup
+document.addEventListener("DOMContentLoaded", function() {
+    const savedName = localStorage.getItem("userName") || localStorage.getItem("name") || "TraderScheem User";
+    const savedEmail = localStorage.getItem("userEmail") || localStorage.getItem("email") || "user@traderscheem.com";
+    
+    const nameEl = document.getElementById("sidebarName");
+    const emailEl = document.getElementById("sidebarEmail");
+    
+    if (nameEl) nameEl.textContent = savedName;
+    if (emailEl) emailEl.textContent = savedEmail;
+
+    const savedTheme = localStorage.getItem("theme");
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+        themeToggle.checked = savedTheme !== "light";
+    }
+});
+
+// Copy Referral Link purpose
+function copyReferralLink() {
+    const refLink = window.location.origin + "/index.html?ref=" + encodeURIComponent(localStorage.getItem("userEmail") || "user");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(refLink).then(() => {
+            alert("Referral link copied to clipboard!");
+        }).catch(() => {
+            prompt("Copy your referral link:", refLink);
+        });
+    } else {
+        prompt("Copy your referral link:", refLink);
+    }
+}
+
+// Dark theme toggle purpose
+function toggleDarkTheme(checkbox) {
+    if (checkbox.checked) {
+        localStorage.setItem("theme", "dark");
+        document.body.style.backgroundColor = "#121212";
+        document.body.style.color = "#fff";
+    } else {
+        localStorage.setItem("theme", "light");
+        document.body.style.backgroundColor = "#f4f4f4";
+        document.body.style.color = "#000";
+    }
+}
+</script>
+
 // Load User Info and theme preference on Startup
 document.addEventListener("DOMContentLoaded", function() {
     const savedName = localStorage.getItem("userName") || localStorage.getItem("name") || "TraderScheem User";
