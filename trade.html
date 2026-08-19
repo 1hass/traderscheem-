@@ -329,49 +329,47 @@ window.addEventListener('DOMContentLoaded', () => {
   </div>
 
   
-      <!-- Bell Icon Button -->
-<button type="button" onclick="toggleNotifDropdown(event)" style="background: none; border: none; cursor: pointer; position: relative; color: white; font-size: 20px; padding: 5px;">
-    🔔
-    <span style="position: absolute; top: -2px; right: -2px; background: #ff3b30; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%;">3</span>
-</button>
-
-      
-      <!-- Notification Dropdown Box -->
-      <div id="notifDropdown" style="display:none; position:absolute; right:0; top:35px; width:280px; max-height:350px; overflow-y:auto; background:#1e1e2d; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.5); z-index:100; color:#fff; padding:12px; text-align:left; border:1px solid #333;"> 
-        <div style="font-weight:bold; margin-bottom:8px; border-bottom:1px solid #333; padding-bottom:4px; display:flex; justify-content:space-between; font-size:12px;"> 
+      <div style="position: relative; display: inline-block;">
+    <!-- Bell Icon Button -->
+    <button type="button" onclick="toggleNotifDropdown(event)" style="background: none; border: none; cursor: pointer; position: relative; color: white; font-size: 20px; padding: 5px;">
+        🔔
+        <span style="position: absolute; top: -2px; right: -2px; background: #ff3b30; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%;">3</span>
+    </button>
+    
+    <!-- Notification Dropdown Box -->
+    <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 35px; width: 280px; max-height: 350px; overflow-y: auto; background: #1e1e2d; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1000; color: #fff; padding: 12px; text-align: left; border: 1px solid #333;"> 
+        <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; display: flex; justify-content: space-between; font-size: 12px;"> 
           <span>Notifications</span> 
-          <span style="font-size:10px; color:#aaa;">3 recent</span> 
+          <span style="font-size: 10px; color: #aaa;">3 recent</span> 
         </div> 
 
-        <div style="margin-bottom:8px; font-size:12px;"> 
+        <div style="margin-bottom: 8px; font-size: 12px;"> 
           <b>👋 Welcome to traderscheem!</b><br> 
-          <span style="color:#aaa; font-size:10px;">Start trading with demo or real money</span> 
+          <span style="color: #aaa; font-size: 10px;">Start trading with demo or real money</span> 
         </div> 
 
-        <div style="margin-bottom:6px; font-size:12px; border-top:1px solid #2a2a3d; padding-top:6px;"> 
+        <div style="margin-bottom: 6px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
           <b>💰 Deposit Received</b><br> 
-          <span style="color:#22c55e; font-size:11px; font-weight:bold;">+$25.00</span> 
+          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$25.00</span> 
         </div> 
 
-        <div style="margin-bottom:6px; font-size:12px; border-top:1px solid #2a2a3d; padding-top:6px;"> 
+        <div style="margin-bottom: 6px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
           <b>💰 Deposit Received</b><br> 
-          <span style="color:#22c55e; font-size:11px; font-weight:bold;">+$10.00</span> 
+          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$10.00</span> 
         </div> 
 
-        <div style="margin-bottom:8px; font-size:12px; border-top:1px solid #2a2a3d; padding-top:6px;"> 
+        <div style="margin-bottom: 8px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
           <b>💰 Deposit Received</b><br> 
-          <span style="color:#22c55e; font-size:11px; font-weight:bold;">+$10.00</span> 
+          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$10.00</span> 
         </div> 
 
         <!-- Close Button -->
-        <div style="text-align:center; border-top:1px solid #333; padding-top:8px;"> 
-          <button type="button" onclick="toggleNotifDropdown()" style="background:#333; border:none; color:#fff; font-size:11px; font-weight:bold; cursor:pointer; width:100%; padding:6px; border-radius:6px;">Close</button> 
+        <div style="text-align: center; border-top: 1px solid #333; padding-top: 8px;"> 
+          <button type="button" onclick="toggleNotifDropdown(event)" style="background: #333; border: none; color: #fff; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; padding: 6px; border-radius: 6px;">Close</button> 
         </div> 
-      </div> 
     </div> 
-  </div>
-
 </div>
+
   
 
 
