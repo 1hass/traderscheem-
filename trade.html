@@ -417,24 +417,7 @@ function toggleDarkTheme(checkbox) {
 </script>
 
 
-<script>
-// Load User Info and theme preference on Startup
-document.addEventListener("DOMContentLoaded", function() {
-    const savedName = localStorage.getItem("userName") || localStorage.getItem("name") || "TraderScheem User";
-    const savedEmail = localStorage.getItem("userEmail") || localStorage.getItem("email") || "user@traderscheem.com";
-    
-    const nameEl = document.getElementById("sidebarName");
-    const emailEl = document.getElementById("sidebarEmail");
-    
-    if (nameEl) nameEl.textContent = savedName;
-    if (emailEl) emailEl.textContent = savedEmail;
 
-    const savedTheme = localStorage.getItem("theme");
-    const themeToggle = document.getElementById("themeToggle");
-    if (themeToggle) {
-        themeToggle.checked = savedTheme !== "light";
-    }
-});
 
 // Copy Referral Link purpose
 function copyReferralLink() {
@@ -449,20 +432,6 @@ function copyReferralLink() {
         prompt("Copy your referral link:", refLink);
     }
 }
-
-// Dark theme toggle purpose
-function toggleDarkTheme(checkbox) {
-    if (checkbox.checked) {
-        localStorage.setItem("theme", "dark");
-        document.body.style.backgroundColor = "#121212";
-        document.body.style.color = "#fff";
-    } else {
-        localStorage.setItem("theme", "light");
-        document.body.style.backgroundColor = "#f4f4f4";
-        document.body.style.color = "#000";
-    }
-}
-</script>
 
 // Load User Info and theme preference on Startup
 document.addEventListener("DOMContentLoaded", function() {
@@ -483,19 +452,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
-// Copy Referral Link function
-function copyReferralLink() {
-    const refLink = window.location.origin + "/index.html?ref=" + encodeURIComponent(localStorage.getItem("userEmail") || "user");
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(refLink).then(() => {
-            alert("Referral link copied to clipboard!");
-        }).catch(() => {
-            prompt("Copy your referral link:", refLink);
-        });
-    } else {
-        prompt("Copy your referral link:", refLink);
-    }
-}
 
 // Dark theme toggle handler
 function toggleDarkTheme(checkbox) {
