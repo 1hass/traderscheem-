@@ -322,8 +322,8 @@ function closeNav() {
   </div>
   
   <div style="padding: 5px 0;">
-    <!-- Trade Page -->
-    <a href="trade.html" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">📈 <span style="margin-left: 10px;">Trade</span></a>
+    <!-- Trade Page (Fixed to close the menu on click) -->
+    <a href="trade.html" onclick="closeNav();" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">📈 <span style="margin-left: 10px;">Trade</span></a>
     
     <!-- Account Settings Modal Trigger -->
     <a href="javascript:void(0);" onclick="openSettingsModal(); closeNav();" style="display:flex; align-items:center; color:#ffffff; text-decoration:none; padding:15px 20px; font-size:15px; font-weight:600; border-bottom: 1px solid #2a2a3d; background: transparent;">⚙️ <span style="margin-left: 10px;">Account settings</span></a>
@@ -391,6 +391,23 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+// Open Account Settings Modal function
+function openSettingsModal() {
+    const modal = document.getElementById("settingsModal");
+    if (modal) {
+        modal.style.display = "block";
+    } else {
+        const currentName = localStorage.getItem("userName") || "";
+        const newName = prompt("Update your Account Name:", currentName);
+        if (newName) {
+            localStorage.setItem("userName", newName);
+            const nameEl = document.getElementById("sidebarName");
+            if (nameEl) nameEl.textContent = newName;
+            alert("Account name updated successfully!");
+        }
+    }
+}
+
 // Copy Referral Link purpose
 function copyReferralLink() {
     const refLink = window.location.origin + "/index.html?ref=" + encodeURIComponent(localStorage.getItem("userEmail") || "user");
@@ -429,6 +446,7 @@ function closeNav() {
     document.getElementById("overlay").style.display = "none";
 }
 </script>
+
 
 
     <div id="overlay" class="overlay" onclick="closeNav()"></div>
