@@ -148,32 +148,42 @@ window.addEventListener('click', (event) => {
 });
 
 function switchAccount(type, event) {
-  if (event) event.stopPropagation();
-  localStorage.setItem('selectedAccount', type);
+    if (event) event.stopPropagation();
+    localStorage.setItem('selectedAccount', type);
 
-  const badge = document.getElementById('badge');
-  const balance = document.getElementById('topBalance');
-  const demoActive = document.getElementById('demoActive');
-  const realActive = document.getElementById('realActive');
-  const dropdown = document.getElementById('dropdown');
-  if (dropdown) dropdown.style.display = 'none';
+    const badge = document.getElementById('badge');
+    const balance = document.getElementById('topBalance');
+    const demoActive = document.getElementById('demoActive');
+    const realActive = document.getElementById('realActive');
+    const dropdown = document.getElementById('dropdown');
+    
+    if (dropdown) dropdown.style.display = 'none';
 
-  if (type === 'demo') {
-    badge.innerText = 'D';
-    badge.style.background = '#ff4444';
-    balance.innerText = '$' + Number(window.demoBal || 0).toFixed(2);
-    balance.style.color = '#ff4444';
-    if (demoActive) demoActive.innerText = 'Active';
-    if (realActive) realActive.innerText = '';
-  } else {
-    badge.innerText = 'R';
-    badge.style.background = '#00c853';
-    balance.innerText = '$' + Number(window.realBal || 0).toFixed(2);
-    balance.style.color = '#00c853';
-    if (realActive) realActive.innerText = 'Active';
-    if (demoActive) demoActive.innerText = '';
-  }
+    if (type === 'demo') {
+        if (badge) {
+            badge.innerText = 'D';
+            badge.style.background = '#ff4444';
+        }
+        if (balance) {
+            balance.innerText = '$' + Number(window.demoBal || 0);
+            balance.style.color = '#ff4444';
+        }
+        if (demoActive) demoActive.innerText = 'Active';
+        if (realActive) realActive.innerText = '';
+    } else {
+        if (badge) {
+            badge.innerText = 'R';
+            badge.style.background = '#00c853';
+        }
+        if (balance) {
+            balance.innerText = '$' + Number(window.realBal || 0);
+            balance.style.color = '#00c853';
+        }
+        if (realActive) realActive.innerText = 'Active';
+        if (demoActive) demoActive.innerText = '';
+    }
 }
+
 
 function openSettingsModal() {
   const modal = document.getElementById('settingsModal');
