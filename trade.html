@@ -369,10 +369,67 @@ function closeNav() {
 }
 </style>
 
+<!-- Overlay to dim background when sidebar is open -->
+<div id="overlay" class="overlay" onclick="closeNav()" style="display:none; position:fixed; width:100%; height:100%; top:0; left:0; background:rgba(0,0,0,0.5); z-index:3999;"></div>
+
+<script>
+// Load User Info and theme preference on Startup
+document.addEventListener("DOMContentLoaded", function() {
+    const savedName = localStorage.getItem("userName") || localStorage.getItem("name") || "TraderScheem User";
+    const savedEmail = localStorage.getItem("userEmail") || localStorage.getItem("email") || "user@traderscheem.com";
+    
+    const nameEl = document.getElementById("sidebarName");
+    const emailEl = document.getElementById("sidebarEmail");
+    
+    if (nameEl) nameEl.textContent = savedName;
+    if (emailEl) emailEl.textContent = savedEmail;
+
+    const savedTheme = localStorage.getItem("theme");
+    const themeToggle = document.getElementById("themeToggle");
+    if (themeToggle) {
+        themeToggle.checked = savedTheme !== "light";
+    }
+});
+
+// Copy Referral Link purpose
+function copyReferralLink() {
+    const refLink = window.location.origin + "/index.html?ref=" + encodeURIComponent(localStorage.getItem("userEmail") || "user");
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(refLink).then(() => {
+            alert("Referral link copied to clipboard!");
+        }).catch(() => {
+            prompt("Copy your referral link:", refLink);
+        });
+    } else {
+        prompt("Copy your referral link:", refLink);
+    }
+}
+
+// Dark theme toggle purpose
+function toggleDarkTheme(checkbox) {
+    if (checkbox.checked) {
+        localStorage.setItem("theme", "dark");
+        document.body.style.backgroundColor = "#121212";
+        document.body.style.color = "#fff";
+    } else {
+        localStorage.setItem("theme", "light");
+        document.body.style.backgroundColor = "#f4f4f4";
+        document.body.style.color = "#000";
+    }
+}
+
+// Sidebar open/close handlers
+function openNav() {
+    document.getElementById("mySidebar").style.width = "280px";
+    document.getElementById("overlay").style.display = "block";
+}
+
+function closeNav() {
+    document.getElementById("mySidebar").style.width = "0";
+    document.getElementById("overlay").style.display = "none";
+}
 </script>
-  
-      </style>
-  
+
 
     <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
