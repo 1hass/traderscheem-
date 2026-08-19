@@ -291,13 +291,27 @@ window.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('userPhone', newPhone);
 
         // Update sidebar dynamically in real-time
-        document.getElementById('sidebarName').innerText = newName;
-        document.getElementById('sidebarEmail').innerText = newEmail;
+            document.getElementById('sidebarEmail').innerText = newEmail;
+    document.getElementById('settingsModal').style.display = 'none';
+    alert('Account settings updated successfully!');
+  }
+}
 
-        document.getElementById('settingsModal').style.display = 'none';
-        alert('Account settings updated successfully!');
-    }
+function openNav() {
+  const sidebar = document.getElementById('mySidebar');
+  if (sidebar) {
+    sidebar.style.width = '250px';
+  }
+}
+
+function closeNav() {
+  const sidebar = document.getElementById('mySidebar');
+  if (sidebar) {
+    sidebar.style.width = '0';
+  }
+}
 </script>
+
 
     <div id="overlay" class="overlay" onclick="closeNav()"></div>
 
