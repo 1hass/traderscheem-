@@ -129,10 +129,13 @@ h3 { margin-top:10px; margin-bottom:5px; }
 
 <script>
 function toggleDropdown(event) {
-  if (event) event.stopPropagation();
-  const dropdown = document.getElementById('dropdown');
-  if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    if (event) event.stopPropagation();
+    const dropdown = document.getElementById('dropdown');
+    if (dropdown) {
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
 }
+
 
 function toggleNotifDropdown() {
   const dropdown = document.getElementById('notifDropdown');
