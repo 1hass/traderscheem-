@@ -463,22 +463,19 @@ function closeNav() {
 
 
 
-    <div id="overlay" class="overlay" onclick="closeNav()"></div>
-
-<div style="display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:#0d0d0d; border-bottom:1px solid #1a1a1a; gap:10px; flex-wrap:wrap;">
-
-  
- 
-  <!-- Center: Account Balance Toggle Dropdown -->
+    <div style="position: relative; display: inline-block;">
+  <!-- Main Balance Toggle Button -->
   <div class="account-toggle" onclick="toggleDropdown(event)" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:#1e1e2d; padding:6px 12px; border-radius:20px; border:1px solid #333;">
     <span id="badge" class="account-badge" style="background:#ff4444; color:#fff; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; font-size:11px; font-weight:bold;">D</span>
     <span id="topBalance" style="color:#ff4444; font-weight:bold; font-size:14px;">$0.00</span>
     <span style="background: rgba(255, 255, 255, 0.15); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; font-size: 10px; color: #fff;">▼</span>
+  </div>
 
-
-        <div id="dropdown" class="account-dropdown" style="display:none;">
-  <div class="account-option" onclick="switchAccount('demo', event)">Demo Account</div>
-  <div class="account-option" onclick="switchAccount('real', event)">Real Account</div>
+  <!-- Dropdown Menu (Positioned outside so it opens and works properly) -->
+  <div id="dropdown" class="account-dropdown" style="display:none; position:absolute; top:110%; left:0; background:#16161f; border:1px solid #333; border-radius:8px; width:160px; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.5);">
+    <div class="account-option" onclick="switchAccount('demo', event)" style="padding:10px 14px; cursor:pointer; color:#fff; border-bottom:1px solid #2a2a3d;">Demo Account</div>
+    <div class="account-option" onclick="switchAccount('real', event)" style="padding:10px 14px; cursor:pointer; color:#fff;">Real Account</div>
+  </div>
 </div>
 
   
