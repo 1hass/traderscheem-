@@ -318,13 +318,22 @@ function closeNav() {
       <b id="sidebarName" style="display:block; font-size:15px; color:#fff;">TraderScheem User</b>
       <small id="sidebarEmail" style="color:#aaa;">user@traderscheem.com</small>
     </div>
-    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:28px; cursor:pointer;">&times;</button>
+    <button type="button" onclick="closeNav()" style="background:none; border:none; color:#fff; font-size:28px; cursor:pointer;" aria-label="Close Sidebar">&times;</button>
   </div>
   
   <div style="padding: 15px;">
     <a href="trade.html" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">📈 Trade</a>
+    <a href="#" onclick="openSettingsModal(); closeNav(); return false;" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">⚙️ Account settings</a>
     <a href="history.html" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">📜 History</a>
-    <a href="https://wa.me/254114622873?text=Hello%20Support" target="_blank" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">💬 Live Support</a>
+    <a href="#" onclick="copyReferralLink(); return false;" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">🎁 Refer & Earn</a>
+    
+    <div style="padding: 10px 0; display: flex; justify-content: space-between; align-items: center; color: #bbb; font-size: 14px;">
+        <span>🌙 Dark theme</span>
+        <input type="checkbox" id="themeToggle" checked aria-label="Toggle dark and light theme">
+    </div>
+
+    <a href="https://wa.me/254114622873?text=Hello%20TraderScheem%20Support" target="_blank" rel="noopener noreferrer" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">💬 Live Chat (WhatsApp)</a>
+    <a href="mailto:support@traderscheem.duckdns.org" style="display:block; color:#bbb; text-decoration:none; padding:10px 0; font-size:14px;">✉️ Email Support</a>
     <a href="index.html" onclick="localStorage.clear();" style="display:block; color:#ff4444; text-decoration:none; padding:10px 0; font-size:14px; margin-top:20px;">🚪 Log out</a>
   </div>
 </div>
@@ -342,6 +351,8 @@ function closeNav() {
   transition: 0.3s;
   box-shadow: 5px 0 15px rgba(0,0,0,0.5);
 }
+</style>
+
       </style>
   
 
