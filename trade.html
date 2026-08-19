@@ -104,23 +104,58 @@ button, a { -webkit-tap-highlight-color:transparent; }
 </style>
 </head>
 
-<body>
-<div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 8px; width: 100%; box-sizing: border-box; padding: 8px 12px; background: #121212;">
-    <!-- Left: T Button, Menu Drawer Button & Account Balance -->
+<body><div class="top-nav" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: nowrap; gap: 8px; width: 100%; box-sizing: border-box; padding: 8px 12px; background: #121212;">
+    <!-- Left: T Button, Menu Drawer Button & Account Balance Dropdown -->
     <div style="display: flex; align-items: center; gap: 6px;">
         <button type="button" style="background: #ff4444; border: none; color: white; width: 30px; height: 30px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 !important; cursor: pointer;">T</button>
         <button type="button" style="background: #333; border: none; color: white; padding: 4px 8px !important; border-radius: 15px; cursor: pointer; font-size: 14px;" onclick="openNav()">☰</button>
         
-        <div class="account-toggle" style="display: flex; align-items: center; background: #222; padding: 4px 10px; border-radius: 20px;">
-            <span style="color: #ff4444; font-weight: bold; margin-right: 4px;">D</span>
-            <span style="color: #fff; font-weight: bold; font-size: 13px;">$10400.00</span>
+        <!-- Interactive Account Toggle Dropdown -->
+        <div class="account-toggle" onclick="toggleDropdown(event)" style="cursor: pointer; display: flex; align-items: center; background: #222; padding: 4px 10px; border-radius: 20px; position: relative; border: 1px solid #333;">
+            <span id="badge" style="background: #ff4444; color: #fff; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; border-radius: 50%; font-size: 10px; font-weight: bold; margin-right: 4px;">D</span>
+            <span id="topBalance" style="color: #ff4444; font-weight: bold; font-size: 13px;">$0.00</span>
             <span style="color: #aaa; margin-left: 4px; font-size: 10px;">▼</span>
+
+            <!-- Account Switcher Dropdown Box -->
+            <div id="dropdown" class="account-dropdown" style="display:none; position:absolute; left:0; top:35px; width:180px; background:#1e1e2d; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.5); z-index:100; color:#fff; padding:6px; text-align:left; border:1px solid #333;">
+                <div class="account-option" onclick="switchAccount('demo', event)" style="padding:8px 10px; display:flex; align-items:center; gap:8px; border-radius:6px; cursor:pointer; font-size:12px;">
+                    <span style="width:8px; height:8px; background:#ff4444; border-radius:50%;"></span>
+                    Demo Account
+                    <span style="margin-left:auto; color:#ff4444; font-size:11px;" id="demoActive">Active</span>
+                </div>
+
+                <div class="account-option" onclick="switchAccount('real', event)" style="padding:8px 10px; display:flex; align-items:center; gap:8px; border-radius:6px; cursor:pointer; font-size:12px;">
+                    <span style="width:8px; height:8px; background:#00c853; border-radius:50%;"></span>
+                    Real Account
+                    <span style="margin-left:auto; color:#00c853; font-size:11px;" id="realActive"></span>
+                </div>
+
+                <div class="account-option reset-btn" onclick="resetDemo(event)" style="padding:8px 10px; display:flex; align-items:center; gap:8px; border-radius:6px; cursor:pointer; font-size:11px; border-top:1px solid #333; margin-top:4px; color:#aaa;">🔄 Reset Demo</div>
+            </div>
         </div>
     </div>
 
-    <!-- Right: Deposit Button Only -->
-    <div>
-        <button class="deposit-btn" onclick="openDepositModal()" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">Deposit</button>
+    <!-- Right: Deposit Button & Notification Bell -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <button class="deposit-btn" onclick="openModal('depositModal')" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">Deposit</button>
+        
+        <!-- Notification Bell -->
+        <div style="position:relative; display:inline-block;">
+            <button type="button" onclick="toggleNotifDropdown()" style="background:none; border:none; color:#fff; cursor:pointer; font-size:16px; padding:0; position:relative;">
+                🔔
+                <span style="position:absolute; top:-2px; right:-2px; background:#ef4444; width:7px; height:7px; border-radius:50%;"></span>
+            </button>
+
+            <div id="notifDropdown" style="display:none; position:absolute; right:0; top:32px; width:270px; background:#1e1e2d; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.5); z-index:100; color:#fff; padding:10px; text-align:left; border:1px solid #333; font-size:11px;">
+                <div style="font-weight:bold; margin-bottom:6px; border-bottom:1px solid #333; padding-bottom:4px; display:flex; justify-content:space-between;">
+                    <span>Notifications</span>
+                    <span style="color:#aaa; font-weight:normal;">3 recent</span>
+                </div>
+                <div style="margin-bottom:6px;"><b>👋 Welcome to TraderScheem!</b><br><span style="color:#aaa;">Start trading with demo or real money.</span></div>
+                <div style="margin-bottom:6px; border-top:1px solid #2a2a3d; padding-top:4px; display:flex; justify-content:space-between;"><b>💰 Deposit Received</b><span style="color:#22c55e; font-weight:bold;">+$25.00</span></div>
+                <div style="border-top:1px solid #2a2a3d; padding-top:4px; display:flex; justify-content:space-between;"><b>💰 Deposit Received</b><span style="color:#22c55e; font-weight:bold;">+$10.00</span></div>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -173,6 +208,66 @@ button, a { -webkit-tap-highlight-color:transparent; }
         </form>
     </div>
 </div>
+
+<script>
+function toggleDropdown(event) {
+  if (event) event.stopPropagation();
+  const dropdown = document.getElementById('dropdown');
+  if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+function toggleNotifDropdown() {
+  const dropdown = document.getElementById('notifDropdown');
+  if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+}
+
+window.addEventListener('click', (event) => {
+  const dropdown = document.getElementById('dropdown');
+  if (dropdown && !dropdown.contains(event.target)) dropdown.style.display = 'none';
+  
+  const notifDropdown = document.getElementById('notifDropdown');
+  if (notifDropdown && !notifDropdown.contains(event.target)) notifDropdown.style.display = 'none';
+});
+
+function switchAccount(type, event) {
+  if (event) event.stopPropagation();
+  localStorage.setItem('selectedAccount', type);
+
+  const badge = document.getElementById('badge');
+  const balance = document.getElementById('topBalance');
+  const demoActive = document.getElementById('demoActive');
+  const realActive = document.getElementById('realActive');
+  const dropdown = document.getElementById('dropdown');
+  if (dropdown) dropdown.style.display = 'none';
+
+  if (type === 'demo') {
+    badge.innerText = 'D';
+    badge.style.background = '#ff4444';
+    balance.innerText = '$' + Number(window.demoBal || 0).toFixed(2);
+    balance.style.color = '#ff4444';
+    if (demoActive) demoActive.innerText = 'Active';
+    if (realActive) realActive.innerText = '';
+  } else {
+    badge.innerText = 'R';
+    badge.style.background = '#00c853';
+    balance.innerText = '$' + Number(window.realBal || 0).toFixed(2);
+    balance.style.color = '#00c853';
+    if (realActive) realActive.innerText = 'Active';
+    if (demoActive) demoActive.innerText = '';
+  }
+}
+
+function openSettingsModal() {
+  const modal = document.getElementById('settingsModal');
+  if (modal) modal.style.display = 'flex';
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  const savedAccount = localStorage.getItem('selectedAccount') || 'demo';
+  switchAccount(savedAccount);
+});
+                      </script>
+                      
 
   
 
