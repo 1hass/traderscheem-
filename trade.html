@@ -108,24 +108,35 @@ h3 { margin-top:10px; margin-bottom:5px; }
 <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:#0d0d0d; border-bottom:1px solid #1a1a1a; gap:10px; flex-wrap:wrap;">
 
     <!-- Left Group: T Button, Menu Drawer & Balance Switcher -->
-    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1;">
+    <div style="display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1; position: relative;">
         <button type="button" style="background: #ff4444; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 !important; cursor: pointer; flex-shrink: 0;">T</button>
         <button type="button" onclick="openNav()" style="background: #333; border: none; color: white; padding: 4px 8px !important; border-radius: 15px; cursor: pointer; font-size: 14px;">☰</button>
 
-    <!-- Right Side: Audio, Deposit, and Bell -->
-        <button class="deposit-btn" onclick="openModal('depositModal')" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">Deposit</button>
+        <!-- Balance Button & Arrow Trigger -->
+        <button type="button" onclick="toggleDropdown(event)" style="background: #ff4444; border: none; color: white; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 8px !important; cursor: pointer; display: flex; align-items: center; gap: 4px;">
+            <span id="badge">D</span> <span id="topBalance">$10000.00</span> ▼
+        </button>
 
-            <!-- Notification Dropdown Box -->
-            <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 32px; width: 260px; background: #1e1e2d; border: 1px solid #333; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 3000; padding: 10px; color: #fff;">
-                <div style="font-weight: bold; font-size: 13px; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px;">Notifications</div>
-                <div style="font-size: 11px; color: #ccc; padding: 6px 0; border-bottom: 1px solid #2a2a3d;">🎉 Welcome to TraderScheem! Account credited.</div>
-                <div style="font-size: 11px; color: #ccc; padding: 6px 0; border-bottom: 1px solid #2a2a3d;">📈 EURUSD market volatility is high today.</div>
-                <div style="font-size: 11px; color: #ccc; padding: 6px 0;">💡 Tip: Try practicing risk management.</div>
+        <!-- Account Switcher Dropdown Box -->
+        <div id="dropdown" style="display: none; position: absolute; top: 35px; left: 40px; background: #1a1a1a; border: 1px solid #333; border-radius: 8px; padding: 6px; z-index: 9999; min-width: 150px; box-shadow: 0 4px 12px rgba(0,0,0,0.5);">
+            <div onclick="switchAccount('demo', event)" style="padding: 8px 10px; cursor: pointer; color: white; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span>Demo Account</span> <span id="demoActive" style="color: #00ff88; font-size: 11px;">Active</span>
+            </div>
+            <div onclick="switchAccount('real', event)" style="padding: 8px 10px; cursor: pointer; color: white; font-size: 12px; display: flex; justify-content: space-between; align-items: center;">
+                <span>Real Account</span> <span id="realActive" style="color: #00ff88; font-size: 11px;"></span>
+            </div>
+            <div onclick="resetDemoBalance(event)" style="padding: 8px 10px; cursor: pointer; color: #ff4444; font-size: 12px; border-top: 1px solid #333; margin-top: 4px;">
+                Reset Demo (10,000)
             </div>
         </div>
     </div>
-</div>
 
+  
+    <!-- Right Side: Deposit and Bell -->
+    <div style="display: flex; align-items: center; gap: 8px; position: relative;">
+        <button class="deposit-btn" onclick="openModal('depositModal')" style="background: #0085ff; border: none; color: white; padding: 6px 14px; border-radius: 6px; font-weight: bold; font-size: 12px; cursor: pointer;">Deposit</button>
+    </div>
+</div>
 
 <script>
 function toggleDropdown(event) {
