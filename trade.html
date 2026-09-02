@@ -108,7 +108,7 @@ h3 { margin-top:10px; margin-bottom:5px; }
 <div style="display:flex; align-items:center; justify-content:space-between; padding:10px 15px; background:#0d0d0d; border-bottom:1px solid #1a1a1a; gap:10px; flex-wrap:wrap;">
 
     <!-- Left Group: T Button, Menu Drawer & Balance Switcher -->
-    <div onclick="toggleDropdown(event)" style="cursor: pointer; display: flex; align-items: center; gap: 8px; min-width: 0; flex-shrink: 1;">
+    <div onclick="const d=document.getElementById('dropdown'); d.style.display=d.style.display==='block'?'none':'block'; event.stopPropagation();" style="cursor: pointer; display: flex; align-items: center; gap: 6px; background: #1e1e2d; padding: 6px 12px; border-radius: 20px; border: 1px solid #333;">
 
         <button type="button" style="background: #ff4444; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; padding: 0 !important; cursor: pointer; flex-shrink: 0;">T</button>
         <button type="button" onclick="openNav()" style="background: #333; border: none; color: white; padding: 4px 8px !important; border-radius: 15px; cursor: pointer; font-size: 14px;">☰</button>
