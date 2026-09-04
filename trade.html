@@ -164,7 +164,6 @@ h3 { margin-top:10px; margin-bottom:5px; }
 
   
 
-<script>
 function toggleDropdown(event) {
     if (event) event.stopPropagation();
     const dropdown = document.getElementById('dropdown');
@@ -173,15 +172,13 @@ function toggleDropdown(event) {
     }
 }
 
-
-
-
-function toggleDropdown(event) {
-  
-  const dropdown = document.getElementById('notifDropdown');
-  if (dropdown) dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+function toggleNotif(event) {
+    if (event) event.stopPropagation();
+    const notifDropdown = document.getElementById('notifDropdown');
+    if (notifDropdown) {
+        notifDropdown.style.display = notifDropdown.style.display === 'block' ? 'none' : 'block';
+    }
 }
-
 window.addEventListener('click', (event) => {
   const dropdown = document.getElementById('dropdown');
   if (dropdown && !dropdown.contains(event.target)) dropdown.style.display = 'none';
