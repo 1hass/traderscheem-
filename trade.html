@@ -191,7 +191,7 @@ window.addEventListener('click', (event) => {
 function switchAccount(type, event) {
     if (event) event.stopPropagation();
     localStorage.setItem('selectedAccount', type);
-
+    
     const badge = document.getElementById('badge');
     const balance = document.getElementById('topBalance');
     const demoActive = document.getElementById('demoActive');
@@ -203,27 +203,28 @@ function switchAccount(type, event) {
     if (type === 'demo') {
         if (badge) {
             badge.innerText = 'D';
-            badge.style.background = '#ff4444';
+            badge.style.background = '#e74c3c';
         }
         if (balance) {
-            balance.innerText = '$' + Number(window.demoBal || 0);
-            balance.style.color = '#ff4444';
+            balance.innerText = '$' + Number(window.demoBal || 100000).toFixed(2);
+            balance.style.color = 'white';
         }
         if (demoActive) demoActive.innerText = 'Active';
         if (realActive) realActive.innerText = '';
     } else {
         if (badge) {
             badge.innerText = 'R';
-            badge.style.background = '#00c853';
+            badge.style.background = '#27ae60';
         }
         if (balance) {
-            balance.innerText = '$' + Number(window.realBal || 0);
-            balance.style.color = '#00c853';
+            balance.innerText = '$' + Number(window.realBal || 1354.00).toFixed(2);
+            balance.style.color = '#00ff88';
         }
         if (realActive) realActive.innerText = 'Active';
         if (demoActive) demoActive.innerText = '';
     }
 }
+
 
 
 function openSettingsModal() {
