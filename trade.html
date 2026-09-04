@@ -119,39 +119,21 @@ h3 { margin-top:10px; margin-bottom:5px; }
     </div>
 
 
-        <!-- Dropdown Menu Box -->
-    <div id="dropdown" style="display: none; position: absolute; top: 45px; left: 0; background: #1a1a24; border: 1px solid #333344; border-radius: 12px; padding: 6px; z-index: 99999; min-width: 220px; box-shadow: 0 10px 30px rgba(0,0,0,0.8);">
-        
-        <!-- Real Account Option -->
-        <div onclick="switchAccount('real', event)" style="padding: 10px 12px; cursor: pointer; color: white; font-size: 13px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; background: transparent;">
-            <div style="display: flex; align-items: center;">
-                <span style="background: #333; color: white; width: 22px; height: 22px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; margin-right: 10px;">R</span>
-                <div>
-                    <div style="font-weight: 500;">Real</div>
-                    <div style="font-size: 11px; color: #888;" id="realBalText">$0.00</div>
-                </div>
-            </div>
-            <span id="realActive" style="width: 6px; height: 6px; border-radius: 50%; background: transparent;"></span>
+         <!-- Dropdown Menu Box -->
+    <div id="dropdown" style="display: none; position: absolute; top: 40px; left: 0; background: #1e1e2d; border: 1px solid #444; border-radius: 10px; padding: 8px; z-index: 99999; min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.8);">
+        <div onclick="switchAccount('real', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-radius: 6px;">
+            Real Account 
+            <span id="realActive" style="color: #00ff88; float: right;"></span>
         </div>
-
-        <!-- Demo Account Option -->
-        <div onclick="switchAccount('demo', event)" style="padding: 10px 12px; cursor: pointer; color: white; font-size: 13px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between; background: #262633; border: 1px solid #3d3d52;">
-            <div style="display: flex; align-items: center;">
-                <span style="background: #e74c3c; color: white; width: 22px; height: 22px; border-radius: 4px; display: inline-flex; align-items: center; justify-content: center; font-size: 11px; font-weight: bold; margin-right: 10px;">D</span>
-                <div>
-                    <div style="font-weight: 500;">Demo</div>
-                    <div style="font-size: 11px; color: #888;" id="demoBalText">$10,000.00</div>
-                </div>
-            </div>
-            <span id="demoActive" style="width: 6px; height: 6px; border-radius: 50%; background: #00ff88; box-shadow: 0 0 8px #00ff88;"></span>
+        <div onclick="switchAccount('demo', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
+            Demo Account 
+            <span id="demoActive" style="color: #00ff88; float: right;">Active</span>
         </div>
-
-        <!-- Reset Demo Balance Option -->
-        <div onclick="resetDemoBalance(event)" style="padding: 10px 12px; cursor: pointer; color: #bbb; font-size: 12px; border-top: 1px solid #2a2a38; border-radius: 8px; margin-top: 4px; display: flex; align-items: center;">
-            <span style="margin-right: 8px;">🔄</span> Reset Demo Balance
+        <div onclick="resetDemoBalance(event)" style="padding: 10px; cursor: pointer; color: #ccc; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
+            🔄 Reset Demo Balance
         </div>
     </div>
-
+    </div>
 
 
     <!-- Right Side: Deposit & Bell with Notification Dropdown -->
