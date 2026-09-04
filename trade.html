@@ -512,63 +512,6 @@ function closeNav() {
 
 
 
-    <div style="position: relative; display: inline-block;">
-  <!-- Main Balance Toggle Button -->
-  <div onclick="toggleDropdown(event)" style="cursor:pointer; display:flex; align-items:center; gap:6px; background:#1e1e2d; padding:6px 12px; border-radius:20px; border:1px solid #333;">
-    <span id="badge" class="account-badge" style="background:#ff4444; color:#fff; width:20px; height:20px; display:inline-flex; align-items:center; justify-content:center; border-radius:50%; font-size:11px; font-weight:bold;">D</span>
-    <span id="topBalance" style="color:#ff4444; font-weight:bold; font-size:14px;">$0.00</span>
-    <span style="background: rgba(255, 255, 255, 0.15); width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; font-size: 10px; color: #fff;">▼</span>
-  </div>
-
-
-  <!-- Dropdown Menu (Positioned outside so it opens and works properly) -->
-  <div id="dropdown" class="account-dropdown" style="display:none; position:absolute; top:110%; left:0; background:#16161f; border:1px solid #333; border-radius:8px; width:160px; z-index:9999; box-shadow:0 4px 12px rgba(0,0,0,0.5);">
-    <div class="account-option" onclick="switchAccount('demo', event)" style="padding:10px 14px; cursor:pointer; color:#fff; border-bottom:1px solid #2a2a3d;">Demo Account</div>
-    <div class="account-option" onclick="switchAccount('real', event)" style="padding:10px 14px; cursor:pointer; color:#fff;">Real Account</div>
-  </div>
-</div>
-
-  
-      <div style="position: relative; display: inline-block;">
-    <!-- Bell Icon Button -->
-    <button type="button" onclick="toggleNotifDropdown(event)" style="background: none; border: none; cursor: pointer; position: relative; color: white; font-size: 20px; padding: 5px;">
-        🔔
-        <span style="position: absolute; top: -2px; right: -2px; background: #ff3b30; color: white; font-size: 10px; padding: 2px 5px; border-radius: 50%;">3</span>
-    </button>
-    
-    <!-- Notification Dropdown Box -->
-    <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 35px; width: 280px; max-height: 350px; overflow-y: auto; background: #1e1e2d; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); z-index: 1000; color: #fff; padding: 12px; text-align: left; border: 1px solid #333;"> 
-        <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #333; padding-bottom: 4px; display: flex; justify-content: space-between; font-size: 12px;"> 
-          <span>Notifications</span> 
-          <span style="font-size: 10px; color: #aaa;">3 recent</span> 
-        </div> 
-
-        <div style="margin-bottom: 8px; font-size: 12px;"> 
-          <b>👋 Welcome to traderscheem!</b><br> 
-          <span style="color: #aaa; font-size: 10px;">Start trading with demo or real money</span> 
-        </div> 
-
-        <div style="margin-bottom: 6px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
-          <b>💰 Deposit Received</b><br> 
-          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$25.00</span> 
-        </div> 
-
-        <div style="margin-bottom: 6px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
-          <b>💰 Deposit Received</b><br> 
-          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$10.00</span> 
-        </div> 
-
-        <div style="margin-bottom: 8px; font-size: 12px; border-top: 1px solid #2a2a3d; padding-top: 6px;"> 
-          <b>💰 Deposit Received</b><br> 
-          <span style="color: #22c55e; font-size: 11px; font-weight: bold;">+$10.00</span> 
-        </div> 
-
-        <!-- Close Button -->
-        <div style="text-align: center; border-top: 1px solid #333; padding-top: 8px;"> 
-          <button type="button" onclick="toggleNotifDropdown(event)" style="background: #333; border: none; color: #fff; font-size: 11px; font-weight: bold; cursor: pointer; width: 100%; padding: 6px; border-radius: 6px;">Close</button> 
-        </div> 
-    </div> 
-</div>
 
   
 
