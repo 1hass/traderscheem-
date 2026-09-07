@@ -116,14 +116,11 @@ h3 { margin-top:10px; margin-bottom:5px; }
         <button type="button" onclick="openNav(); event.stopPropagation();" style="background: #333; border: none; color: white; padding: 3px 6px; border-radius: 12px; cursor: pointer; font-size: 13px;">☰</button>
         
         <!-- Real Balance Pill Box (Green Theme) -->
-<div style="display: inline-flex; align-items: center; background: #1a1a1a; padding: 4px 10px; border-radius: 20px; border: 1px solid #333;">
-    <span style="background: #2ecc71; color: white; padding: 1px 5px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 6px;">R</span>
-    <span style="color: #00ff88; font-weight: bold; font-size: 13px;">$0.00</span>
-</div>
-
-
-
-        
+        <div style="display: inline-flex; align-items: center; background: #1a1a1a; padding: 4px 10px; border-radius: 20px; border: 1px solid #333;">
+            <span style="background: #2ecc71; color: white; padding: 1px 5px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 6px;">R</span>
+            <span style="color: #00ff88; font-weight: bold; font-size: 13px;">$0.00</span>
+        </div>
+    </div> <!-- Closes Left Group -->
 
     <!-- Right Side: Deposit & Bell with Notification Dropdown -->
     <div style="display: flex; align-items: center; gap: 8px; position: relative;">
@@ -132,6 +129,10 @@ h3 { margin-top:10px; margin-bottom:5px; }
         <div onclick="toggleNotif(event)" style="cursor: pointer; position: relative; background: #1a1a1a; width: 28px; height: 28px; border-radius: 6px; display: flex; align-items: center; justify-content: center; border: 1px solid #333; font-size: 14px;">
             🔔
         </div>
+    </div> <!-- Closes Right Side -->
+
+</div> <!-- Closes Main Header Container -->
+
 
         <!-- Notification Dropdown Box -->
         <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 40px; width: 260px; background: #1e1e2d; border: 1px solid #333; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.5); z-index: 3000; padding: 10px; color: #fff;">
