@@ -105,35 +105,46 @@ h3 { margin-top:10px; margin-bottom:5px; }
 </head>
 
 <body>
-  <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #131722;">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding: 6px 10px; background: #131722; width: 100%; box-sizing: border-box;">
 
-    <!-- Left Group: T Button, Menu Drawer & Balance Switcher -->
-    <div style="position: relative; display: inline-block;">
-    <!-- Main Account Pill Header -->
-    <div onclick="toggleDropdown(event)" style="cursor: pointer; display: inline-flex; align-items: center; background: #1a1a1a; padding: 4px 10px; border-radius: 20px; border: 1px solid #333;">
-        <button type="button" style="background: #ff4444; border: none; color: white; width: 28px; height: 28px; border-radius: 6px; font-weight: bold; font-size: 14px; cursor: pointer; margin-right: 8px;">T</button>
-        <button type="button" onclick="openNav(); event.stopPropagation();" style="background: #333; border: none; color: white; padding: 4px 8px; border-radius: 15px; cursor: pointer; font-size: 14px; margin-right: 8px;">☰</button>
-        <span id="badge" style="background: #e74c3c; color: white; padding: 1px 5px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-right: 6px;">D</span>
-        <span id="topBalance" style="color: white; font-weight: bold; font-size: 13px;">$100000.00</span>
-        <span onclick="toggleDropdown(event); event.stopPropagation();" style="background: #333333; width: 22px; height: 22px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-left: 6px; font-size: 10px; color: #fff; cursor: pointer;">▼</span>
+    <!-- Left Group: Free-standing buttons + Account Pill -->
+    <div style="position: relative; display: inline-flex; align-items: center; gap: 6px;">
+        <!-- T Button -->
+        <button type="button" style="background: #ff4444; border: none; color: white; width: 24px; height: 24px; border-radius: 6px; font-weight: bold; font-size: 13px; cursor: pointer;">T</button>
+        
+        <!-- Menu Drawer Button -->
+        <button type="button" onclick="openNav(); event.stopPropagation();" style="background: #333; border: none; color: white; padding: 3px 6px; border-radius: 12px; cursor: pointer; font-size: 13px;">☰</button>
+        
+        <!-- Account Switcher Pill Box -->
+        <div onclick="toggleDropdown(event)" style="cursor: pointer; display: inline-flex; align-items: center; background: #1a1a1a; padding: 3px 8px; border-radius: 20px; border: 1px solid #333;">
+            <span id="badge" style="background: #e74c3c; color: white; padding: 1px 4px; border-radius: 4px; font-size: 9px; font-weight: bold; margin-right: 4px;">D</span>
+            <span id="topBalance" style="color: white; font-weight: bold; font-size: 12px;">$10,000.00</span>
+            <span style="background: #333333; width: 20px; height: 20px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; margin-left: 4px; font-size: 9px; color: #fff;">▼</span>
+        </div>
+
+        <!-- Dropdown Menu Box -->
+        <div id="dropdown" style="display: none; position: absolute; top: 40px; left: 80px; background: #1e1e2d; border: 1px solid #444; border-radius: 10px; padding: 8px; z-index: 99999; min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.8);">
+            <div onclick="switchAccount('real', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-radius: 6px;">
+                Real Account 
+                <span id="realActive" style="color: #00ff88; float: right;"></span>
+            </div>
+            <div onclick="switchAccount('demo', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
+                Demo Account 
+                <span id="demoActive" style="color: #00ff88; float: right;">Active</span>
+            </div>
+            <div onclick="resetDemoBalance(event)" style="padding: 10px; cursor: pointer; color: #ccc; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
+                🔄 Reset Demo Balance
+            </div>
+        </div>
     </div>
 
+    <!-- Right Group: Deposit & Notifications -->
+    <div style="display: flex; align-items: center; gap: 8px;">
+        <button type="button" style="background: #0088ff; border: none; color: white; padding: 5px 12px; border-radius: 6px; font-size: 12px; font-weight: bold; cursor: pointer;">Deposit</button>
+        <button type="button" onclick="toggleNotif(event)" style="background: #1a1a1a; border: 1px solid #333; color: #f1c40f; width: 28px; height: 28px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px;">🔔</button>
+    </div>
+</div>
 
-         <!-- Dropdown Menu Box -->
-    <div id="dropdown" style="display: none; position: absolute; top: 40px; left: 0; background: #1e1e2d; border: 1px solid #444; border-radius: 10px; padding: 8px; z-index: 99999; min-width: 180px; box-shadow: 0 8px 24px rgba(0,0,0,0.8);">
-        <div onclick="switchAccount('real', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-radius: 6px;">
-            Real Account 
-            <span id="realActive" style="color: #00ff88; float: right;"></span>
-        </div>
-        <div onclick="switchAccount('demo', event)" style="padding: 10px; cursor: pointer; color: white; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
-            Demo Account 
-            <span id="demoActive" style="color: #00ff88; float: right;">Active</span>
-        </div>
-        <div onclick="resetDemoBalance(event)" style="padding: 10px; cursor: pointer; color: #ccc; font-size: 13px; border-top: 1px solid #333; border-radius: 6px; margin-top: 4px;">
-            🔄 Reset Demo Balance
-        </div>
-    </div>
-    </div>
 
 
 
